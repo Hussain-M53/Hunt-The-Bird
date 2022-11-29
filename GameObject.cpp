@@ -53,6 +53,12 @@ string GameObject::saveState(){
 }
 void GameObject::setPreviousState(string state){}
 
+void GameObject::update() {
+
+	dst_rect.x = x_pos;
+	dst_rect.y = y_pos;
+}
+
 //related to game objects behaviour
 void GameObject::render(){}
 void GameObject::move(){}

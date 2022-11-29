@@ -3,6 +3,8 @@
 #include <vector>
 #include "SDL_ttf.h"
 #include <string>
+#include "GameObject.h"
+#include "Middleware.h"
 #pragma once
 
 using namespace std;
@@ -14,12 +16,16 @@ private:
 	static Game* instance;
 	bool isRunning;
 	SDL_Window* window;
+	int nSpeedCount;
 
 public:
-	static SDL_Renderer* renderer;
 	static Game* getInstance();
 	void loadMedia();
 	void initialize(const char* title, int x, int y, int width, int height, bool fullscreen);
+	void setPreviousGameState(string state);
+	string saveGameStateVariables();
+	bool checkCollision(GameObject* game_object_one,GameObject game_object_two);
+	void updateChanges();
 	void handleEvents();
 	void render();
 	void clean();

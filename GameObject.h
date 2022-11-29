@@ -40,6 +40,7 @@ public:
 	virtual void setPreviousState(string state);
 
 	//related to game objects behaviour
+	void update();
 	virtual void render();
 	virtual void move();
 

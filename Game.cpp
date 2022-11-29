@@ -3,12 +3,13 @@
 
 using namespace std;
 
-Game* Game::instance = 0;
-SDL_Renderer* Game::renderer = nullptr;
+Game* Game::instance = nullptr;
+
 
 Game::Game() {
 	window = nullptr;
 	isRunning = false;
+	nSpeedCount = 0;
 }
 
 Game::~Game() {
@@ -24,6 +25,7 @@ Game* Game::getInstance() {
 	return instance;
 
 }
+
 
 void Game::initialize(const char* title, int x, int y, int width, int height, bool fullscreen) {
 
@@ -45,9 +47,9 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 		else
 		{
 			//Get window surface
-			renderer = SDL_CreateRenderer(window, -1, 0);
-			if (renderer) {
-				SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+			Middleware::renderer = SDL_CreateRenderer(window, -1, 0);
+			if (Middleware::renderer) {
+				SDL_SetRenderDrawColor(Middleware::renderer, 255, 255, 255, 255);
 			}
 			isRunning = true;
 		}
@@ -61,6 +63,14 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 		isRunning = true;
 
 	}
+}
+
+void Game::setPreviousGameState(string state) {}
+string Game::saveGameStateVariables() {
+
+	string state = "<GameState>\n";
+	//state += "";
+	return state.c_str();
 }
 
 void Game::loadMedia() {
@@ -86,17 +96,43 @@ void Game::handleEvents() {
 		}
 	}
 
+void Game ::updateChanges() {
+
+}
+
+bool Game::checkCollision(GameObject* game_object_one, GameObject game_object_two)
+{
+
+	SDL_Rect rectOne = game_object_one->getDstRect();
+	SDL_Rect rectTwo = game_object_one->getDstRect();
+
+	int rectOneLeft = rectOne.x;
+	int rectOneRight = rectOne.x + rectOne.w;
+	int rectOneTop = rectOne.y;
+	int rectOneBottom = rectOne.y + rectOne.h;
+
+	int rectTwoLeft = rectTwo.x;
+	int rectTwoRight = rectTwo.x + rectTwo.w;
+	int rectTwoTop = rectTwo.y;
+	int rectTwoBottom = rectTwo.y + rectTwo.h;
+
+	if ((rectOneBottom <= rectTwoTop) || (rectOneRight <= rectTwoLeft) ||
+		(rectOneTop >= rectTwoBottom) || (rectOneLeft >= rectTwoRight))
+		return false;
+	else return true;
+}
+
 void Game::render() {
 
-	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
+	SDL_RenderClear(Middleware::renderer);
+	SDL_RenderPresent(Middleware::renderer);
 }
 
 
 void Game::clean() {
 
 	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
+	SDL_DestroyRenderer(Middleware::renderer);
 
 	Mix_Quit();
 	TTF_Quit();

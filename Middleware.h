@@ -7,8 +7,9 @@
 class Middleware {
 public:
 	Middleware();
-	static const int SCREEN_WIDTH = 800;
-	static const int SCREEN_HEIGHT = 640;
+	static const int SCREEN_WIDTH = 900;
+	static const int SCREEN_HEIGHT = 700;
+	static SDL_Renderer* renderer;
 	static SDL_Texture* LoadTexture(const char* filename);
 	static string getListStates(vector<GameObject*>& list);
 	static string intToString(int value);

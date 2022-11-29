@@ -5,6 +5,8 @@
 #include <sstream>
 #include "Game.h"
 
+SDL_Renderer* Middleware::renderer = nullptr;
+
 Middleware::Middleware() {}
 
 void Middleware::render(vector<GameObject*>& list) {
@@ -65,7 +67,7 @@ void Middleware::animate(vector<GameObject*>& list) {
 
 SDL_Texture* Middleware::LoadTexture(const char* filename) {
 	SDL_Surface* tempSurface = IMG_Load(filename);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(Game::renderer, tempSurface);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(Middleware::renderer, tempSurface);
 	if (texture == NULL) {
 		printf("Unable to create texture from %s! SDL Error: %s\n", filename, SDL_GetError());
 	}
