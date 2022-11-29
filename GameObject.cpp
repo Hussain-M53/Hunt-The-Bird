@@ -6,10 +6,10 @@ GameObject::GameObject(SDL_Texture* texture, int x, int y){
 	this->alive = true;
 	this->x_pos = x;
 	this->y_pos = y;
-	this->health = 1;
-	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
-	src_rect = { 0,0,size.x,size.y };
-	dst_rect = { x,y,size.x,size.y };
+	this->lives = 1;
+	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+	src_rect = { 0,0,width,height};
+	dst_rect = { x,y,width,height };
 
 }
 GameObject::~GameObject(){}
@@ -26,8 +26,16 @@ int GameObject::getX(){
 int GameObject::getY(){
 	return y_pos;
 }
-int GameObject::getHealth(){
-	return health;
+
+int GameObject::getWidth() {
+	return width;
+}
+
+int GameObject::getHeight() {
+	return height;
+}
+int GameObject::getLives(){
+	return lives;
 }
 bool GameObject::getAlive(){
 	return alive;
@@ -43,7 +51,7 @@ SDL_Rect GameObject::getDstRect(){
 string GameObject::saveState(){
 	return "";
 }
-void setPreviousState(string state){}
+void GameObject::setPreviousState(string state){}
 
 //related to game objects behaviour
 void GameObject::render(){}

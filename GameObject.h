@@ -14,8 +14,9 @@ protected:
 	SDL_Rect dst_rect;
 	int x_pos;
 	int y_pos;
-	int health;
-	SDL_Point size;
+	int width;
+	int height;
+	int lives;
 
 public:
 
@@ -27,17 +28,19 @@ public:
 	void setAliveToFalse();
 	int getX();
 	int getY();
-	int getHealth();
+	int getWidth();
+	int getHeight();
+	int getLives();
 	bool getAlive();
 	string getName();
 	SDL_Rect getDstRect();
 
 	//related to saving state
-	string saveState();
-	void setPreviousState(string state);
+	virtual string saveState();
+	virtual void setPreviousState(string state);
 
 	//related to game objects behaviour
-	void render();
-	void move();
+	virtual void render();
+	virtual void move();
 
 };

@@ -18,6 +18,7 @@ private:
 public:
 	static SDL_Renderer* renderer;
 	static Game* getInstance();
+	void loadMedia();
 	void initialize(const char* title, int x, int y, int width, int height, bool fullscreen);
 	void handleEvents();
 	void render();
