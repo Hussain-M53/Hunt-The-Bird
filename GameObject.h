@@ -15,6 +15,7 @@ protected:
 	int x_pos;
 	int y_pos;
 	int health;
+	SDL_Point size;
 
 public:
 

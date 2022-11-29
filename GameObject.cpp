@@ -7,8 +7,9 @@ GameObject::GameObject(SDL_Texture* texture, int x, int y){
 	this->x_pos = x;
 	this->y_pos = y;
 	this->health = 1;
-	src_rect = { 0,0,64,64 };
-	dst_rect = { x,y,64,64 };
+	SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
+	src_rect = { 0,0,size.x,size.y };
+	dst_rect = { x,y,size.x,size.y };
 
 }
 GameObject::~GameObject(){}
