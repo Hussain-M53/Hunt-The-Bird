@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Middleware.h"
 
 GameObject::GameObject(SDL_Texture* texture, int x, int y){
 	this->texture = texture;
@@ -26,6 +27,7 @@ int GameObject::getX(){
 int GameObject::getY(){
 	return y_pos;
 }
+
 
 int GameObject::getWidth() {
 	return width;
@@ -60,5 +62,9 @@ void GameObject::update() {
 }
 
 //related to game objects behaviour
-void GameObject::render(){}
+void GameObject::render(){
+	this->update();
+	SDL_RenderCopy(Middleware::renderer, texture, &src_rect, &dst_rect);
+
+}
 void GameObject::move(){}

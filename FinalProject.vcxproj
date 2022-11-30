@@ -133,6 +133,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Archer.cpp" />
+    <ClCompile Include="Bird.cpp" />
+    <ClCompile Include="BirdOne.cpp" />
+    <ClCompile Include="BirdTwo.cpp" />
+    <ClCompile Include="Cloud.cpp" />
     <ClCompile Include="FinalProject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -141,7 +145,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archer.h" />
-    <ClInclude Include="FinalProject.h" />
+    <ClInclude Include="Bird.h" />
+    <ClInclude Include="BirdOne.h" />
+    <ClInclude Include="BirdTwo.h" />
+    <ClInclude Include="Cloud.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Menu.h" />

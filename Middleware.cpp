@@ -6,6 +6,7 @@
 #include "Game.h"
 
 SDL_Renderer* Middleware::renderer = nullptr;
+int Middleware::nSpeedCount=0;
 
 Middleware::Middleware() {}
 
@@ -55,13 +56,52 @@ string Middleware::getListStates(vector<GameObject*>& list)
 	return state;
 }
 
-void Middleware::move(vector<GameObject*>& list, int nSpeedCount)
+void Middleware::move(vector<GameObject*>& list)
 {
+	for (int i = 0; i < list.size(); i++) {
+		GameObject* gameObject;
+		gameObject = list.at(i);
+		if (nSpeedCount % 100) {
+			gameObject->move();
+		}
+	}
 
 }
 
 void Middleware::animate(vector<GameObject*>& list) {
-
+	for (int i = 0; i < list.size(); i++) {
+		GameObject* gameObject = list.at(i);
+		if (gameObject->getName() == "bird_one") {
+			if (gameObject->src_rect.x == 128) {
+				if (gameObject->src_rect.y == 58) {
+					gameObject->src_rect.x = 0;
+					gameObject->src_rect.y = 0;
+				}
+				else {
+					gameObject->src_rect.y += 58;
+					gameObject->src_rect.x = 0;
+				}
+			}
+			else {
+				gameObject->src_rect.x += 64;
+			}
+		}
+		if (gameObject->getName() == "bird_two" && Middleware::nSpeedCount%15 ==0) {
+			if (gameObject->src_rect.x == 64) {
+				if (gameObject->src_rect.y == 56) {
+					gameObject->src_rect.x = 0;
+					gameObject->src_rect.y = 0;
+				}
+				else {
+					gameObject->src_rect.y += 56;
+					gameObject->src_rect.x = 0;
+				}
+			}
+			else {
+				gameObject->src_rect.x += 64;
+			}
+		}
+	}
 }
 
 

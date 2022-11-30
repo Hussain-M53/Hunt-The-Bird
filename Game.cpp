@@ -1,15 +1,27 @@
 #include "Game.h"
 #include <SDL_mixer.h>
+#include "Archer.h"
+#include "Bird.h"
+#include "BirdOne.h"
+#include "BirdTwo.h"
+#include "Cloud.h"
 
 using namespace std;
 
 Game* Game::instance = nullptr;
+SDL_Texture* ArcherTexture;
+SDL_Texture* BirdOneTexture;
+SDL_Texture* BirdTwoTexture;
+SDL_Texture* CloudTexture;
 
+vector<GameObject*> bird_list;
+vector<GameObject*> ui_elements_list;
+
+GameObject* archer;
 
 Game::Game() {
 	window = nullptr;
 	isRunning = false;
-	nSpeedCount = 0;
 }
 
 Game::~Game() {
@@ -49,7 +61,7 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			//Get window surface
 			Middleware::renderer = SDL_CreateRenderer(window, -1, 0);
 			if (Middleware::renderer) {
-				SDL_SetRenderDrawColor(Middleware::renderer, 255, 255, 255, 255);
+				SDL_SetRenderDrawColor(Middleware::renderer, 23, 166, 253, 255);
 			}
 			isRunning = true;
 		}
@@ -61,6 +73,8 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			isRunning = false;
 		}
 		isRunning = true;
+		loadMedia();
+		archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT-160);
 
 	}
 }
@@ -74,30 +88,86 @@ string Game::saveGameStateVariables() {
 }
 
 void Game::loadMedia() {
-
+	ArcherTexture = Middleware::LoadTexture("Images/archer.png");
+	BirdTwoTexture = Middleware::LoadTexture("Images/bird_two.png");
+	BirdOneTexture = Middleware::LoadTexture("Images/bird_one.png");
+	CloudTexture = Middleware::LoadTexture("Images/cloud.png");
 }
 
 void Game::handleEvents() {
+
 
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event) != 0) {
 
-		if (event.type == SDL_QUIT)
+		if (event.type == SDL_QUIT) {
 			isRunning = false;
+		}
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.sym) {
 			case SDLK_SPACE:
 				break;
 			case SDLK_b:
 				break;
-				}
 			}
 		}
 	}
+	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+	if (currentKeyStates[SDL_SCANCODE_UP]) {
+		archer->y_pos--;
+	}
+	if (currentKeyStates[SDL_SCANCODE_DOWN]) {
+		archer->y_pos++;
+	}
+	if (currentKeyStates[SDL_SCANCODE_LEFT]) {
+		archer->x_pos--;
+	}
+	if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
+		archer->x_pos++;
+	}
+	}
 
-void Game ::updateChanges() {
+void Game ::handleGameChanges() {
 
+	Middleware::nSpeedCount++;
+
+	//--------------------------------animate-----------------------------------------
+	if (Middleware::nSpeedCount % 15 == 0) {
+		Middleware::animate(bird_list);
+	}
+
+	//--------------------------------insert-----------------------------------------
+	if (Middleware::nSpeedCount % 1500 == 0) {
+		int random = rand() % 200;
+		GameObject* cloud = new Cloud(CloudTexture, -150, random);
+		ui_elements_list.insert(ui_elements_list.begin(), cloud);
+	}
+
+	if (Middleware::nSpeedCount % 800 == 0) {
+		int select_random = rand() % 2;
+		int position_random = 100 + rand() % 200;
+
+		if (select_random == 0) {
+			GameObject* bird_one = new BirdOne(BirdOneTexture, -64, position_random);
+			bird_list.insert(bird_list.begin(), bird_one);
+		}
+		if (select_random == 1) {
+			GameObject* bird_two = new BirdTwo(BirdTwoTexture, -64, position_random);
+			bird_list.insert(bird_list.begin(), bird_two);
+		}	
+
+	}
+
+
+	//--------------------------------move-----------------------------------------
+	Middleware::move(bird_list);
+	Middleware::move(ui_elements_list);
+
+	
+	//--------------------------------clean-----------------------------------------
+	Middleware::clean(bird_list);
+	Middleware::clean(ui_elements_list);
 }
 
 bool Game::checkCollision(GameObject* game_object_one, GameObject game_object_two)
@@ -124,7 +194,14 @@ bool Game::checkCollision(GameObject* game_object_one, GameObject game_object_tw
 
 void Game::render() {
 
+	SDL_Delay(3);
+
 	SDL_RenderClear(Middleware::renderer);
+
+	archer->render();
+	Middleware::render(ui_elements_list);
+	Middleware::render(bird_list);
+
 	SDL_RenderPresent(Middleware::renderer);
 }
 

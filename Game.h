@@ -16,7 +16,6 @@ private:
 	static Game* instance;
 	bool isRunning;
 	SDL_Window* window;
-	int nSpeedCount;
 
 public:
 	static Game* getInstance();
@@ -25,7 +24,7 @@ public:
 	void setPreviousGameState(string state);
 	string saveGameStateVariables();
 	bool checkCollision(GameObject* game_object_one,GameObject game_object_two);
-	void updateChanges();
+	void handleGameChanges();
 	void handleEvents();
 	void render();
 	void clean();
