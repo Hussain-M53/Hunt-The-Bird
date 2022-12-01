@@ -13,6 +13,8 @@ protected:
 	int width;
 	int height;
 	int lives;
+	double angle_in_radian;
+	double angle_in_degree;
 
 public:
 

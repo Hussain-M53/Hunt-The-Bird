@@ -7,6 +7,7 @@
 #include "Eagle.h"
 #include "Dragon.h"
 #include "Cloud.h"
+#include "Sun.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ SDL_Texture* BirdTwoTexture;
 SDL_Texture* CloudTexture;
 SDL_Texture* EagleTexture;
 SDL_Texture* DragonTexture;
+SDL_Texture* SunTexture;
 
 vector<GameObject*> bird_list;
 vector<GameObject*> ui_elements_list;
@@ -79,6 +81,8 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 		isRunning = true;
 		loadMedia();
 		archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT-160);
+		GameObject* sun = new Sun(SunTexture, 0, 0);
+		ui_elements_list.insert(ui_elements_list.begin(), sun);
 
 	}
 }
@@ -98,6 +102,7 @@ void Game::loadMedia() {
 	CloudTexture = Middleware::LoadTexture("Images/cloud.png");
 	DragonTexture = Middleware::LoadTexture("Images/dragon.png");
 	EagleTexture = Middleware::LoadTexture("Images/eagle.png");
+	SunTexture = Middleware::LoadTexture("Images/sun.png");
 }
 
 void Game::handleEvents() {
@@ -151,9 +156,8 @@ void Game ::handleGameChanges() {
 	}
 
 	if (Middleware::nSpeedCount % 800 == 0) {
-		//int select_random = rand() % 4;
+		int select_random = rand() % 3;
 		//will fix this later
-		int select_random = 2;
 		int position_random = 100 + rand() % 200;
 
 		if (select_random == 0) {
