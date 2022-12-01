@@ -151,9 +151,9 @@ void Game ::handleGameChanges() {
 	}
 
 	if (Middleware::nSpeedCount % 800 == 0) {
-		int select_random = rand() % 4;
+		//int select_random = rand() % 4;
 		//will fix this later
-		//int select_random = 2;
+		int select_random = 2;
 		int position_random = 100 + rand() % 200;
 
 		if (select_random == 0) {
