@@ -9,7 +9,7 @@ using namespace std;
 
 
 BirdOne::BirdOne(SDL_Texture* texture, int x, int y) :Bird(texture, x, y) {
-	src_rect = { 0,0,64,58 };
-	dst_rect = { x,y,64,58 };
+	src_rect = { 0,0,64,68 };
+	dst_rect = { x,y,64,68 };
 	name = "bird_one";
 }

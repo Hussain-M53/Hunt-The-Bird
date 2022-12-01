@@ -45,6 +45,12 @@
     <ClCompile Include="BirdOne.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Dragon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Eagle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -72,6 +78,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BirdTwo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dragon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Eagle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

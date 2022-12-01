@@ -4,6 +4,8 @@
 #include "Bird.h"
 #include "BirdOne.h"
 #include "BirdTwo.h"
+#include "Eagle.h"
+#include "Dragon.h"
 #include "Cloud.h"
 
 using namespace std;
@@ -13,6 +15,8 @@ SDL_Texture* ArcherTexture;
 SDL_Texture* BirdOneTexture;
 SDL_Texture* BirdTwoTexture;
 SDL_Texture* CloudTexture;
+SDL_Texture* EagleTexture;
+SDL_Texture* DragonTexture;
 
 vector<GameObject*> bird_list;
 vector<GameObject*> ui_elements_list;
@@ -92,6 +96,8 @@ void Game::loadMedia() {
 	BirdTwoTexture = Middleware::LoadTexture("Images/bird_two.png");
 	BirdOneTexture = Middleware::LoadTexture("Images/bird_one.png");
 	CloudTexture = Middleware::LoadTexture("Images/cloud.png");
+	DragonTexture = Middleware::LoadTexture("Images/dragon.png");
+	EagleTexture = Middleware::LoadTexture("Images/eagle.png");
 }
 
 void Game::handleEvents() {
@@ -133,7 +139,7 @@ void Game ::handleGameChanges() {
 	Middleware::nSpeedCount++;
 
 	//--------------------------------animate-----------------------------------------
-	if (Middleware::nSpeedCount % 15 == 0) {
+	if (Middleware::nSpeedCount % 30 == 0) {
 		Middleware::animate(bird_list);
 	}
 
@@ -145,7 +151,9 @@ void Game ::handleGameChanges() {
 	}
 
 	if (Middleware::nSpeedCount % 800 == 0) {
-		int select_random = rand() % 2;
+		/*int select_random = rand() % 4;*/
+		//will fix this later
+		int select_random = 2;
 		int position_random = 100 + rand() % 200;
 
 		if (select_random == 0) {
@@ -155,7 +163,15 @@ void Game ::handleGameChanges() {
 		if (select_random == 1) {
 			GameObject* bird_two = new BirdTwo(BirdTwoTexture, -64, position_random);
 			bird_list.insert(bird_list.begin(), bird_two);
-		}	
+		}
+		if (select_random == 2) {
+			GameObject* dragon = new Dragon(DragonTexture, -200, position_random);
+			bird_list.insert(bird_list.begin(), dragon);
+		}
+		if (select_random == 3) {
+			GameObject* eagle = new Eagle(EagleTexture, -100, position_random);
+			bird_list.insert(bird_list.begin(), eagle);
+		}
 
 	}
 
