@@ -8,10 +8,11 @@ GameObject::GameObject(SDL_Texture* texture, int x, int y){
 	this->x_pos = x;
 	this->y_pos = y;
 	this->lives = 1;
+	this->state = "still";
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 	src_rect = { 0,0,width,height};
 	dst_rect = { x,y,width,height };
-
+	flip = SDL_FLIP_NONE;
 }
 GameObject::~GameObject(){}
 
@@ -45,6 +46,14 @@ bool GameObject::getAlive(){
 string GameObject::getName(){
 	return name;
 }
+string GameObject::getState()
+{
+	return state;
+}
+void GameObject::setState(string state)
+{
+	this->state = state;
+}
 SDL_Rect GameObject::getDstRect(){
 	return dst_rect;
 }
@@ -61,10 +70,11 @@ void GameObject::update() {
 	dst_rect.y = y_pos;
 }
 
-//related to game objects behaviour
-void GameObject::render(){
-	this->update();
-	SDL_RenderCopy(Middleware::renderer, texture, &src_rect, &dst_rect);
 
+
+//related to game objects behaviour
+void GameObject::render() {
+	this->update();
+	SDL_RenderCopyEx(Middleware::renderer, texture, &src_rect, &dst_rect, angle_in_degree, NULL, flip);
 }
 void GameObject::move(){}

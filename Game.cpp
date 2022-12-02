@@ -19,9 +19,14 @@ SDL_Texture* CloudTexture;
 SDL_Texture* EagleTexture;
 SDL_Texture* DragonTexture;
 SDL_Texture* SunTexture;
+SDL_Texture* BackgroundTexture;
+
+SDL_Rect backgroundRect = { 0,0,Middleware::SCREEN_WIDTH,Middleware::SCREEN_HEIGHT };
 
 vector<GameObject*> bird_list;
 vector<GameObject*> ui_elements_list;
+
+bool key_press = false;
 
 GameObject* archer;
 
@@ -80,7 +85,7 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 		}
 		isRunning = true;
 		loadMedia();
-		archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT-160);
+		archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT-230);
 		GameObject* sun = new Sun(SunTexture, 0, 0);
 		ui_elements_list.insert(ui_elements_list.begin(), sun);
 
@@ -96,6 +101,7 @@ string Game::saveGameStateVariables() {
 }
 
 void Game::loadMedia() {
+	BackgroundTexture = Middleware::LoadTexture("Images/background.jpg");
 	ArcherTexture = Middleware::LoadTexture("Images/archer.png");
 	BirdTwoTexture = Middleware::LoadTexture("Images/bird_two.png");
 	BirdOneTexture = Middleware::LoadTexture("Images/bird_one.png");
@@ -117,9 +123,32 @@ void Game::handleEvents() {
 		}
 		else if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.sym) {
+			case SDLK_LEFT:
+				if (archer->src_rect.x < 720) {
+					archer->setState("movingleft");
+				}
+				break;
+			case SDLK_RIGHT:
+				if (archer->src_rect.x < 720) {
+					archer->setState("movingright");
+				}
+				break;
 			case SDLK_SPACE:
 				break;
 			case SDLK_b:
+				cout << "Pressed B" << endl;
+				break;
+			}
+		}
+		else if (event.type == SDL_KEYUP) {
+			switch (event.key.keysym.sym) {
+			case SDLK_LEFT:
+				archer->setState("still");
+				archer->src_rect.x = 0;
+				break;
+			case SDLK_RIGHT:
+				archer->setState("still");
+				archer->src_rect.x = 0;
 				break;
 			}
 		}
@@ -147,6 +176,28 @@ void Game ::handleGameChanges() {
 	if (Middleware::nSpeedCount % 30 == 0) {
 		Middleware::animate(bird_list);
 	}
+
+	if (Middleware::nSpeedCount % 10 == 0) {
+		if (archer->getName() == "archer") {
+			if (archer->getState() == "still") {
+				if (archer->src_rect.x == 600) {
+					archer->src_rect.x = 0;
+				}
+				else {
+					archer->src_rect.x += 120;
+				}
+			}
+			if (archer->getState() == "movingleft" || archer->getState() == "movingright") {
+				if (archer->src_rect.x == 2280) {
+					archer->src_rect.x = 720;
+				}
+				else {
+					archer->src_rect.x += 120;
+				}
+			}
+		}
+	}
+	
 
 	//--------------------------------insert-----------------------------------------
 	if (Middleware::nSpeedCount % 1500 == 0) {
@@ -217,6 +268,7 @@ void Game::render() {
 	SDL_Delay(3);
 
 	SDL_RenderClear(Middleware::renderer);
+	SDL_RenderCopy(Middleware::renderer, BackgroundTexture, NULL, &backgroundRect);
 
 	archer->render();
 	Middleware::render(ui_elements_list);

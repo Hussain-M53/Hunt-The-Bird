@@ -15,6 +15,8 @@ protected:
 	int lives;
 	double angle_in_radian;
 	double angle_in_degree;
+	string state;
+	SDL_RendererFlip flip;
 
 public:
 
@@ -36,6 +38,8 @@ public:
 	int getLives();
 	bool getAlive();
 	string getName();
+	string getState();
+	virtual void setState(string state);
 	SDL_Rect getDstRect();
 
 	//related to saving state
@@ -44,7 +48,7 @@ public:
 
 	//related to game objects behaviour
 	void update();
-	virtual void render();
+	void render();
 	virtual void move();
 
 };

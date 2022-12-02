@@ -87,6 +87,24 @@ void Middleware::animate(vector<GameObject*>& list) {
 				gameObject->src_rect.x += 200;
 			}
 		}
+		if (gameObject->getName() == "archer") {
+			if (gameObject->getState() == "still") {
+				if (gameObject->src_rect.x == 600 ) {
+					gameObject->src_rect.x = 0;
+				}
+				else {
+					gameObject->src_rect.x += 120;
+				}
+			}
+			if (gameObject->getState() == "moving") {
+				if (gameObject->src_rect.x == 2280) {
+					gameObject->src_rect.x = 720;
+				}
+				else {
+					gameObject->src_rect.x += 120;
+				}
+			}
+		}
 		if (gameObject->getName() == "eagle") {
 			if (gameObject->src_rect.x >= 1500) {
 				gameObject->src_rect.x = 0;

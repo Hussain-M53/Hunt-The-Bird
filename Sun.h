@@ -9,6 +9,5 @@ class Sun : public GameObject {
 public:
 	Sun(SDL_Texture* texture, int x, int y);
 	void move();
-	void render();
 };
 
