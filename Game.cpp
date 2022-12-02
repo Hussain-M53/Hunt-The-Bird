@@ -2,9 +2,14 @@
 #include <SDL_mixer.h>
 #include "Archer.h"
 #include "Bird.h"
-#include "BirdOne.h"
-#include "BirdTwo.h"
+#include "GreyBird.h"
+#include "RedBird.h"
 #include "Eagle.h"
+#include "YellowBird.h"
+#include "GreyBirdEgg.h"
+#include "RedBirdEgg.h"
+#include "YellowBirdEgg.h"
+#include "EagleBirdEgg.h"
 #include "Dragon.h"
 #include "Cloud.h"
 #include "Sun.h"
@@ -13,20 +18,33 @@ using namespace std;
 
 Game* Game::instance = nullptr;
 SDL_Texture* ArcherTexture;
-SDL_Texture* BirdOneTexture;
-SDL_Texture* BirdTwoTexture;
-SDL_Texture* CloudTexture;
+SDL_Texture* GreyBirdTexture;
+SDL_Texture* RedBirdTexture;
+SDL_Texture* YellowBirdTexture;
 SDL_Texture* EagleTexture;
+
+SDL_Texture* GreyEggTexture;
+SDL_Texture* RedEggTexture;
+SDL_Texture* YellowEggTexture;
+SDL_Texture* EagleEggTexture;
+
+SDL_Texture* CloudTexture;
 SDL_Texture* DragonTexture;
 SDL_Texture* SunTexture;
 SDL_Texture* BackgroundTexture;
 
+Mix_Music* gameMusic = NULL;
+Mix_Chunk* explosion = NULL;
+Mix_Chunk* missileShoot = NULL;
+Mix_Chunk* laserShoot = NULL;
+Mix_Chunk* enemyShoot = NULL;
+
 SDL_Rect backgroundRect = { 0,0,Middleware::SCREEN_WIDTH,Middleware::SCREEN_HEIGHT };
 
 vector<GameObject*> bird_list;
+vector<GameObject*> bullet_list;
 vector<GameObject*> ui_elements_list;
 
-bool key_press = false;
 
 GameObject* archer;
 
@@ -47,6 +65,18 @@ Game* Game::getInstance() {
 	}
 	return instance;
 
+}
+
+void Game::playGameMusic() {
+	Mix_HaltMusic();
+	//If there is no music playing
+	if (Mix_PlayingMusic() == 0) Mix_PlayMusic(gameMusic, -1);
+	else
+	{
+		if (Mix_PausedMusic() == 1) Mix_ResumeMusic();
+		else Mix_PauseMusic();
+
+	}
 }
 
 
@@ -89,6 +119,16 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 		GameObject* sun = new Sun(SunTexture, 0, 0);
 		ui_elements_list.insert(ui_elements_list.begin(), sun);
 
+		int generate_random_cloud = rand() % 10;
+
+		for (int i = 0; i <= generate_random_cloud; i++) {
+			int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
+			int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;
+			GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
+			ui_elements_list.insert(ui_elements_list.begin(), cloud);
+		}
+
+
 	}
 }
 
@@ -101,14 +141,27 @@ string Game::saveGameStateVariables() {
 }
 
 void Game::loadMedia() {
+	//load the textures
 	BackgroundTexture = Middleware::LoadTexture("Images/background.jpg");
 	ArcherTexture = Middleware::LoadTexture("Images/archer.png");
-	BirdTwoTexture = Middleware::LoadTexture("Images/bird_two.png");
-	BirdOneTexture = Middleware::LoadTexture("Images/bird_one.png");
+	GreyBirdTexture = Middleware::LoadTexture("Images/grey_bird.png");
+	YellowBirdTexture = Middleware::LoadTexture("Images/yellow_bird.png");
+	RedBirdTexture = Middleware::LoadTexture("Images/red_bird.png");
 	CloudTexture = Middleware::LoadTexture("Images/cloud.png");
 	DragonTexture = Middleware::LoadTexture("Images/dragon.png");
 	EagleTexture = Middleware::LoadTexture("Images/eagle.png");
 	SunTexture = Middleware::LoadTexture("Images/sun.png");
+	GreyEggTexture = Middleware::LoadTexture("Images/.png");
+	RedEggTexture = Middleware::LoadTexture("Images/.png");
+	YellowEggTexture = Middleware::LoadTexture("Images/.png");
+	EagleEggTexture = Middleware::LoadTexture("Images/.png");
+
+	//load the music and sound effects
+	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
+	explosion = Mix_LoadWAV("Music/Sound Effects/explosion.wav");
+	laserShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
+	missileShoot = Mix_LoadWAV("Music/Sound Effects/missileShoot.wav");
+	enemyShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
 }
 
 void Game::handleEvents() {
@@ -154,12 +207,6 @@ void Game::handleEvents() {
 		}
 	}
 	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-	if (currentKeyStates[SDL_SCANCODE_UP]) {
-		archer->y_pos--;
-	}
-	if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-		archer->y_pos++;
-	}
 	if (currentKeyStates[SDL_SCANCODE_LEFT]) {
 		archer->x_pos--;
 	}
@@ -212,18 +259,22 @@ void Game ::handleGameChanges() {
 		int position_random = 100 + rand() % 200;
 
 		if (select_random == 0) {
-			GameObject* bird_one = new BirdOne(BirdOneTexture, -64, position_random);
-			bird_list.insert(bird_list.begin(), bird_one);
+			GameObject* grey_bird = new GreyBird(GreyBirdTexture, -64, position_random);
+			bird_list.insert(bird_list.begin(), grey_bird);
 		}
 		if (select_random == 1) {
-			GameObject* bird_two = new BirdTwo(BirdTwoTexture, -64, position_random);
-			bird_list.insert(bird_list.begin(), bird_two);
+			GameObject* yellow_bird = new YellowBird(YellowBirdTexture, -64, position_random);
+			bird_list.insert(bird_list.begin(), yellow_bird);
 		}
 		if (select_random == 2) {
+			GameObject* red_bird = new RedBird(RedBirdTexture, -64, position_random);
+			bird_list.insert(bird_list.begin(), red_bird);
+		}
+		if (select_random == 3) {
 			GameObject* dragon = new Dragon(DragonTexture, -200, position_random);
 			bird_list.insert(bird_list.begin(), dragon);
 		}
-		if (select_random == 3) {
+		if (select_random == 4) {
 			GameObject* eagle = new Eagle(EagleTexture, -100, position_random);
 			bird_list.insert(bird_list.begin(), eagle);
 		}
@@ -265,7 +316,7 @@ bool Game::checkCollision(GameObject* game_object_one, GameObject game_object_tw
 
 void Game::render() {
 
-	SDL_Delay(3);
+	SDL_Delay(2);
 
 	SDL_RenderClear(Middleware::renderer);
 	SDL_RenderCopy(Middleware::renderer, BackgroundTexture, NULL, &backgroundRect);
@@ -282,6 +333,32 @@ void Game::clean() {
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(Middleware::renderer);
+	
+	SDL_DestroyTexture(ArcherTexture);
+	SDL_DestroyTexture(GreyBirdTexture);
+	SDL_DestroyTexture(RedBirdTexture);
+	SDL_DestroyTexture(YellowBirdTexture);
+	SDL_DestroyTexture(EagleTexture);
+	SDL_DestroyTexture(GreyEggTexture);
+	SDL_DestroyTexture(RedEggTexture);
+	SDL_DestroyTexture(YellowEggTexture);
+	SDL_DestroyTexture(EagleEggTexture);
+	SDL_DestroyTexture(CloudTexture);
+	SDL_DestroyTexture(DragonTexture);
+	SDL_DestroyTexture(SunTexture);
+	SDL_DestroyTexture(BackgroundTexture);
+
+
+	//Free the music
+	Mix_FreeMusic(gameMusic);
+	gameMusic = NULL;
+
+	//Free the sound effects
+	Mix_FreeChunk(explosion);
+	Mix_FreeChunk(enemyShoot);
+	Mix_FreeChunk(laserShoot);
+	Mix_FreeChunk(missileShoot);
+
 
 	Mix_Quit();
 	TTF_Quit();

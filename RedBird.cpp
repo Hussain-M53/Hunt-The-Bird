@@ -1,4 +1,4 @@
-#include "BirdTwo.h"
+#include "RedBird.h"
 #include "Bird.h"
 #include <sstream>
 #include <iostream>
@@ -7,8 +7,8 @@
 using namespace std;
 
 
-BirdTwo::BirdTwo(SDL_Texture* texture, int x, int y) :Bird(texture, x, y) {
+RedBird::RedBird(SDL_Texture* texture, int x, int y) :Bird(texture, x, y) {
 	src_rect = { 0,0,64,56 };
 	dst_rect = { x,y,64,56 };
-	name = "bird_two";
+	name = "red_bird";
 }

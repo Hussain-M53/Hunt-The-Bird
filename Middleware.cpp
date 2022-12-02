@@ -71,8 +71,16 @@ void Middleware::move(vector<GameObject*>& list)
 void Middleware::animate(vector<GameObject*>& list) {
 	for (int i = 0; i < list.size(); i++) {
 		GameObject* gameObject = list.at(i);
-		if (gameObject->getName() == "bird_one" || gameObject->getName() == "bird_two") {
+		if (gameObject->getName() == "grey_bird" || gameObject->getName() == "yellow_bird") {
 			if (gameObject->src_rect.x == 192) {
+				gameObject->src_rect.x = 0;
+			}
+			else {
+				gameObject->src_rect.x += 64;
+			}
+		}
+		if (gameObject->getName() == "red_bird") {
+			if (gameObject->src_rect.x == 320) {
 				gameObject->src_rect.x = 0;
 			}
 			else {

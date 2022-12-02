@@ -25,6 +25,7 @@ public:
 	string saveGameStateVariables();
 	bool checkCollision(GameObject* game_object_one,GameObject game_object_two);
 	void handleGameChanges();
+	void playGameMusic();
 	void handleEvents();
 	void render();
 	void clean();

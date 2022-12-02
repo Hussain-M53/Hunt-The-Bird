@@ -18,9 +18,10 @@ int main(int argc, char* args[])
 	Game* game = Game::getInstance();
 	Menu* menu = Menu::getInstance();
 	game->initialize("Bird Hunting", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Middleware::SCREEN_WIDTH, Middleware::SCREEN_HEIGHT, false);
-	//menu->showMenu();
+	string menu_selection = menu->showMenu();
+	if (menu_selection != "exit") game->playGameMusic();
 
-		while (game->running()) {
+		while (game->running() && menu_selection!="exit") {
 			frame_start = SDL_GetTicks();
 
 			game->handleEvents();

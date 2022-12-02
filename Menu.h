@@ -18,8 +18,11 @@ private:
 
 public:
 	static Menu* getInstance();
+	SDL_Point getSize(SDL_Texture* texture);
 	bool checkButtonCollision(int x, int y, SDL_Rect rect);
-	void showMenu();
+	string showMenu();
+	void clickSound();
 	void loadMedia();
+	void display_button(SDL_Rect* gSpriteClips, int position);
 
 };

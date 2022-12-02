@@ -4,10 +4,9 @@
 #include <SDL.h>
 #include<iostream>
 #include <stdio.h>
-#include "Bird.h"
+#include "Egg.h"
 
-class BirdOne : public Bird {
+class RedBirdEgg : public Egg {
 public:
-	BirdOne(SDL_Texture* texture, int x, int y);
+	RedBirdEgg(SDL_Texture* texture, int x, int y);
 };
-
