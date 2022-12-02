@@ -21,7 +21,11 @@ int main(int argc, char* args[])
 	string menu_selection = menu->showMenu();
 	if (menu_selection != "exit") game->playGameMusic();
 
-		while (game->running() && menu_selection!="exit") {
+	while (menu_selection != "exit") {
+		if (menu_selection == "continue") {
+			cout << "continue the game boys" << endl;
+		}
+		while (game->running()) {
 			frame_start = SDL_GetTicks();
 
 			game->handleEvents();
@@ -34,6 +38,9 @@ int main(int argc, char* args[])
 				SDL_Delay(frame_delay - frame_time);
 			}
 		}
+		menu_selection= menu->showMenu();
+		game->resetGame();
+	}
 		
 	game->clean();
 

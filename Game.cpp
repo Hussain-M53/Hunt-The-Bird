@@ -42,7 +42,7 @@ Mix_Chunk* enemyShoot = NULL;
 SDL_Rect backgroundRect = { 0,0,Middleware::SCREEN_WIDTH,Middleware::SCREEN_HEIGHT };
 
 vector<GameObject*> bird_list;
-vector<GameObject*> bullet_list;
+vector<GameObject*> egg_list;
 vector<GameObject*> ui_elements_list;
 
 
@@ -79,6 +79,14 @@ void Game::playGameMusic() {
 	}
 }
 
+void Game::resetGame() {
+
+	Mix_HaltMusic();
+	initializeGameStart();
+	Middleware::cleanEntireList(ui_elements_list);
+	Middleware::cleanEntireList(bird_list);
+}
+
 
 void Game::initialize(const char* title, int x, int y, int width, int height, bool fullscreen) {
 
@@ -113,22 +121,25 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 			isRunning = false;
 		}
-		isRunning = true;
 		loadMedia();
-		archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT-230);
-		GameObject* sun = new Sun(SunTexture, 0, 0);
-		ui_elements_list.insert(ui_elements_list.begin(), sun);
+		initializeGameStart();
+	}
+}
 
-		int generate_random_cloud = rand() % 10;
+void Game::initializeGameStart() {
+	playGameMusic();
+	isRunning = true;
+	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 230);
+	GameObject* sun = new Sun(SunTexture, 0, 0);
+	ui_elements_list.insert(ui_elements_list.begin(), sun);
 
-		for (int i = 0; i <= generate_random_cloud; i++) {
-			int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
-			int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;
-			GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
-			ui_elements_list.insert(ui_elements_list.begin(), cloud);
-		}
+	int generate_random_cloud = rand() % 10;
 
-
+	for (int i = 0; i <= generate_random_cloud; i++) {
+		int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
+		int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;
+		GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
+		ui_elements_list.insert(ui_elements_list.begin(), cloud);
 	}
 }
 
@@ -151,9 +162,9 @@ void Game::loadMedia() {
 	DragonTexture = Middleware::LoadTexture("Images/dragon.png");
 	EagleTexture = Middleware::LoadTexture("Images/eagle.png");
 	SunTexture = Middleware::LoadTexture("Images/sun.png");
-	GreyEggTexture = Middleware::LoadTexture("Images/.png");
-	RedEggTexture = Middleware::LoadTexture("Images/.png");
-	YellowEggTexture = Middleware::LoadTexture("Images/.png");
+	GreyEggTexture = Middleware::LoadTexture("Images/grey_egg.png");
+	RedEggTexture = Middleware::LoadTexture("Images/red_egg.png");
+	YellowEggTexture = Middleware::LoadTexture("Images/yellow_egg.png");
 	EagleEggTexture = Middleware::LoadTexture("Images/.png");
 
 	//load the music and sound effects
@@ -281,22 +292,72 @@ void Game ::handleGameChanges() {
 
 	}
 
+	if (Middleware::nSpeedCount % 600 == 0)
+	{
+		for (int i = 0; i < bird_list.size(); i++) {
+
+			if (bird_list.at(i)->getName() == "grey_bird") {
+				GameObject* gameObject = bird_list.at(i);
+				GameObject* egg = new GreyBirdEgg(GreyEggTexture, gameObject->x_pos, gameObject->y_pos);
+				egg_list.insert(egg_list.begin(), egg);
+				Mix_PlayChannel(-1, enemyShoot, 0);
+			}
+
+
+			if (bird_list.at(i)->getName() == "yellow_bird") {
+				GameObject* gameObject = bird_list.at(i);
+				GameObject* egg = new YellowBirdEgg(YellowEggTexture, gameObject->x_pos, gameObject->y_pos);
+				egg_list.insert(egg_list.begin(), egg);
+				Mix_PlayChannel(-1, enemyShoot, 0);
+			}
+
+
+			if (bird_list.at(i)->getName() == "red_bird") {
+				GameObject* gameObject = bird_list.at(i);
+				GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->x_pos, gameObject->y_pos);
+				egg_list.insert(egg_list.begin(), egg);
+				Mix_PlayChannel(-1, enemyShoot, 0);
+			}
+
+		}
+	}
+
+	//--------------------------------collision detection-----------------------------------------
+	for (int b = 0; b < egg_list.size(); b++)
+	{
+
+		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg") {
+			GameObject* gameObject = egg_list.at(b);
+			if (checkCollision(gameObject, archer)) {
+				gameObject->setAliveToFalse();
+				archer->setAliveToFalse();
+				isRunning = false;
+			}
+		}
+	}
+
+
+
+
+
 
 	//--------------------------------move-----------------------------------------
 	Middleware::move(bird_list);
+	Middleware::move(egg_list);
 	Middleware::move(ui_elements_list);
 
 	
 	//--------------------------------clean-----------------------------------------
 	Middleware::clean(bird_list);
+	Middleware::clean(egg_list);
 	Middleware::clean(ui_elements_list);
 }
 
-bool Game::checkCollision(GameObject* game_object_one, GameObject game_object_two)
+bool Game::checkCollision(GameObject* game_object_one, GameObject* game_object_two)
 {
 
 	SDL_Rect rectOne = game_object_one->getDstRect();
-	SDL_Rect rectTwo = game_object_one->getDstRect();
+	SDL_Rect rectTwo = game_object_two->getDstRect();
 
 	int rectOneLeft = rectOne.x;
 	int rectOneRight = rectOne.x + rectOne.w;
@@ -324,6 +385,7 @@ void Game::render() {
 	archer->render();
 	Middleware::render(ui_elements_list);
 	Middleware::render(bird_list);
+	Middleware::render(egg_list);
 
 	SDL_RenderPresent(Middleware::renderer);
 }

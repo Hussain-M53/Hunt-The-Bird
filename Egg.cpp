@@ -14,12 +14,7 @@ Egg::Egg(SDL_Texture* texture, int x, int y) :GameObject(texture, x, y) {
 void Egg::move() {
 	if (x_pos <= (Middleware::SCREEN_WIDTH + width) && y_pos >= 0 && y_pos <= Middleware::SCREEN_HEIGHT + height)
 	{
-		x_pos++;
-		if (Middleware::nSpeedCount % 5 == 0) {
-			int random = rand() % 2;
-			if (random == 0) y_pos++;
-			else y_pos--;
-		}
+		y_pos++;
 	}
 	else
 		alive = false;
