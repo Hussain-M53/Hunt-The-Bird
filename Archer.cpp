@@ -4,9 +4,9 @@
 using namespace std;
 
 
-Archer::Archer(SDL_Texture* texture, int x, int y) :GameObject(texture, x, y) {
+Archer::Archer(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y) {
 	src_rect = { 0,0,120,120 };
-	dst_rect = { x,y,120,120 };
+	dst_rect = { int(x),int(y),120,120 };
 	name = "archer";
 }
 
@@ -33,6 +33,12 @@ void Archer::setState(string state)
 	if (state == "movingright") {
 		flip = SDL_FLIP_NONE;
 		src_rect.x = 720;
+	}
+	if (state == "dead") {
+		src_rect.x = 3120;
+	}
+	if (state == "shoot") {
+		src_rect.x = 2400;
 	}
 	this->state = state;
 }

@@ -7,7 +7,7 @@
 
 class Cloud : public GameObject {
 public:
-	Cloud(SDL_Texture* texture, int x, int y);
+	Cloud(SDL_Texture* texture, double x, double y);
 	void move();
 };
 

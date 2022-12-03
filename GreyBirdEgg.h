@@ -8,6 +8,6 @@
 
 class GreyBirdEgg : public Egg {
 public:
-	GreyBirdEgg(SDL_Texture* texture, int x, int y);
+	GreyBirdEgg(SDL_Texture* texture, double x, double y);
 };
 

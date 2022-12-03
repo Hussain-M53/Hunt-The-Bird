@@ -18,6 +18,8 @@ private:
 	SDL_Window* window;
 
 public:
+	double static playerX;
+	double static playerY;
 	static Game* getInstance();
 	void loadMedia();
 	void initialize(const char* title, int x, int y, int width, int height, bool fullscreen);

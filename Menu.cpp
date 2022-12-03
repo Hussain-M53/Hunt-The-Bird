@@ -72,7 +72,7 @@ string Menu::showMenu() {
 	Mix_HaltMusic();
 	loadMedia();
 	SDL_Texture* buttonTexture = Middleware::LoadTexture("Images/buttons.png");
-	TTF_Font* SpaceFont = TTF_OpenFont("Fonts/debug_font.otf", 50);
+	TTF_Font* SpaceFont = TTF_OpenFont("Fonts/debug_font.otf", 40);
 	TTF_Font* SpaceFontLarge = TTF_OpenFont("Fonts/debug_font.otf", 100);
 
 	SDL_Rect gSpriteClips[2];
@@ -94,17 +94,17 @@ string Menu::showMenu() {
 	SDL_Rect rect = { (Middleware::SCREEN_WIDTH / 2) - (titlePoint.x / 2),(Middleware::SCREEN_HEIGHT / 4) - (titlePoint.y / 2),titlePoint.x,titlePoint.y };
 
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(SpaceFont, "New", Color);
-	SDL_Rect play_rect = { (Middleware::SCREEN_WIDTH / 2) - 244,((Middleware::SCREEN_HEIGHT - 130) / 2) + 54,100,100 };
+	SDL_Rect play_rect = { (Middleware::SCREEN_WIDTH / 2) - 244,((Middleware::SCREEN_HEIGHT - 150) / 2) + 54,100,100 };
 	SDL_Texture* playTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);
 	SDL_QueryTexture(playTexture, NULL, NULL, &play_rect.w, &play_rect.h);
 
 	surfaceMessage = TTF_RenderText_Solid(SpaceFont, "Exit", Color);
-	SDL_Rect exit_rect = { (Middleware::SCREEN_WIDTH / 2) - 30,((Middleware::SCREEN_HEIGHT - 130) / 2) + 54,100,100 };
+	SDL_Rect exit_rect = { (Middleware::SCREEN_WIDTH / 2) - 30,((Middleware::SCREEN_HEIGHT - 150) / 2) + 54,100,100 };
 	SDL_Texture* exitTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);
 	SDL_QueryTexture(exitTexture, NULL, NULL, &exit_rect.w, &exit_rect.h);
 
 	surfaceMessage = TTF_RenderText_Solid(SpaceFont, "Continue", Color);
-	SDL_Rect continue_rect = { (Middleware::SCREEN_WIDTH / 2) + 154,((Middleware::SCREEN_HEIGHT - 130) / 2) + 54,100,100 };
+	SDL_Rect continue_rect = { (Middleware::SCREEN_WIDTH / 2) + 145,((Middleware::SCREEN_HEIGHT - 150) / 2) + 54,100,100 };
 	SDL_Texture* continueTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);
 	SDL_QueryTexture(continueTexture, NULL, NULL, &continue_rect.w, &continue_rect.h);
 

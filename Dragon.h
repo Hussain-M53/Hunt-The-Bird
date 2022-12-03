@@ -8,6 +8,6 @@
 
 class Dragon : public Bird {
 public:
-	Dragon(SDL_Texture* texture, int x, int y);
+	Dragon(SDL_Texture* texture, double x, double y);
 };
 

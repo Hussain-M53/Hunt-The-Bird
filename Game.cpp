@@ -13,6 +13,7 @@
 #include "Dragon.h"
 #include "Cloud.h"
 #include "Sun.h"
+#include "Bow.h"
 
 using namespace std;
 
@@ -33,11 +34,17 @@ SDL_Texture* DragonTexture;
 SDL_Texture* SunTexture;
 SDL_Texture* BackgroundTexture;
 
+SDL_Texture* BowTexture;
+
 Mix_Music* gameMusic = NULL;
 Mix_Chunk* explosion = NULL;
 Mix_Chunk* missileShoot = NULL;
 Mix_Chunk* laserShoot = NULL;
 Mix_Chunk* enemyShoot = NULL;
+
+double Game::playerX = 0;
+double Game::playerY = 0;
+GameObject* bow;
 
 SDL_Rect backgroundRect = { 0,0,Middleware::SCREEN_WIDTH,Middleware::SCREEN_HEIGHT };
 
@@ -166,6 +173,7 @@ void Game::loadMedia() {
 	RedEggTexture = Middleware::LoadTexture("Images/red_egg.png");
 	YellowEggTexture = Middleware::LoadTexture("Images/yellow_egg.png");
 	EagleEggTexture = Middleware::LoadTexture("Images/.png");
+	BowTexture = Middleware::LoadTexture("Images/bow.png");
 
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
@@ -185,7 +193,7 @@ void Game::handleEvents() {
 		if (event.type == SDL_QUIT) {
 			isRunning = false;
 		}
-		else if (event.type == SDL_KEYDOWN) {
+		if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.sym) {
 			case SDLK_LEFT:
 				if (archer->src_rect.x < 720) {
@@ -196,24 +204,24 @@ void Game::handleEvents() {
 				if (archer->src_rect.x < 720) {
 					archer->setState("movingright");
 				}
-				break;
-			case SDLK_SPACE:
-				break;
-			case SDLK_b:
-				cout << "Pressed B" << endl;
-				break;
 			}
 		}
-		else if (event.type == SDL_KEYUP) {
+		if (event.type == SDL_KEYUP) {
 			switch (event.key.keysym.sym) {
 			case SDLK_LEFT:
 				archer->setState("still");
-				archer->src_rect.x = 0;
 				break;
 			case SDLK_RIGHT:
 				archer->setState("still");
-				archer->src_rect.x = 0;
 				break;
+			}
+		}
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			if (SDL_BUTTON_LEFT == event.button.button) {
+				bow = new Bow(BowTexture,archer->x_pos,archer->y_pos,x,y);
+				archer->setState("shoot");
 			}
 		}
 	}
@@ -253,6 +261,24 @@ void Game ::handleGameChanges() {
 					archer->src_rect.x += 120;
 				}
 			}
+			if (archer->getState() == "dead") {
+				if (archer->src_rect.x == 3600) {
+					archer->src_rect.x = 3600;
+					//isRunning = false;
+				}
+				else {
+					archer->src_rect.x += 120;
+				}
+			}
+			if (archer->getState() == "shoot") {
+				if (archer->src_rect.x == 3000) {
+					egg_list.insert(egg_list.begin(), bow);
+					archer->setState("still");
+				}
+				else {
+					archer->src_rect.x += 120;
+				}
+			}
 		}
 	}
 	
@@ -268,6 +294,7 @@ void Game ::handleGameChanges() {
 		int select_random = rand() % 3;
 		//will fix this later
 		int position_random = 100 + rand() % 200;
+		//int select_random = 3;
 
 		if (select_random == 0) {
 			GameObject* grey_bird = new GreyBird(GreyBirdTexture, -64, position_random);
@@ -298,7 +325,7 @@ void Game ::handleGameChanges() {
 
 			if (bird_list.at(i)->getName() == "grey_bird") {
 				GameObject* gameObject = bird_list.at(i);
-				GameObject* egg = new GreyBirdEgg(GreyEggTexture, gameObject->x_pos, gameObject->y_pos);
+				GameObject* egg = new GreyBirdEgg(GreyEggTexture, gameObject->x_pos+gameObject->getWidth()/2, gameObject->y_pos + gameObject->getHeight() / 2);
 				egg_list.insert(egg_list.begin(), egg);
 				Mix_PlayChannel(-1, enemyShoot, 0);
 			}
@@ -306,7 +333,7 @@ void Game ::handleGameChanges() {
 
 			if (bird_list.at(i)->getName() == "yellow_bird") {
 				GameObject* gameObject = bird_list.at(i);
-				GameObject* egg = new YellowBirdEgg(YellowEggTexture, gameObject->x_pos, gameObject->y_pos);
+				GameObject* egg = new YellowBirdEgg(YellowEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
 				egg_list.insert(egg_list.begin(), egg);
 				Mix_PlayChannel(-1, enemyShoot, 0);
 			}
@@ -314,7 +341,7 @@ void Game ::handleGameChanges() {
 
 			if (bird_list.at(i)->getName() == "red_bird") {
 				GameObject* gameObject = bird_list.at(i);
-				GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->x_pos, gameObject->y_pos);
+				GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
 				egg_list.insert(egg_list.begin(), egg);
 				Mix_PlayChannel(-1, enemyShoot, 0);
 			}
@@ -331,14 +358,15 @@ void Game ::handleGameChanges() {
 			if (checkCollision(gameObject, archer)) {
 				gameObject->setAliveToFalse();
 				archer->setAliveToFalse();
-				isRunning = false;
+				archer->setState("dead");
 			}
 		}
 	}
 
 
 
-
+	playerX = archer->x_pos;
+	playerY = archer->y_pos;
 
 
 	//--------------------------------move-----------------------------------------

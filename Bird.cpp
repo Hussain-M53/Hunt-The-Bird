@@ -6,7 +6,7 @@
 using namespace std;
 
 
-Bird::Bird(SDL_Texture* texture, int x, int y) :GameObject(texture, x, y) {
+Bird::Bird(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y) {
 	name = "bird";
 }
 

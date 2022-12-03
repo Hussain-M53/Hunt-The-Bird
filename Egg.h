@@ -6,8 +6,10 @@
 #include <stdio.h>
 
 class Egg : public GameObject {
+	double friction = 1.01;
+	double ty = 1;
 public:
-	Egg(SDL_Texture* texture, int x, int y);
+	Egg(SDL_Texture* texture, double x, double y);
 	void move();
 };
 

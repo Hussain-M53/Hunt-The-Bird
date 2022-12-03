@@ -8,5 +8,5 @@
 
 class EagleBirdEgg : public Egg {
 public:
-	EagleBirdEgg(SDL_Texture* texture, int x, int y);
+	EagleBirdEgg(SDL_Texture* texture, double x, double y);
 };

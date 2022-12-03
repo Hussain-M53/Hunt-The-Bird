@@ -7,8 +7,8 @@
 using namespace std;
 
 
-Eagle::Eagle(SDL_Texture* texture, int x, int y) :Bird(texture, x, y) {
+Eagle::Eagle(SDL_Texture* texture, double x, double y) :Bird(texture, x, y) {
 	src_rect = { 0,0,100,100 };
-	dst_rect = { x,y,100,100 };
+	dst_rect = { int(x),int(y),100,100 };
 	name = "eagle";
 }

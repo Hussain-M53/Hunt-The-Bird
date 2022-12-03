@@ -7,7 +7,7 @@
 
 class Bird : public GameObject {
 public:
-	Bird(SDL_Texture* texture, int x, int y);
+	Bird(SDL_Texture* texture, double x, double y);
 	void move();
 };
 

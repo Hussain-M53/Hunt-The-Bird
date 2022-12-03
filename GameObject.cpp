@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "Middleware.h"
 
-GameObject::GameObject(SDL_Texture* texture, int x, int y){
+GameObject::GameObject(SDL_Texture* texture, double x, double y){
 	this->texture = texture;
 	this->name = "gameObject";
 	this->alive = true;
@@ -11,7 +11,7 @@ GameObject::GameObject(SDL_Texture* texture, int x, int y){
 	this->state = "still";
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 	src_rect = { 0,0,width,height};
-	dst_rect = { x,y,width,height };
+	dst_rect = { (int)x,(int)y,width,height };
 	flip = SDL_FLIP_NONE;
 }
 GameObject::~GameObject(){}
@@ -21,11 +21,11 @@ void GameObject::setAliveToFalse() {
 	alive = false;
 }
 
-int GameObject::getX(){
+double GameObject::getX(){
 	return x_pos;
 }
 
-int GameObject::getY(){
+double GameObject::getY(){
 	return y_pos;
 }
 
@@ -66,8 +66,8 @@ void GameObject::setPreviousState(string state){}
 
 void GameObject::update() {
 
-	dst_rect.x = x_pos;
-	dst_rect.y = y_pos;
+	dst_rect.x = int(x_pos);
+	dst_rect.y = int(y_pos);
 }
 
 

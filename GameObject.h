@@ -20,19 +20,19 @@ protected:
 
 public:
 
-	int x_pos;
-	int y_pos;
+	double x_pos;
+	double y_pos;
 	SDL_Rect src_rect;
 	SDL_Rect dst_rect;
 
 	//constructors and destructors
-	GameObject(SDL_Texture* texture, int x, int y);
+	GameObject(SDL_Texture* texture, double x, double y);
 	~GameObject();
 
 	//getters and setters
 	void setAliveToFalse();
-	int getX();
-	int getY();
+	double getX();
+	double getY();
 	int getWidth();
 	int getHeight();
 	int getLives();

@@ -8,6 +8,6 @@
 
 class YellowBird : public Bird {
 public:
-	YellowBird(SDL_Texture* texture, int x, int y);
+	YellowBird(SDL_Texture* texture, double x, double y);
 };
 

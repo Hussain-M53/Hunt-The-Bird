@@ -6,7 +6,7 @@
 using namespace std;
 
 
-Sun::Sun(SDL_Texture* texture, int x, int y) :GameObject(texture, x, y) {
+Sun::Sun(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y) {
 	name = "sun";
 }
 
