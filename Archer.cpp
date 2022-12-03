@@ -8,10 +8,18 @@ Archer::Archer(SDL_Texture* texture, double x, double y) :GameObject(texture, x,
 	src_rect = { 0,0,120,120 };
 	dst_rect = { int(x),int(y),120,120 };
 	name = "archer";
+	width = 120;
+	height = 120;
 }
 
 
 void Archer::move() {
+	if (state == "movingright") {
+		x_pos++;
+	}
+	if (state == "movingleft") {
+		x_pos--;
+	}
 }
 
 string Archer::saveState() {
@@ -23,6 +31,8 @@ void Archer::setPreviousState(string state) {
 }
 void Archer::setState(string state)
 {
+	this->state = state;
+
 	if (state == "still") {
 		src_rect.x = 0;
 	}
@@ -37,8 +47,12 @@ void Archer::setState(string state)
 	if (state == "dead") {
 		src_rect.x = 3120;
 	}
-	if (state == "shoot") {
+	if (state == "shootright") {
+		flip = SDL_FLIP_NONE;
 		src_rect.x = 2400;
 	}
-	this->state = state;
+	if (state == "shootleft") {
+		src_rect.x = 2400;
+		flip = SDL_FLIP_HORIZONTAL;
+	}
 }

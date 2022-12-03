@@ -12,14 +12,13 @@ protected:
 	bool alive;
 	int width;
 	int height;
-	int lives;
 	double angle_in_radian;
 	double angle_in_degree;
 	string state;
 	SDL_RendererFlip flip;
 
 public:
-
+	int lives;
 	double x_pos;
 	double y_pos;
 	SDL_Rect src_rect;
@@ -39,6 +38,7 @@ public:
 	bool getAlive();
 	string getName();
 	string getState();
+	double getAngleInDegrees();
 	virtual void setState(string state);
 	SDL_Rect getDstRect();
 

@@ -16,6 +16,10 @@ private:
 	static Game* instance;
 	bool isRunning;
 	SDL_Window* window;
+	int game_score;
+	int bow_count;
+	int prev_score, prev_bows;
+	bool isEnemyCreated;
 
 public:
 	double static playerX;
@@ -27,6 +31,8 @@ public:
 	string saveGameStateVariables();
 	bool checkCollision(GameObject* game_object_one,GameObject* game_object_two);
 	void handleGameChanges();
+	SDL_Point getSize(SDL_Texture* texture);
+	void updateScore();
 	void playGameMusic();
 	void resetGame();
 	void initializeGameStart();

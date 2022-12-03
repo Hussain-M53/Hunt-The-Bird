@@ -50,6 +50,11 @@ string GameObject::getState()
 {
 	return state;
 }
+
+double GameObject::getAngleInDegrees() {
+	return angle_in_degree;
+}
+
 void GameObject::setState(string state)
 {
 	this->state = state;
