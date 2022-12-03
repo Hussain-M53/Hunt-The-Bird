@@ -133,6 +133,51 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 	}
 }
 
+//void Game::updateScore() {
+//	TTF_Font* SpaceFont = TTF_OpenFont("Font/SpaceMission-rgyw9.otf", 24);
+//	SDL_Rect Missile_rect = { 570,10,100,100 };
+//	SDL_Rect Health_rect = { 300,10,100,100 };
+//	SDL_Rect Score_rect = { 30,10,100,100 };
+//	SDL_Color Color = { 255, 255, 255 ,255 };
+//	stringstream ss;
+//	string display_missile;
+//	ss << missile_limit;
+//	ss >> display_missile;
+//
+//	string missilesLeftMessage = "Missiles Left: " + display_missile;
+//	surfaceMessage = TTF_RenderText_Solid(SpaceFont, missilesLeftMessage.c_str(), Color);
+//	Missiles_Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+//
+//	SDL_QueryTexture(Missiles_Message, NULL, NULL, &Missile_rect.w, &Missile_rect.h);
+//
+//	stringstream ss2;
+//	string display_score;
+//	ss2 << score;
+//	ss2 >> display_score;
+//
+//	string displayMessageScore = "Your Score: " + display_score;
+//	surfaceMessage = TTF_RenderText_Solid(SpaceFont, displayMessageScore.c_str(), Color);
+//	Score_Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+//	SDL_QueryTexture(Score_Message, NULL, NULL, &Score_rect.w, &Score_rect.h);
+//
+//	if (boss_enemy != nullptr && isEnemyCreated) {
+//
+//		stringstream ss3;
+//		string display_boss_health;
+//		ss3 << boss_enemy->count_lives;
+//		ss3 >> display_boss_health;
+//
+//		string displayBossHealth = "Boss Hits Left: " + display_boss_health;
+//		surfaceMessage = TTF_RenderText_Solid(SpaceFont, displayBossHealth.c_str(), Color);
+//		HealthMessage = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+//
+//
+//
+//		SDL_QueryTexture(HealthMessage, NULL, NULL, &Health_rect.w, &Health_rect.h);
+//	}
+//
+//}
+
 void Game::initializeGameStart() {
 	playGameMusic();
 	isRunning = true;
@@ -323,7 +368,7 @@ void Game ::handleGameChanges() {
 	{
 		for (int i = 0; i < bird_list.size(); i++) {
 
-			if (bird_list.at(i)->getName() == "grey_bird") {
+			if (bird_list.at(i)->getName() == "grey_bird" && bird_list.at(i)->getState() != "die") {
 				GameObject* gameObject = bird_list.at(i);
 				GameObject* egg = new GreyBirdEgg(GreyEggTexture, gameObject->x_pos+gameObject->getWidth()/2, gameObject->y_pos + gameObject->getHeight() / 2);
 				egg_list.insert(egg_list.begin(), egg);
@@ -331,7 +376,7 @@ void Game ::handleGameChanges() {
 			}
 
 
-			if (bird_list.at(i)->getName() == "yellow_bird") {
+			if (bird_list.at(i)->getName() == "yellow_bird" && bird_list.at(i)->getState() != "die") {
 				GameObject* gameObject = bird_list.at(i);
 				GameObject* egg = new YellowBirdEgg(YellowEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
 				egg_list.insert(egg_list.begin(), egg);
@@ -339,7 +384,7 @@ void Game ::handleGameChanges() {
 			}
 
 
-			if (bird_list.at(i)->getName() == "red_bird") {
+			if (bird_list.at(i)->getName() == "red_bird" && bird_list.at(i)->getState() != "die") {
 				GameObject* gameObject = bird_list.at(i);
 				GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
 				egg_list.insert(egg_list.begin(), egg);
@@ -361,7 +406,28 @@ void Game ::handleGameChanges() {
 				archer->setState("dead");
 			}
 		}
+
+		//Collision with enemy with usermissile
+		if (egg_list.at(b)->getName() == "bow") {
+			GameObject* bowObject = egg_list.at(b);
+
+			for (int n = 0; n < bird_list.size(); n++)
+			{
+				GameObject* gameObject = bird_list.at(n);
+				if (checkCollision(bowObject, gameObject)) {
+
+					if (bird_list.at(n)->getName() == "red_bird" || bird_list.at(n)->getName() == "grey_bird" ||
+						bird_list.at(n)->getName() == "yellow_bird") {
+						bowObject->setAliveToFalse();
+						gameObject->setState("die");
+						Mix_PlayChannel(-1, explosion, 0);
+					}
+				}
+			}
+		}
+
 	}
+
 
 
 

@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 class Bird : public GameObject {
+	double friction = 1.01;
+	double ty = 1;
 public:
 	Bird(SDL_Texture* texture, double x, double y);
 	void move();
