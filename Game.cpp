@@ -298,14 +298,15 @@ int Game::handleLevelTwoChanges() {
 		Middleware::animate(bird_list);
 	}
 
-	if (Middleware::nSpeedCount % 10 == 0) {
 
+	if (Middleware::nSpeedCount % 10 == 0) {
 		bool animation_complete = archer->animate();
-		if (animation_complete && bow_count > 0 && archer->getState() == "shootright" || archer->getState() == "shootleft") {
+		if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
 			egg_list.insert(egg_list.begin(), bow);
 			archer->setState("still");
 		}
 	}
+
 
 
 	//--------------------------------insert-----------------------------------------
@@ -383,7 +384,7 @@ int Game ::handleLevelOneChanges() {
 	if (Middleware::nSpeedCount % 10 == 0) {
 
 			bool animation_complete = archer->animate();
-			if (animation_complete && bow_count > 0 && archer->getState() == "shootright" || archer->getState()=="shootleft") {
+			if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
 				egg_list.insert(egg_list.begin(), bow);
 				archer->setState("still");
 			}

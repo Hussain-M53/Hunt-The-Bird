@@ -53,7 +53,7 @@ void Eagle::move() {
 
 bool Eagle::animate(){
 
-		if (src_rect.x >= 15 * width) {
+		if (src_rect.x >= 14 * width) {
 			src_rect.x = 0;
 		}
 		else {

@@ -37,21 +37,21 @@ void Archer::setState(string state)
 	}
 	if (state == "movingleft") {
 		flip = SDL_FLIP_HORIZONTAL;
-		src_rect.x = 720;
+		src_rect.x = 6 * width;
 	}
 	if (state == "movingright") {
 		flip = SDL_FLIP_NONE;
-		src_rect.x = 720;
+		src_rect.x = 6 * width;
 	}
 	if (state == "dead") {
-		src_rect.x = 3120;
+		src_rect.x = 26 * width;
 	}
 	if (state == "shootright") {
 		flip = SDL_FLIP_NONE;
-		src_rect.x = 2400;
+		src_rect.x = 20  *width;
 	}
 	if (state == "shootleft") {
-		src_rect.x = 2400;
+		src_rect.x = 20 * width;
 		flip = SDL_FLIP_HORIZONTAL;
 	}
 	this->state = state;

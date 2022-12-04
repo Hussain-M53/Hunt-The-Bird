@@ -8,6 +8,12 @@ using namespace std;
 
 Cloud::Cloud(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y) {
 	name = "cloud";
+	width = 150;
+	height = 150;
+	int randomCloudSelection = rand() % 8;
+	src_rect = { randomCloudSelection*width,0,width,height };
+	dst_rect = { int(x),int(y),width,height };
+	
 }
 
 
