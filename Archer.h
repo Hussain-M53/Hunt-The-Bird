@@ -12,5 +12,7 @@ public:
 	string saveState();
 	void setPreviousState(string state);
 	void setState(string state);
+	bool animate();
+
 };
 

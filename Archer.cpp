@@ -31,7 +31,6 @@ void Archer::setPreviousState(string state) {
 }
 void Archer::setState(string state)
 {
-	this->state = state;
 
 	if (state == "still") {
 		src_rect.x = 0;
@@ -55,4 +54,42 @@ void Archer::setState(string state)
 		src_rect.x = 2400;
 		flip = SDL_FLIP_HORIZONTAL;
 	}
+	this->state = state;
+}
+
+bool Archer::animate() {
+		if (state == "still") {
+			if (src_rect.x == 5 * width) {
+				src_rect.x = 0;
+			}
+			else {
+				src_rect.x += width;
+			}
+		}
+		if (state == "movingleft" || state == "movingright") {
+			if (src_rect.x == 19 * width) {
+				src_rect.x = 6 * width;
+			}
+			else {
+				src_rect.x += width;
+			}
+		}
+		if (state == "dead") {
+			if (src_rect.x == 30 * width) {
+				src_rect.x = 30 * width;
+				//isRunning = false;
+			}
+			else {
+				src_rect.x += width;
+			}
+		}
+		if (state == "shootright" || state == "shootleft") {
+			if (src_rect.x == 24 * width) {
+				return true;
+			}
+			else {
+				src_rect.x += width;
+			}
+		}
+		return false;
 }

@@ -14,6 +14,8 @@ int main(int argc, char* args[])
 	const int frame_delay = 1000 / FPS;
 	Uint32 frame_start = 0;
 	int frame_time = 0;
+	int level = 1;
+	
 
 	Game* game = Game::getInstance();
 	Menu* menu = Menu::getInstance();
@@ -29,7 +31,15 @@ int main(int argc, char* args[])
 			frame_start = SDL_GetTicks();
 
 			game->handleEvents();
-			game->handleGameChanges();
+			if (level == 1) {
+				level = game->handleLevelOneChanges();
+				if (level == 2) {
+					game->startLevelTwo();
+				}
+			}
+			else
+				level =game->handleLevelTwoChanges();
+			
 			game->render();
 
 			frame_time = SDL_GetTicks();

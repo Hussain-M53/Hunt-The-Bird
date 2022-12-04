@@ -11,7 +11,7 @@ Eagle::Eagle(SDL_Texture* texture, double x, double y) :Bird(texture, x, y) {
 	src_rect = { 0,0,100,100 };
 	dst_rect = { int(x),int(y),100,100 };
 	name = "eagle";
-	lives = 10;
+	lives = 1;
 	moveRight = true;
 	moveDown = false;
 	width = 100;
@@ -49,4 +49,15 @@ void Eagle::move() {
 			}
 		}
 	}
+}
+
+bool Eagle::animate(){
+
+		if (src_rect.x >= 15 * width) {
+			src_rect.x = 0;
+		}
+		else {
+			src_rect.x += width;
+		}
+	return false;
 }

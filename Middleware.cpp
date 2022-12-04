@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include "Game.h"
+#include "Explosion.h"
 
 SDL_Renderer* Middleware::renderer = nullptr;
 int Middleware::nSpeedCount=0;
@@ -71,62 +72,7 @@ void Middleware::move(vector<GameObject*>& list)
 void Middleware::animate(vector<GameObject*>& list) {
 	for (int i = 0; i < list.size(); i++) {
 		GameObject* gameObject = list.at(i);
-		if (gameObject->getName() == "grey_bird" || gameObject->getName() == "yellow_bird") {
-			if (gameObject->getState() == "die") {
-				gameObject->src_rect.x = 0;
-			}
-			else if (gameObject->src_rect.x == 192) {
-				gameObject->src_rect.x = 0;
-			}
-			else {
-				gameObject->src_rect.x += 64;
-			}
-		}
-		if (gameObject->getName() == "red_bird") {
-			if (gameObject->getState() == "die") {
-				gameObject->src_rect.x = 0;
-			}
-			if (gameObject->src_rect.x == 320) {
-				gameObject->src_rect.x = 0;
-			}
-			else {
-				gameObject->src_rect.x += 64;
-			}
-		}
-		if (gameObject->getName() == "dragon") {
-			if (gameObject->src_rect.x >= 2200) {
-				gameObject->src_rect.x = 0;
-			}
-			else {
-				gameObject->src_rect.x += 200;
-			}
-		}
-		if (gameObject->getName() == "archer") {
-			if (gameObject->getState() == "still") {
-				if (gameObject->src_rect.x == 600 ) {
-					gameObject->src_rect.x = 0;
-				}
-				else {
-					gameObject->src_rect.x += 120;
-				}
-			}
-			if (gameObject->getState() == "moving") {
-				if (gameObject->src_rect.x == 2280) {
-					gameObject->src_rect.x = 720;
-				}
-				else {
-					gameObject->src_rect.x += 120;
-				}
-			}
-		}
-		if (gameObject->getName() == "eagle") {
-			if (gameObject->src_rect.x >= 1500) {
-				gameObject->src_rect.x = 0;
-			}
-			else {
-				gameObject->src_rect.x += 100;
-			}
-		}
+		gameObject->animate();
 	}
 }
 
@@ -156,6 +102,16 @@ string Middleware::intToString(int value) {
 	stringstream ss;
 	ss << value;
 	return ss.str();
+}
+
+void Middleware::createExplosion(GameObject* object, SDL_Texture* ExplosionTexture, vector<GameObject*>& explosion_list, Mix_Chunk* sf_explosion) {
+	for (int i = 0; i < 15; i++) {
+		double randomX = rand() % object->dst_rect.w;
+		double randomY = rand() % ((object->dst_rect.h / 2) - 15);
+		GameObject* explosion = new Explosion(ExplosionTexture, object->x_pos + ((object->dst_rect.w) / 2) - randomX, object->y_pos + ((object->dst_rect.h) / 2) - randomY);
+		explosion_list.insert(explosion_list.begin(), explosion);
+		Mix_PlayChannel(-1, sf_explosion, 0);
+	}
 }
 
 

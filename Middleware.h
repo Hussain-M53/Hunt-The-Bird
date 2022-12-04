@@ -10,7 +10,7 @@ public:
 	static const int SCREEN_WIDTH = 900;
 	static const int SCREEN_HEIGHT = 700;
 	static const int LEVEL_ONE_BOSS_SCORE = 100;
-	static const int LEVEL_TWO_BOSS_SCORE = 5000;
+	static const int LEVEL_TWO_BOSS_SCORE = 500;
 	static SDL_Renderer* renderer;
 	static int nSpeedCount;
 	static SDL_Texture* LoadTexture(const char* filename);
@@ -23,5 +23,6 @@ public:
 	static void cleanEntireList(vector<GameObject*>& list);
 	static void move(vector<GameObject*>& list);
 	static void animate(vector<GameObject*>& list);
+	static void createExplosion(GameObject* object, SDL_Texture* ExplosionTexture, vector<GameObject*>& explosion_list, Mix_Chunk* sf_explosion);
 
 };

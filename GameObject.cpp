@@ -69,6 +69,10 @@ string GameObject::saveState(){
 }
 void GameObject::setPreviousState(string state){}
 
+bool GameObject::animate(){
+	return false;
+}
+
 void GameObject::update() {
 
 	dst_rect.x = int(x_pos);

@@ -35,12 +35,13 @@ public:
 	int getWidth();
 	int getHeight();
 	int getLives();
-	bool getAlive();
+	virtual bool getAlive();
 	string getName();
 	string getState();
 	double getAngleInDegrees();
 	virtual void setState(string state);
 	SDL_Rect getDstRect();
+	virtual bool animate();
 
 	//related to saving state
 	virtual string saveState();

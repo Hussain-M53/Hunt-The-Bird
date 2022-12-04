@@ -20,6 +20,7 @@ private:
 	int bow_count;
 	int prev_score, prev_bows;
 	bool isEnemyCreated;
+	int level_number;
 
 public:
 	double static playerX;
@@ -27,10 +28,14 @@ public:
 	static Game* getInstance();
 	void loadMedia();
 	void initialize(const char* title, int x, int y, int width, int height, bool fullscreen);
+	void startLevelTwo();
+	void detectCollisions();
+	void insertEggs();
 	void setPreviousGameState(string state);
-	string saveGameStateVariables();
+	int saveGameStateVariables();
 	bool checkCollision(GameObject* game_object_one,GameObject* game_object_two);
-	void handleGameChanges();
+	int handleLevelOneChanges();
+	int handleLevelTwoChanges();
 	SDL_Point getSize(SDL_Texture* texture);
 	void updateScore();
 	void playGameMusic();

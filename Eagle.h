@@ -12,5 +12,6 @@ class Eagle : public Bird {
 public:
 	Eagle(SDL_Texture* texture, double x, double y);
 	void move();
+	bool animate();
 };
 
