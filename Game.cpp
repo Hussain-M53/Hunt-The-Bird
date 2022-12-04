@@ -30,6 +30,7 @@ SDL_Texture* GreyEggTexture;
 SDL_Texture* RedEggTexture;
 SDL_Texture* YellowEggTexture;
 SDL_Texture* EagleEggTexture;
+SDL_Texture* DragonFireTexture;
 
 SDL_Texture* CloudTexture;
 SDL_Texture* DragonTexture;
@@ -39,9 +40,10 @@ SDL_Texture* BackgroundTexture;
 SDL_Texture* BowTexture;
 SDL_Texture* scoreTexture;
 SDL_Texture* BowsLeftTexture;
+SDL_Texture* LevelNumberTexture;
 SDL_Texture* Background_Level_Two_Texture;
 
-SDL_Rect Bow_Count_Rect, Score_Rect;
+SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect;
 
 Mix_Music* gameMusic = NULL;
 Mix_Chunk* explosion = NULL;
@@ -201,6 +203,7 @@ void Game::loadMedia() {
 	EagleEggTexture = Middleware::LoadTexture("Images/eagle_egg.png");
 	BowTexture = Middleware::LoadTexture("Images/bow.png");
 	ExplosionTexture = Middleware::LoadTexture("Images/explosion.png");
+	DragonFireTexture = Middleware::LoadTexture("Images/dragon_fire.png");
 
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
@@ -231,6 +234,12 @@ void Game::updateScore() {
 	scoreTexture = SDL_CreateTextureFromSurface(Middleware::renderer, scoreSurface);
 	SDL_Point ScoreTitlePoint = getSize(scoreTexture);
 	Score_Rect = { Middleware::SCREEN_WIDTH - ScoreTitlePoint.x - BowTitlePoint.x - 60,10,ScoreTitlePoint.x,ScoreTitlePoint.y };
+
+	string level = "Level #" + Middleware::intToString(level_number);
+	SDL_Surface* levelSurface = TTF_RenderText_Solid(SpaceFont, level.c_str(), Color);
+	LevelNumberTexture = SDL_CreateTextureFromSurface(Middleware::renderer, levelSurface);
+	SDL_Point LevelTitlePoint = getSize(LevelNumberTexture);
+	Level_Number_Rect = { Middleware::SCREEN_WIDTH - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 90,10,LevelTitlePoint.x,LevelTitlePoint.y };
 
 
 }
@@ -578,6 +587,7 @@ void Game::render() {
 
 	SDL_RenderCopy(Middleware::renderer, scoreTexture, NULL, &Score_Rect);
 	SDL_RenderCopy(Middleware::renderer, BowsLeftTexture, NULL, &Bow_Count_Rect);
+	SDL_RenderCopy(Middleware::renderer, LevelNumberTexture, NULL, &Level_Number_Rect);
 	SDL_RenderPresent(Middleware::renderer);
 }
 

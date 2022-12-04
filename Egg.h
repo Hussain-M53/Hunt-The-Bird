@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 class Egg : public GameObject {
-	double friction = 1.001;
+	double friction = 1.005;
 	double ty = 1;
 public:
 	Egg(SDL_Texture* texture, double x, double y);
