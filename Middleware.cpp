@@ -103,7 +103,7 @@ void Middleware::createExplosion(GameObject* object, SDL_Texture* ExplosionTextu
 	for (int i = 0; i < 15; i++) {
 		double randomX = rand() % object->dst_rect.w;
 		double randomY = rand() % ((object->dst_rect.h / 2) - 15);
-		GameObject* explosion = new Explosion(ExplosionTexture, object->x_pos + ((object->dst_rect.w) / 2) - randomX, object->y_pos + ((object->dst_rect.h) / 2) - randomY);
+		GameObject* explosion = new Explosion(ExplosionTexture, object->getX() + ((object->dst_rect.w) / 2) - randomX, object->getY() + ((object->dst_rect.h) / 2) - randomY);
 		explosion_list.insert(explosion_list.begin(), explosion);
 		Mix_PlayChannel(-1, sf_explosion, 0);
 	}
