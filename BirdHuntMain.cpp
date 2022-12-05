@@ -40,6 +40,7 @@ int main(int argc, char* args[])
 			else
 				level =game->handleLevelTwoChanges();
 			
+			game->update();
 			game->render();
 
 			frame_time = SDL_GetTicks();

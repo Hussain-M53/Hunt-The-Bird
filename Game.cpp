@@ -15,6 +15,7 @@
 #include "Sun.h"
 #include "Bow.h"
 #include "Explosion.h"
+#include "DragonFire.h"
 
 using namespace std;
 
@@ -158,7 +159,6 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 	}
 }
 
-
 void Game::initializeGameStart() {
 	playGameMusic();
 	isRunning = true;
@@ -177,13 +177,165 @@ void Game::initializeGameStart() {
 	}
 }
 
-void Game::setPreviousGameState(string state) {}
-//string Game::saveGameStateVariables() {
-//
-//	string state = "<GameState>\n";
-//	//state += "";
-//	return state.c_str();
-//}
+/*
+void Game::initializePreviousGameState(string state) {
+	istringstream f(state);
+	string line;
+	int counter = 0;
+	while (getline(f, line)) {
+		if (counter == 0) score = stoi(line);
+		if (counter == 1) count = stoi(line);
+		if (counter == 2) missile_limit = stoi(line);
+		if (counter == 3) game_time = stoi(line);
+		if (counter == 4) {
+			if (line == "1") isEnemyCreated = true;
+			else isEnemyCreated = false;
+		}
+		counter++;
+	}
+}
+
+
+void Game::getGamePreviousStates() {
+	string myText;
+	string Tag;
+	string state;
+
+	ifstream readFile("Game State/game_state.txt");
+
+	while (getline(readFile, myText)) {
+
+		// A game Tag is found
+		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
+			//Player
+			cout << Tag << endl;
+			cout << state << endl;
+			if (Tag == "<Player>") {
+				player->initializePreviousState(state);
+			}
+			//Enemies
+			if (Tag == "<Nimble>") {
+				GameObject* gameObject = new nimble(NimbleTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				enemy_list.insert(enemy_list.begin(), gameObject);
+			}
+			if (Tag == "<Ranger>") {
+				GameObject* gameObject = new Ranger(RangerTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				enemy_list.insert(enemy_list.begin(), gameObject);
+			}
+			//Bullets
+			if (Tag == "<RangerBullet>") {
+				GameObject* gameObject = new RangerBullet(RangerBulletTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<NimbleBullet>") {
+				GameObject* gameObject = new NimbleBullet(NimbleBulletTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<UserBullet>") {
+				GameObject* gameObject = new UserBullet(UserBulletTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<UserMissile>") {
+				GameObject* gameObject = new UserMissile(UserMissileTexture, 0, 0, SmokeTexture);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<TurretBulletOne>") {
+				GameObject* gameObject = new TurretBulletOne(TurretBulletOneTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<TurretBulletTwo>") {
+				GameObject* gameObject = new TurretBulletTwo(TurretBulletTwoTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<TurretBulletThree>") {
+				GameObject* gameObject = new TurretBulletThree(TurretBulletThreeTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+			if (Tag == "<TurretBulletFour>") {
+				GameObject* gameObject = new TurretBulletFour(TurretBulletFourTexture, 0, 0);
+				gameObject->initializePreviousState(state);
+				bullet_list.insert(bullet_list.begin(), gameObject);
+			}
+
+			if (Tag == "<BossEnemy>") {
+				boss_enemy = new BossEnemy(BossEnemyTexture, 0, 0, BossEnemyTurretOneTexture, BossEnemyTurretTwoTexture, BossEnemyTurretThreeTexture, BossEnemyTurretFourTexture);
+				boss_enemy->initializePreviousState(state);
+			}
+			if (Tag == "<BossEnemyTurretOne>") {
+				boss_enemy->initializeTurretOnePreviousState(state);
+			}
+			if (Tag == "<BossEnemyTurretTwo>") {
+				boss_enemy->initializeTurretTwoPreviousState(state);
+			}
+			if (Tag == "<BossEnemyTurretThree>") {
+				boss_enemy->initializeTurretThreePreviousState(state);
+			}
+			if (Tag == "<BossEnemyTurretFour>") {
+				boss_enemy->initializeTurretFourPreviousState(state);
+			}
+			if (Tag == "<GameState>") {
+				initializePreviousGameState(state);
+			}
+			Tag = myText;
+			state = "";
+			continue;
+		}
+		state += myText + "\n";
+	}
+}
+
+string Game::saveGameStateVariables() {
+
+
+	string state = "<GameState>\n";
+	state += Middleware::intToString(score) + "\n";
+	state += Middleware::intToString(count) + "\n";
+	state += Middleware::intToString(missile_limit) + "\n";
+	state += Middleware::intToString(game_time) + "\n";
+	state += Middleware::boolToString(isEnemyCreated) + "\n";
+	return state.c_str();
+}
+
+void Game::saveStatesinFile() {
+
+	//Open File
+	ofstream file;
+	file.open("Game State/game_state.txt");
+
+	//save Player State
+	if (player != nullptr) {
+		string getPlayerState = player->saveState();
+		file << getPlayerState;
+	}
+	//save Boss State
+	if (boss_enemy != nullptr) {
+		string getBossState = boss_enemy->saveState();
+		file << getBossState;
+	}
+
+	//save List States
+	file << Middleware::getListStates(enemy_list);
+	file << Middleware::getListStates(bullet_list);
+
+	// save Game States
+	file << saveGameStateVariables();
+
+	//add a closing Tag
+	file << "<>";
+	file.close();
+	//Close File
+}
+
+*/
 
 void Game::loadMedia() {
 	//load the textures
@@ -244,67 +396,13 @@ void Game::updateScore() {
 
 }
 
-void Game::handleEvents() {
-
-
-	SDL_Event event;
-
-	while (SDL_PollEvent(&event) != 0) {
-
-		if (event.type == SDL_QUIT) {
-			isRunning = false;
-		}
-		if (event.type == SDL_KEYDOWN) {
-			switch (event.key.keysym.sym) {
-			case SDLK_a:
-				if (archer->src_rect.x < 720) {
-					archer->setState("movingleft");
-				}
-				break;
-			case SDLK_d:
-				if (archer->src_rect.x < 720) {
-					archer->setState("movingright");
-				}
-			}
-		}
-		if (event.type == SDL_KEYUP) {
-			switch (event.key.keysym.sym) {
-			case SDLK_a:
-				archer->setState("still");
-				break;
-			case SDLK_d:
-				archer->setState("still");
-				break;
-			}
-		}
-		if (event.type == SDL_MOUSEBUTTONDOWN) {
-			int x, y;
-			SDL_GetMouseState(&x, &y);
-			if (SDL_BUTTON_LEFT == event.button.button) {
-				bow = new Bow(BowTexture,archer->x_pos,archer->y_pos,x,y);
-				bow_count--;
-				if (bow->getAngleInDegrees() >= -260 && bow->getAngleInDegrees() <= -115) {
-					archer->setState("shootright");
-				}
-				else archer->setState("shootleft");
-			}
-		}
-	}
-	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-	if (currentKeyStates[SDL_SCANCODE_A]) {
-		archer->move();
-	}
-	if (currentKeyStates[SDL_SCANCODE_D]) {
-		archer->move();
-	}
-	}
-
-int Game::handleLevelTwoChanges() {
+void Game::update() {
 	Middleware::nSpeedCount++;
 
 	//--------------------------------animate-----------------------------------------
 	if (Middleware::nSpeedCount % 30 == 0) {
 		Middleware::animate(bird_list);
+		Middleware::animate(egg_list);
 	}
 
 
@@ -316,31 +414,6 @@ int Game::handleLevelTwoChanges() {
 		}
 	}
 
-
-
-	//--------------------------------insert-----------------------------------------
-	if (Middleware::nSpeedCount % 1500 == 0) {
-		int random = rand() % 200;
-		GameObject* cloud = new Cloud(CloudTexture, -150, random);
-		ui_elements_list.insert(ui_elements_list.begin(), cloud);
-	}
-
-	if (Middleware::nSpeedCount % 800 == 0 && game_score < Middleware::LEVEL_TWO_BOSS_SCORE) {
-		int select_random = rand() % 1;
-		int position_random = 100 + rand() % 200;
-
-		if (select_random == 0) {
-			GameObject* red_bird = new RedBird(RedBirdTexture, -64, position_random);
-			bird_list.insert(bird_list.begin(), red_bird);
-		}
-
-	}
-	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isEnemyCreated == false) {
-		int position_random = 100 + rand() % 200;
-		GameObject* dragon = new Dragon(DragonTexture, -100, position_random);
-		bird_list.insert(bird_list.begin(), dragon);
-		isEnemyCreated = true;
-	}
 
 
 
@@ -378,27 +451,96 @@ int Game::handleLevelTwoChanges() {
 	Middleware::clean(egg_list);
 	Middleware::clean(ui_elements_list);
 	Middleware::clean(explosion_list);
+}
+
+void Game::handleEvents() {
+
+
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event) != 0) {
+
+		if (event.type == SDL_QUIT) {
+			isRunning = false;
+		}
+		if (event.type == SDL_KEYDOWN) {
+			switch (event.key.keysym.sym) {
+			case SDLK_a:
+				if (archer->src_rect.x < 720) {
+					archer->setState("movingleft");
+				}
+				break;
+			case SDLK_d:
+				if (archer->src_rect.x < 720) {
+					archer->setState("movingright");
+				}
+			}
+		}
+		if (event.type == SDL_KEYUP) {
+			switch (event.key.keysym.sym) {
+			case SDLK_a:
+				archer->setState("still");
+				break;
+			case SDLK_d:
+				archer->setState("still");
+				break;
+			}
+		}
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			if (SDL_BUTTON_LEFT == event.button.button) {
+				if (bow_count > 0) {
+					bow = new Bow(BowTexture, archer->x_pos, archer->y_pos, x, y);
+					bow_count--;
+					if (bow->getAngleInDegrees() >= -260 && bow->getAngleInDegrees() <= -115) {
+						archer->setState("shootright");
+					}
+					else archer->setState("shootleft");
+				}
+			}
+		}
+	}
+	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+	if (currentKeyStates[SDL_SCANCODE_A]) {
+		archer->move();
+	}
+	if (currentKeyStates[SDL_SCANCODE_D]) {
+		archer->move();
+	}
+	}
+
+int Game::handleLevelTwoChanges() {
+
+
+	//--------------------------------insert-----------------------------------------
+	if (Middleware::nSpeedCount % 1500 == 0) {
+		int random = rand() % 200;
+		GameObject* cloud = new Cloud(CloudTexture, -150, random);
+		ui_elements_list.insert(ui_elements_list.begin(), cloud);
+	}
+
+	if (Middleware::nSpeedCount % 800 == 0 && game_score < Middleware::LEVEL_TWO_BOSS_SCORE) {
+		int select_random = rand() % 1;
+		int position_random = 100 + rand() % 200;
+
+		if (select_random == 0) {
+			GameObject* red_bird = new RedBird(RedBirdTexture, -64, position_random);
+			bird_list.insert(bird_list.begin(), red_bird);
+		}
+
+	}
+	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isEnemyCreated == false) {
+		GameObject* dragon = new Dragon(DragonTexture, -200, 0);
+		bird_list.insert(bird_list.begin(), dragon);
+		isEnemyCreated = true;
+	}
+
 	return level_number;
 }
 
 int Game ::handleLevelOneChanges() {
 
-	Middleware::nSpeedCount++;
-
-	//--------------------------------animate-----------------------------------------
-	if (Middleware::nSpeedCount % 30 == 0) {
-		Middleware::animate(bird_list);
-	}
-
-	if (Middleware::nSpeedCount % 10 == 0) {
-
-			bool animation_complete = archer->animate();
-			if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
-				egg_list.insert(egg_list.begin(), bow);
-				archer->setState("still");
-			}
-	}
-	
 
 	//--------------------------------insert-----------------------------------------
 	if (Middleware::nSpeedCount % 1500 == 0) {
@@ -427,47 +569,6 @@ int Game ::handleLevelOneChanges() {
 		bird_list.insert(bird_list.begin(), eagle);
 		isEnemyCreated = true;
 	}
-
-
-
-	if (Middleware::nSpeedCount % 600 == 0)
-	{
-		insertEggs();
-	}
-
-	//--------------------------------------------------collision detection-----------------------------------------
-	detectCollisions();
-
-	//-------------------------------------------------updatescore+playerValues---------------------------------------
-	playerX = archer->x_pos;
-	playerY = archer->y_pos;
-	if (prev_score != game_score || prev_bows != bow_count) {
-		updateScore();
-	}
-	prev_score = game_score;
-	prev_bows = bow_count;
-
-	//Increase missile limit with time
-	if (Middleware::nSpeedCount % 500 == 0) {
-		if (bow_count < 10) {
-			bow_count++;
-		}
-	}
-
-
-
-	//--------------------------------move-----------------------------------------
-	Middleware::move(bird_list);
-	Middleware::move(egg_list);
-	Middleware::move(ui_elements_list);
-	Middleware::move(explosion_list);
-
-	
-	//--------------------------------clean-----------------------------------------
-	Middleware::clean(bird_list);
-	Middleware::clean(egg_list);
-	Middleware::clean(ui_elements_list);
-	Middleware::clean(explosion_list);
 	return level_number;
 }
 
@@ -475,7 +576,7 @@ void Game::detectCollisions() {
 	for (int b = 0; b < egg_list.size(); b++)
 	{
 
-		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg") {
+		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg" || egg_list.at(b)->getName()=="dragon_fire") {
 			GameObject* gameObject = egg_list.at(b);
 			if (checkCollision(gameObject, archer)) {
 				Middleware::createExplosion(gameObject, ExplosionTexture, explosion_list, explosion);
@@ -512,6 +613,18 @@ void Game::detectCollisions() {
 						gameObject->lives--;
 						game_score += 300;
 					}
+
+					if (bird_list.at(n)->getName() == "dragon") {
+						Middleware::createExplosion(gameObject, ExplosionTexture, explosion_list, explosion);
+						bowObject->setAliveToFalse();
+						if (gameObject->getLives() == 0) {
+							gameObject->setAliveToFalse();
+							level_number = 2;
+							isRunning = false;
+						}
+						gameObject->lives--;
+						game_score += 500;
+					}
 				}
 			}
 		}
@@ -546,6 +659,17 @@ void Game::insertEggs() {
 		if (gameObject->getName() == "red_bird" && gameObject->getState() != "die") {
 			GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
+			Mix_PlayChannel(-1, enemyShoot, 0);
+		}
+
+		if (gameObject->getName() == "dragon" && gameObject->getState() != "die") {
+
+			double dragon_fire_xpos;
+			if (gameObject->getState() == "movingright") dragon_fire_xpos = gameObject->x_pos + 10;
+			else dragon_fire_xpos = gameObject->x_pos + gameObject->getWidth() - 10;
+
+			GameObject* fire = new DragonFire(DragonFireTexture, dragon_fire_xpos, gameObject->y_pos + gameObject->getHeight() / 2);
+			egg_list.insert(egg_list.begin(), fire);
 			Mix_PlayChannel(-1, enemyShoot, 0);
 		}
 	}

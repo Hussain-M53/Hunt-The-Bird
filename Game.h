@@ -31,8 +31,7 @@ public:
 	void startLevelTwo();
 	void detectCollisions();
 	void insertEggs();
-	void setPreviousGameState(string state);
-	int saveGameStateVariables();
+	void update();
 	bool checkCollision(GameObject* game_object_one,GameObject* game_object_two);
 	int handleLevelOneChanges();
 	int handleLevelTwoChanges();
@@ -45,5 +44,10 @@ public:
 	void render();
 	void clean();
 	bool running();
+
+	void saveStatesinFile();
+	string saveGameStateVariables();
+	void getGamePreviousStates();
+	void initializePreviousGameState(string state);
 
 };

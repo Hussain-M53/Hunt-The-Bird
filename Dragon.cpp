@@ -14,6 +14,9 @@ Dragon::Dragon(SDL_Texture* texture, double x, double y) :Bird(texture, x, y) {
 	name = "dragon";
 	width = 200;
 	height = 200;
+	lives = 8;
+	moveRight = true;
+	moveDown = false;
 }
 
 bool Dragon::animate() {
@@ -42,6 +45,7 @@ void Dragon::move() {
 	}
 	else {
 		if (moveRight) {
+			state = "movingright";
 			flip = SDL_FLIP_HORIZONTAL;;
 			x_pos--;
 			if (x_pos <= 10) {
@@ -50,6 +54,7 @@ void Dragon::move() {
 			}
 		}
 		else {
+			state = "movingleft";
 			flip = SDL_FLIP_NONE;
 			x_pos++;
 			if (x_pos >= Middleware::SCREEN_WIDTH - dst_rect.w) {
