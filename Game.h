@@ -19,7 +19,8 @@ private:
 	int game_score;
 	int bow_count;
 	int prev_score, prev_bows;
-	bool isEnemyCreated;
+	bool isLevelOneBossCreated;
+	bool isLevelTwoBossCreated;
 	int level_number;
 
 public:

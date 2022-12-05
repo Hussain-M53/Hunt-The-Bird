@@ -52,9 +52,10 @@ SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect;
 
 Mix_Music* gameMusic = NULL;
 Mix_Chunk* explosion = NULL;
-Mix_Chunk* missileShoot = NULL;
+Mix_Chunk* dragonFire = NULL;
 Mix_Chunk* laserShoot = NULL;
 Mix_Chunk* enemyShoot = NULL;
+Mix_Chunk* BirdChirp = NULL;
 
 double Game::playerX = 0;
 double Game::playerY = 0;
@@ -77,7 +78,8 @@ Game::Game() {
 	bow_count = 10;
 	prev_score = 0;
 	prev_bows = 0;
-	isEnemyCreated = false;
+	isLevelOneBossCreated = false;
+	isLevelTwoBossCreated = false;
 	level_number = 1;
 }
 
@@ -110,8 +112,7 @@ Game::~Game() {
 	Mix_FreeChunk(explosion);
 	Mix_FreeChunk(enemyShoot);
 	Mix_FreeChunk(laserShoot);
-	Mix_FreeChunk(missileShoot);
-
+	Mix_FreeChunk(dragonFire);
 
 	Mix_Quit();
 	TTF_Quit();
@@ -119,7 +120,6 @@ Game::~Game() {
 }
 
 void Game::startLevelTwo() {
-	isEnemyCreated = false;
 	BackgroundTexture = Background_Level_Two_Texture;
 	level_number = 2;
 	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 200);
@@ -216,7 +216,8 @@ void Game::initializeGameStart(string menu_selection) {
 		bow_count = 10;
 		prev_score = 0;
 		prev_bows = 0;
-		isEnemyCreated = false;
+		isLevelOneBossCreated = false;
+		isLevelTwoBossCreated = false;
 		level_number = 1;
 		BackgroundTexture = Background__Level_One_Texture;
 	}
@@ -234,8 +235,12 @@ void Game::initializePreviousGameState(string state) {
 		if (counter == 3) prev_bows = stoi(line);
 		if (counter == 4) level_number = stoi(line);
 		if (counter == 5) {
-			if (line == "1") isEnemyCreated = true;
-			else isEnemyCreated = false;
+			if (line == "1") isLevelOneBossCreated = true;
+			else isLevelOneBossCreated = false;
+		}
+		if (counter == 6) {
+			if (line == "1") isLevelTwoBossCreated = true;
+			else isLevelTwoBossCreated = false;
 		}
 		counter++;
 	}
@@ -250,7 +255,8 @@ string Game::saveGameStateVariables() {
 	state += Middleware::intToString(prev_score) + "\n";
 	state += Middleware::intToString(prev_bows) + "\n";
 	state += Middleware::intToString(level_number) + "\n";
-	state += Middleware::boolToString(isEnemyCreated) + "\n";
+	state += Middleware::boolToString(isLevelOneBossCreated) + "\n";
+	state += Middleware::boolToString(isLevelTwoBossCreated) + "\n";
 	return state.c_str();
 }
 
@@ -389,9 +395,10 @@ void Game::loadMedia() {
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
 	explosion = Mix_LoadWAV("Music/Sound Effects/explosion.wav");
-	laserShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
-	missileShoot = Mix_LoadWAV("Music/Sound Effects/missileShoot.wav");
-	enemyShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
+	//bowShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
+	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
+	enemyShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
+	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -558,10 +565,10 @@ int Game::handleLevelTwoChanges() {
 		}
 
 	}
-	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isEnemyCreated == false) {
+	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isLevelTwoBossCreated == false) {
 		GameObject* dragon = new Dragon(DragonTexture, -200, 0);
 		bird_list.insert(bird_list.begin(), dragon);
-		isEnemyCreated = true;
+		isLevelTwoBossCreated = true;
 	}
 
 	return level_number;
@@ -589,13 +596,14 @@ int Game ::handleLevelOneChanges() {
 			GameObject* yellow_bird = new YellowBird(YellowBirdTexture, -64, position_random);
 			bird_list.insert(bird_list.begin(), yellow_bird);
 		}
+		Mix_PlayChannel(-1, BirdChirp, 0);
 
 	}
-	else if (game_score>=Middleware::LEVEL_ONE_BOSS_SCORE && isEnemyCreated==false) {
+	else if (game_score>=Middleware::LEVEL_ONE_BOSS_SCORE && isLevelOneBossCreated ==false) {
 		int position_random = 100 + rand() % 200;
 		GameObject* eagle = new Eagle(EagleTexture, -100, position_random);
 		bird_list.insert(bird_list.begin(), eagle);
-		isEnemyCreated = true;
+		isLevelOneBossCreated = true;
 	}
 	return level_number;
 }
@@ -698,7 +706,7 @@ void Game::insertEggs() {
 
 			GameObject* fire = new DragonFire(DragonFireTexture, dragon_fire_xpos, gameObject->y_pos + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), fire);
-			Mix_PlayChannel(-1, enemyShoot, 0);
+			Mix_PlayChannel(-1, dragonFire, 0);
 		}
 	}
 }

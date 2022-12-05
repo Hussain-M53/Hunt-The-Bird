@@ -35,11 +35,9 @@ int main(int argc, char* args[])
 				level = game->handleLevelOneChanges();
 				if (level == 2) {
 					game->startLevelTwo();
-					cout << "starting level 2" << endl;
 				}
 			}
 			else if (level == 2) {
-				cout << "In level 2" << endl;
 				level = game->handleLevelTwoChanges();
 			}
 			
