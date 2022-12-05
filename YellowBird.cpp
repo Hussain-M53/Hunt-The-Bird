@@ -27,3 +27,37 @@ bool YellowBird::animate() {
 	}
 	return false;;
 }
+
+string YellowBird::saveState() {
+	//Format:
+	// 	<YellowBird>
+	//	xpos
+	//	ypos
+	//	ty
+	//	src_rect.x
+	//state
+
+	string state = "<YellowBird>\n";
+	state += Middleware::doubleToString(x_pos) + "\n";
+	state += Middleware::doubleToString(y_pos) + "\n";
+	state += Middleware::doubleToString(ty) + "\n";
+	state += Middleware::intToString(src_rect.x) + "\n";
+	state += this->state + "\n";
+	return state.c_str();
+}
+
+void YellowBird::setPreviousGameState(string state) {
+	istringstream f(state);
+	string line;
+	int counter = 0;
+	while (getline(f, line)) {
+		if (counter == 0) x_pos = stod(line);
+		if (counter == 1) y_pos = stod(line);
+		if (counter == 2) ty = stod(line);
+		if (counter == 3) src_rect.x = stoi(line);
+		if (counter == 4) this->state = line;
+		counter++;
+	}
+}
+
+

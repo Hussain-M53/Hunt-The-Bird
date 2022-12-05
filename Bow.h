@@ -12,4 +12,6 @@ class Bow : public GameObject {
 public:
 	Bow(SDL_Texture* texture, double x, double y, double mouseX, double mouseY);
 	void move();
+	//void setPreviousGameState(string state);
+	//string saveState();
 };

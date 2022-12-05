@@ -14,13 +14,13 @@ protected:
 	int height;
 	double angle_in_radian;
 	double angle_in_degree;
-	string state;
-	SDL_RendererFlip flip;
-
-public:
-	int lives;
 	double x_pos;
 	double y_pos;
+	string state;
+	SDL_RendererFlip flip;
+	int lives;
+
+public:
 	SDL_Rect src_rect;
 	SDL_Rect dst_rect;
 
@@ -35,6 +35,7 @@ public:
 	int getWidth();
 	int getHeight();
 	int getLives();
+	void reduceLives();
 	virtual bool getAlive();
 	string getName();
 	string getState();
@@ -45,7 +46,7 @@ public:
 
 	//related to saving state
 	virtual string saveState();
-	virtual void setPreviousState(string state);
+	virtual void setPreviousGameState(string state);
 
 	//related to game objects behaviour
 	void update();

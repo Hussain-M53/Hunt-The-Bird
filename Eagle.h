@@ -13,5 +13,7 @@ public:
 	Eagle(SDL_Texture* texture, double x, double y);
 	void move();
 	bool animate();
+	void setPreviousGameState(string state);
+	string saveState();
 };
 

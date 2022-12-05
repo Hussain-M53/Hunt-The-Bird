@@ -63,11 +63,15 @@ SDL_Rect GameObject::getDstRect(){
 	return dst_rect;
 }
 
+void GameObject::reduceLives() {
+	lives--;
+}
+
 //related to saving state
 string GameObject::saveState(){
 	return "";
 }
-void GameObject::setPreviousState(string state){}
+void GameObject::setPreviousGameState(string state){}
 
 bool GameObject::animate(){
 	return false;

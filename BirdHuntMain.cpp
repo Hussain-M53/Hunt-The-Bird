@@ -21,12 +21,12 @@ int main(int argc, char* args[])
 	Menu* menu = Menu::getInstance();
 	game->initialize("Hunt The Sky", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Middleware::SCREEN_WIDTH, Middleware::SCREEN_HEIGHT, false);
 	string menu_selection = menu->showMenu();
-	if (menu_selection != "exit") game->playGameMusic();
+	if (menu_selection != "exit") {
+		game->playGameMusic();
+		game->initializeGameStart(menu_selection);
+	}
 
 	while (menu_selection != "exit") {
-		if (menu_selection == "continue") {
-			cout << "continue the game boys" << endl;
-		}
 		while (game->running()) {
 			frame_start = SDL_GetTicks();
 
@@ -37,9 +37,11 @@ int main(int argc, char* args[])
 					game->startLevelTwo();
 				}
 			}
-			else
-				level =game->handleLevelTwoChanges();
+			else if (level == 2) {
+				level = game->handleLevelTwoChanges();
+			}
 			
+			game->update();
 			game->render();
 
 			frame_time = SDL_GetTicks();
@@ -49,10 +51,8 @@ int main(int argc, char* args[])
 			}
 		}
 		menu_selection= menu->showMenu();
-		game->resetGame();
+		game->resetGame(menu_selection);
 	}
-		
-	game->clean();
 
 	return 0;
 }

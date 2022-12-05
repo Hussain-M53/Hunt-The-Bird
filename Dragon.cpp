@@ -14,6 +14,9 @@ Dragon::Dragon(SDL_Texture* texture, double x, double y) :Bird(texture, x, y) {
 	name = "dragon";
 	width = 200;
 	height = 200;
+	lives = 8;
+	moveRight = true;
+	moveDown = false;
 }
 
 bool Dragon::animate() {
@@ -42,6 +45,7 @@ void Dragon::move() {
 	}
 	else {
 		if (moveRight) {
+			state = "movingright";
 			flip = SDL_FLIP_HORIZONTAL;;
 			x_pos--;
 			if (x_pos <= 10) {
@@ -50,6 +54,7 @@ void Dragon::move() {
 			}
 		}
 		else {
+			state = "movingleft";
 			flip = SDL_FLIP_NONE;
 			x_pos++;
 			if (x_pos >= Middleware::SCREEN_WIDTH - dst_rect.w) {
@@ -57,5 +62,64 @@ void Dragon::move() {
 				moveRight = true;
 			}
 		}
+	}
+}
+
+
+string Dragon::saveState() {
+
+	//Format:
+	// 	<Dragon>
+	//	xpos
+	//	ypos
+	// src_rect.x
+	// state
+	// angleDegree
+	//alive
+	//moveRight
+	//moveDown
+
+	string state = "<Dragon>\n";
+	state += Middleware::doubleToString(x_pos) + "\n";
+	state += Middleware::doubleToString(y_pos) + "\n";
+	state += Middleware::intToString(src_rect.x) + "\n";
+	state += Middleware::doubleToString(angle_in_radian) + "\n";
+	state += Middleware::doubleToString(angle_in_degree) + "\n";
+	state += Middleware::intToString(lives) + "\n";
+	state += this->state + "\n";
+	state += Middleware::boolToString(alive) + "\n";
+	state += Middleware::boolToString(moveRight) + "\n";
+	state += Middleware::boolToString(moveDown) + "\n";
+	return state.c_str();
+
+}
+
+void Dragon::setPreviousGameState(string state) {
+	istringstream f(state);
+	string line;
+	int counter = 0;
+	while (getline(f, line)) {
+		if (counter == 0) x_pos = stod(line);
+		if (counter == 1) y_pos = stod(line);
+		if (counter == 2) src_rect.x = stoi(line);
+		if (counter == 3) angle_in_radian = stod(line);
+		if (counter == 4) angle_in_degree = stod(line);
+		if (counter == 5) lives = stoi(line);
+		if (counter == 6) this->state = line;
+		if (counter == 7) {
+			if (line == "1") {
+				alive = true;
+			}
+			else alive = false;
+		}
+		if (counter == 8) {
+			if (line == "1") moveRight = true;
+			else moveRight = false;
+		}
+		if (counter == 9) {
+			if (line == "1") moveDown = true;
+			else moveDown = false;
+		}
+		counter++;
 	}
 }

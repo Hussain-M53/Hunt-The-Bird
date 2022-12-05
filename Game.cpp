@@ -15,6 +15,10 @@
 #include "Sun.h"
 #include "Bow.h"
 #include "Explosion.h"
+#include "DragonFire.h"
+#include <sstream>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -42,14 +46,16 @@ SDL_Texture* scoreTexture;
 SDL_Texture* BowsLeftTexture;
 SDL_Texture* LevelNumberTexture;
 SDL_Texture* Background_Level_Two_Texture;
+SDL_Texture* Background_Level_One_Texture;
 
 SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect;
 
 Mix_Music* gameMusic = NULL;
 Mix_Chunk* explosion = NULL;
-Mix_Chunk* missileShoot = NULL;
+Mix_Chunk* dragonFire = NULL;
 Mix_Chunk* laserShoot = NULL;
 Mix_Chunk* enemyShoot = NULL;
+Mix_Chunk* BirdChirp = NULL;
 
 double Game::playerX = 0;
 double Game::playerY = 0;
@@ -72,18 +78,52 @@ Game::Game() {
 	bow_count = 10;
 	prev_score = 0;
 	prev_bows = 0;
-	isEnemyCreated = false;
+	isLevelOneBossCreated = false;
+	isLevelTwoBossCreated = false;
 	level_number = 1;
 }
 
 Game::~Game() {
 
+	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(Middleware::renderer);
+
+	SDL_DestroyTexture(ArcherTexture);
+	SDL_DestroyTexture(GreyBirdTexture);
+	SDL_DestroyTexture(RedBirdTexture);
+	SDL_DestroyTexture(YellowBirdTexture);
+	SDL_DestroyTexture(EagleTexture);
+	SDL_DestroyTexture(GreyEggTexture);
+	SDL_DestroyTexture(RedEggTexture);
+	SDL_DestroyTexture(YellowEggTexture);
+	SDL_DestroyTexture(EagleEggTexture);
+	SDL_DestroyTexture(CloudTexture);
+	SDL_DestroyTexture(DragonTexture);
+	SDL_DestroyTexture(SunTexture);
+	SDL_DestroyTexture(Background_Level_One_Texture);
+	SDL_DestroyTexture(Background_Level_Two_Texture);
+	SDL_DestroyTexture(BackgroundTexture);
+	SDL_DestroyTexture(ExplosionTexture);
+
+
+	//Free the music
+	Mix_FreeMusic(gameMusic);
+	gameMusic = NULL;
+
+	//Free the sound effects
+	Mix_FreeChunk(explosion);
+	Mix_FreeChunk(enemyShoot);
+	Mix_FreeChunk(laserShoot);
+	Mix_FreeChunk(dragonFire);
+
+	Mix_Quit();
+	TTF_Quit();
+	SDL_Quit();
 }
 
 void Game::startLevelTwo() {
 	BackgroundTexture = Background_Level_Two_Texture;
 	level_number = 2;
-	resetGame();
 	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 200);
 }
 
@@ -109,14 +149,14 @@ void Game::playGameMusic() {
 	}
 }
 
-void Game::resetGame() {
-
+void Game::resetGame(string menu_selection) {
+	saveStatesinFile();
 	Mix_HaltMusic();
-	initializeGameStart();
 	Middleware::cleanEntireList(ui_elements_list);
 	Middleware::cleanEntireList(bird_list);
 	Middleware::cleanEntireList(egg_list);
 	Middleware::cleanEntireList(explosion_list);
+	initializeGameStart(menu_selection);
 }
 
 
@@ -154,18 +194,20 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			isRunning = false;
 		}
 		loadMedia();
-		initializeGameStart();
 	}
 }
 
-
-void Game::initializeGameStart() {
+void Game::initializeGameStart(string menu_selection) {
 	playGameMusic();
 	isRunning = true;
 	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 230);
 	GameObject* sun = new Sun(SunTexture, 0, 0);
 	ui_elements_list.insert(ui_elements_list.begin(), sun);
+<<<<<<< HEAD
 	isEnemyCreated = false;
+=======
+
+>>>>>>> 25c40794cea53f03a4da08cc782b967b086f2520
 	int generate_random_cloud = rand() % 10;
 	for (int i = 0; i <= generate_random_cloud; i++) {
 		int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
@@ -173,19 +215,170 @@ void Game::initializeGameStart() {
 		GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
 		ui_elements_list.insert(ui_elements_list.begin(), cloud);
 	}
+	if (menu_selection == "continue") getGamePreviousStates();
+	if (menu_selection == "new") {
+		game_score = 0;
+		bow_count = 10;
+		prev_score = 0;
+		prev_bows = 0;
+		isLevelOneBossCreated = false;
+		isLevelTwoBossCreated = false;
+		level_number = 1;
+		BackgroundTexture = Background_Level_One_Texture;
+	}
 }
 
-void Game::setPreviousGameState(string state) {}
-//string Game::saveGameStateVariables() {
-//
-//	string state = "<GameState>\n";
-//	//state += "";
-//	return state.c_str();
-//}
+
+void Game::initializePreviousGameState(string state) {
+	istringstream f(state);
+	string line;
+	int counter = 0;
+	while (getline(f, line)) {
+		if (counter == 0) game_score = stoi(line);
+		if (counter == 1) bow_count = stoi(line);
+		if (counter == 2) prev_score = stoi(line);
+		if (counter == 3) prev_bows = stoi(line);
+		if (counter == 4) level_number = stoi(line);
+		if (counter == 5) {
+			if (line == "1") isLevelOneBossCreated = true;
+			else isLevelOneBossCreated = false;
+		}
+		if (counter == 6) {
+			if (line == "1") isLevelTwoBossCreated = true;
+			else isLevelTwoBossCreated = false;
+		}
+		counter++;
+	}
+}
+
+string Game::saveGameStateVariables() {
+
+
+	string state = "<GameState>\n";
+	state += Middleware::intToString(game_score) + "\n";
+	state += Middleware::intToString(bow_count) + "\n";
+	state += Middleware::intToString(prev_score) + "\n";
+	state += Middleware::intToString(prev_bows) + "\n";
+	state += Middleware::intToString(level_number) + "\n";
+	state += Middleware::boolToString(isLevelOneBossCreated) + "\n";
+	state += Middleware::boolToString(isLevelTwoBossCreated) + "\n";
+	return state.c_str();
+}
+
+
+void Game::getGamePreviousStates() {
+	string myText;
+	string Tag;
+	string state;
+
+	ifstream readFile("Game State/game_state.txt");
+
+	while (getline(readFile, myText)) {
+
+		// A game Tag is found
+		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
+			//Player
+			cout << Tag << endl;
+			cout << state << endl;
+			if (Tag == "<Archer>") {
+				archer->setPreviousGameState(state);
+			}
+			//Enemies
+			if (Tag == "<GreyBird>") {
+				GameObject* gameObject = new GreyBird(GreyBirdTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				bird_list.insert(bird_list.begin(), gameObject);
+			}
+			if (Tag == "<YellowBird>") {
+				GameObject* gameObject = new YellowBird(YellowBirdTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				bird_list.insert(bird_list.begin(), gameObject);
+			}
+			if (Tag == "<RedBird>") {
+				GameObject* gameObject = new RedBird(RedBirdTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				bird_list.insert(bird_list.begin(), gameObject);
+			}
+			if (Tag == "<Dragon>") {
+				GameObject* gameObject = new Dragon(DragonTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				bird_list.insert(bird_list.begin(), gameObject);
+			}
+			if (Tag == "<Eagle>") {
+				GameObject* gameObject = new Eagle(EagleTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				bird_list.insert(bird_list.begin(), gameObject);
+			}
+			//Eggs and Fire
+			if (Tag == "<GreyBirdEgg>") {
+				GameObject* gameObject = new GreyBirdEgg(GreyEggTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<YellowBirdEgg>") {
+				GameObject* gameObject = new YellowBirdEgg(YellowEggTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<RedBirdEgg>") {
+				GameObject* gameObject = new RedBirdEgg(RedEggTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<EagleBirdEgg>") {
+				GameObject* gameObject = new EagleBirdEgg(EagleEggTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<DragonFire>") {
+				GameObject* gameObject = new RedBirdEgg(DragonFireTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<GameState>") {
+				initializePreviousGameState(state);
+			}
+
+			Tag = myText;
+			state = "";
+			continue;
+		}
+		state += myText + "\n";
+	}
+}
+
+
+
+void Game::saveStatesinFile() {
+
+	//Open File
+	ofstream file;
+	file.open("Game State/game_state.txt");
+
+	//save Player State
+	if (archer != nullptr) {
+		string getPlayerState = archer->saveState();
+		file << getPlayerState;
+	}
+
+	//save List States
+	file << Middleware::getListStates(bird_list);
+	file << Middleware::getListStates(egg_list);
+
+	// save Game States
+	file << saveGameStateVariables();
+
+	//add a closing Tag
+	file << "<>";
+	file.close();
+	//Close File
+}
+
+
 
 void Game::loadMedia() {
 	//load the textures
-	BackgroundTexture = Middleware::LoadTexture("Images/background.jpg");
+	Background_Level_One_Texture = Middleware::LoadTexture("Images/background.jpg");
 	Background_Level_Two_Texture = Middleware::LoadTexture("Images/background_level_two.jpg");
 	ArcherTexture = Middleware::LoadTexture("Images/archer.png");
 	GreyBirdTexture = Middleware::LoadTexture("Images/grey_bird.png");
@@ -202,13 +395,15 @@ void Game::loadMedia() {
 	BowTexture = Middleware::LoadTexture("Images/bow.png");
 	ExplosionTexture = Middleware::LoadTexture("Images/explosion.png");
 	DragonFireTexture = Middleware::LoadTexture("Images/dragon_fire.png");
+	BackgroundTexture = Background_Level_One_Texture;
 
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
 	explosion = Mix_LoadWAV("Music/Sound Effects/explosion.wav");
-	laserShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
-	missileShoot = Mix_LoadWAV("Music/Sound Effects/missileShoot.wav");
-	enemyShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
+	//bowShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
+	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
+	enemyShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
+	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -240,6 +435,63 @@ void Game::updateScore() {
 	Level_Number_Rect = { Middleware::SCREEN_WIDTH - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 90,10,LevelTitlePoint.x,LevelTitlePoint.y };
 
 
+}
+
+void Game::update() {
+	Middleware::nSpeedCount++;
+
+	//--------------------------------animate-----------------------------------------
+	if (Middleware::nSpeedCount % 30 == 0) {
+		Middleware::animate(bird_list);
+		Middleware::animate(egg_list);
+	}
+
+
+	if (Middleware::nSpeedCount % 10 == 0) {
+		bool animation_complete = archer->animate();
+		if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
+			egg_list.insert(egg_list.begin(), bow);
+			archer->setState("still");
+		}
+	}
+
+
+
+
+	if (Middleware::nSpeedCount % 600 == 0) insertEggs();
+	//--------------------------------------------------collision detection-----------------------------------------
+	detectCollisions();
+
+	//-------------------------------------------------updatescore+playerValues---------------------------------------
+	playerX = archer->getX();
+	playerY = archer->getY();
+	if (prev_score != game_score || prev_bows != bow_count) {
+		updateScore();
+	}
+	prev_score = game_score;
+	prev_bows = bow_count;
+
+	//Increase missile limit with time
+	if (Middleware::nSpeedCount % 500 == 0) {
+		if (bow_count < 10) {
+			bow_count++;
+		}
+	}
+
+
+
+	//--------------------------------move-----------------------------------------
+	Middleware::move(bird_list);
+	Middleware::move(egg_list);
+	Middleware::move(ui_elements_list);
+	Middleware::move(explosion_list);
+
+
+	//--------------------------------clean-----------------------------------------
+	Middleware::clean(bird_list);
+	Middleware::clean(egg_list);
+	Middleware::clean(ui_elements_list);
+	Middleware::clean(explosion_list);
 }
 
 void Game::handleEvents() {
@@ -279,12 +531,14 @@ void Game::handleEvents() {
 			int x, y;
 			SDL_GetMouseState(&x, &y);
 			if (SDL_BUTTON_LEFT == event.button.button) {
-				bow = new Bow(BowTexture,archer->x_pos,archer->y_pos,x,y);
-				bow_count--;
-				if (bow->getAngleInDegrees() >= -260 && bow->getAngleInDegrees() <= -115) {
-					archer->setState("shootright");
+				if (bow_count > 0) {
+					bow = new Bow(BowTexture, archer->getX(), archer->getY(), x, y);
+					bow_count--;
+					if (bow->getAngleInDegrees() >= -260 && bow->getAngleInDegrees() <= -115) {
+						archer->setState("shootright");
+					}
+					else archer->setState("shootleft");
 				}
-				else archer->setState("shootleft");
 			}
 		}
 	}
@@ -298,23 +552,6 @@ void Game::handleEvents() {
 	}
 
 int Game::handleLevelTwoChanges() {
-	Middleware::nSpeedCount++;
-
-	//--------------------------------animate-----------------------------------------
-	if (Middleware::nSpeedCount % 30 == 0) {
-		Middleware::animate(bird_list);
-	}
-
-
-	if (Middleware::nSpeedCount % 10 == 0) {
-		bool animation_complete = archer->animate();
-		if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
-			egg_list.insert(egg_list.begin(), bow);
-			archer->setState("still");
-		}
-	}
-
-
 
 	//--------------------------------insert-----------------------------------------
 	if (Middleware::nSpeedCount % 1500 == 0) {
@@ -333,70 +570,17 @@ int Game::handleLevelTwoChanges() {
 		}
 
 	}
-	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isEnemyCreated == false) {
-		int position_random = 100 + rand() % 200;
-		GameObject* dragon = new Dragon(DragonTexture, -100, position_random);
+	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isLevelTwoBossCreated == false) {
+		GameObject* dragon = new Dragon(DragonTexture, -200, 0);
 		bird_list.insert(bird_list.begin(), dragon);
-		isEnemyCreated = true;
+		isLevelTwoBossCreated = true;
 	}
 
-
-
-	if (Middleware::nSpeedCount % 600 == 0) insertEggs();
-	//--------------------------------------------------collision detection-----------------------------------------
-	detectCollisions();
-
-	//-------------------------------------------------updatescore+playerValues---------------------------------------
-	playerX = archer->x_pos;
-	playerY = archer->y_pos;
-	if (prev_score != game_score || prev_bows != bow_count) {
-		updateScore();
-	}
-	prev_score = game_score;
-	prev_bows = bow_count;
-
-	//Increase missile limit with time
-	if (Middleware::nSpeedCount % 500 == 0) {
-		if (bow_count < 10) {
-			bow_count++;
-		}
-	}
-
-
-
-	//--------------------------------move-----------------------------------------
-	Middleware::move(bird_list);
-	Middleware::move(egg_list);
-	Middleware::move(ui_elements_list);
-	Middleware::move(explosion_list);
-
-
-	//--------------------------------clean-----------------------------------------
-	Middleware::clean(bird_list);
-	Middleware::clean(egg_list);
-	Middleware::clean(ui_elements_list);
-	Middleware::clean(explosion_list);
 	return level_number;
 }
 
 int Game ::handleLevelOneChanges() {
 
-	Middleware::nSpeedCount++;
-
-	//--------------------------------animate-----------------------------------------
-	if (Middleware::nSpeedCount % 30 == 0) {
-		Middleware::animate(bird_list);
-	}
-
-	if (Middleware::nSpeedCount % 10 == 0) {
-
-			bool animation_complete = archer->animate();
-			if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
-				egg_list.insert(egg_list.begin(), bow);
-				archer->setState("still");
-			}
-	}
-	
 
 	//--------------------------------insert-----------------------------------------
 	if (Middleware::nSpeedCount % 1500 == 0) {
@@ -417,55 +601,15 @@ int Game ::handleLevelOneChanges() {
 			GameObject* yellow_bird = new YellowBird(YellowBirdTexture, -64, position_random);
 			bird_list.insert(bird_list.begin(), yellow_bird);
 		}
+		Mix_PlayChannel(-1, BirdChirp, 0);
 
 	}
-	else if (game_score>=Middleware::LEVEL_ONE_BOSS_SCORE && isEnemyCreated==false) {
+	else if (game_score>=Middleware::LEVEL_ONE_BOSS_SCORE && isLevelOneBossCreated ==false) {
 		int position_random = 100 + rand() % 200;
 		GameObject* eagle = new Eagle(EagleTexture, -100, position_random);
 		bird_list.insert(bird_list.begin(), eagle);
-		isEnemyCreated = true;
+		isLevelOneBossCreated = true;
 	}
-
-
-
-	if (Middleware::nSpeedCount % 600 == 0)
-	{
-		insertEggs();
-	}
-
-	//--------------------------------------------------collision detection-----------------------------------------
-	detectCollisions();
-
-	//-------------------------------------------------updatescore+playerValues---------------------------------------
-	playerX = archer->x_pos;
-	playerY = archer->y_pos;
-	if (prev_score != game_score || prev_bows != bow_count) {
-		updateScore();
-	}
-	prev_score = game_score;
-	prev_bows = bow_count;
-
-	//Increase missile limit with time
-	if (Middleware::nSpeedCount % 500 == 0) {
-		if (bow_count < 10) {
-			bow_count++;
-		}
-	}
-
-
-
-	//--------------------------------move-----------------------------------------
-	Middleware::move(bird_list);
-	Middleware::move(egg_list);
-	Middleware::move(ui_elements_list);
-	Middleware::move(explosion_list);
-
-	
-	//--------------------------------clean-----------------------------------------
-	Middleware::clean(bird_list);
-	Middleware::clean(egg_list);
-	Middleware::clean(ui_elements_list);
-	Middleware::clean(explosion_list);
 	return level_number;
 }
 
@@ -473,7 +617,7 @@ void Game::detectCollisions() {
 	for (int b = 0; b < egg_list.size(); b++)
 	{
 
-		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg") {
+		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg" || egg_list.at(b)->getName()=="dragon_fire") {
 			GameObject* gameObject = egg_list.at(b);
 			if (checkCollision(gameObject, archer)) {
 				Middleware::createExplosion(gameObject, ExplosionTexture, explosion_list, explosion);
@@ -507,8 +651,20 @@ void Game::detectCollisions() {
 							gameObject->setAliveToFalse();
 							level_number = 2;
 						}
-						gameObject->lives--;
+						gameObject->reduceLives();
 						game_score += 300;
+					}
+
+					if (bird_list.at(n)->getName() == "dragon") {
+						Middleware::createExplosion(gameObject, ExplosionTexture, explosion_list, explosion);
+						bowObject->setAliveToFalse();
+						if (gameObject->getLives() == 0) {
+							gameObject->setAliveToFalse();
+							level_number = 2;
+							isRunning = false;
+						}
+						gameObject->reduceLives();
+						game_score += 500;
 					}
 				}
 			}
@@ -522,29 +678,40 @@ void Game::insertEggs() {
 		GameObject* gameObject = bird_list.at(i);
 
 		if (gameObject->getName() == "grey_bird" && gameObject->getState() != "die") {
-			GameObject* egg = new GreyBirdEgg(GreyEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
+			GameObject* egg = new GreyBirdEgg(GreyEggTexture, gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
 			Mix_PlayChannel(-1, enemyShoot, 0);
 		}
 
 
 		if (gameObject->getName() == "yellow_bird" && gameObject->getState() != "die") {
-			GameObject* egg = new YellowBirdEgg(YellowEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
+			GameObject* egg = new YellowBirdEgg(YellowEggTexture, gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
 			Mix_PlayChannel(-1, enemyShoot, 0);
 		}
 
 
 		if (gameObject->getName() == "eagle" && gameObject->getState() != "die") {
-			GameObject* egg = new EagleBirdEgg(EagleEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
+			GameObject* egg = new EagleBirdEgg(EagleEggTexture, gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
 			Mix_PlayChannel(-1, enemyShoot, 0);
 		}
 
 		if (gameObject->getName() == "red_bird" && gameObject->getState() != "die") {
-			GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->x_pos + gameObject->getWidth() / 2, gameObject->y_pos + gameObject->getHeight() / 2);
+			GameObject* egg = new RedBirdEgg(RedEggTexture, gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
 			Mix_PlayChannel(-1, enemyShoot, 0);
+		}
+
+		if (gameObject->getName() == "dragon" && gameObject->getState() != "die") {
+
+			double dragon_fire_xpos;
+			if (gameObject->getState() == "movingright") dragon_fire_xpos = gameObject->getX() + 10;
+			else dragon_fire_xpos = gameObject->getX() + gameObject->getWidth() - 10;
+
+			GameObject* fire = new DragonFire(DragonFireTexture, dragon_fire_xpos, gameObject->getY() + gameObject->getHeight() / 2);
+			egg_list.insert(egg_list.begin(), fire);
+			Mix_PlayChannel(-1, dragonFire, 0);
 		}
 	}
 }
@@ -589,43 +756,6 @@ void Game::render() {
 	SDL_RenderPresent(Middleware::renderer);
 }
 
-
-void Game::clean() {
-
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(Middleware::renderer);
-	
-	SDL_DestroyTexture(ArcherTexture);
-	SDL_DestroyTexture(GreyBirdTexture);
-	SDL_DestroyTexture(RedBirdTexture);
-	SDL_DestroyTexture(YellowBirdTexture);
-	SDL_DestroyTexture(EagleTexture);
-	SDL_DestroyTexture(GreyEggTexture);
-	SDL_DestroyTexture(RedEggTexture);
-	SDL_DestroyTexture(YellowEggTexture);
-	SDL_DestroyTexture(EagleEggTexture);
-	SDL_DestroyTexture(CloudTexture);
-	SDL_DestroyTexture(DragonTexture);
-	SDL_DestroyTexture(SunTexture);
-	SDL_DestroyTexture(BackgroundTexture);
-	SDL_DestroyTexture(ExplosionTexture);
-
-
-	//Free the music
-	Mix_FreeMusic(gameMusic);
-	gameMusic = NULL;
-
-	//Free the sound effects
-	Mix_FreeChunk(explosion);
-	Mix_FreeChunk(enemyShoot);
-	Mix_FreeChunk(laserShoot);
-	Mix_FreeChunk(missileShoot);
-
-
-	Mix_Quit();
-	TTF_Quit();
-	SDL_Quit();
-}
 
 bool Game::running() {
 	return isRunning;

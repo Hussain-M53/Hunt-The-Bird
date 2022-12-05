@@ -10,5 +10,7 @@ class GreyBird : public Bird {
 public:
 	GreyBird(SDL_Texture* texture, double x, double y);
 	bool animate();
+	void setPreviousGameState(string state);
+	string saveState();
 };
 

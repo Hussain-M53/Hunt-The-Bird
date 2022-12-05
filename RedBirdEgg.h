@@ -9,4 +9,6 @@
 class RedBirdEgg : public Egg {
 public:
 	RedBirdEgg(SDL_Texture* texture, double x, double y);
+	void setPreviousGameState(string state);
+	string saveState();
 };

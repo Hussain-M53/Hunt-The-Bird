@@ -19,7 +19,8 @@ private:
 	int game_score;
 	int bow_count;
 	int prev_score, prev_bows;
-	bool isEnemyCreated;
+	bool isLevelOneBossCreated;
+	bool isLevelTwoBossCreated;
 	int level_number;
 
 public:
@@ -31,19 +32,22 @@ public:
 	void startLevelTwo();
 	void detectCollisions();
 	void insertEggs();
-	void setPreviousGameState(string state);
-	int saveGameStateVariables();
+	void update();
 	bool checkCollision(GameObject* game_object_one,GameObject* game_object_two);
 	int handleLevelOneChanges();
 	int handleLevelTwoChanges();
 	SDL_Point getSize(SDL_Texture* texture);
 	void updateScore();
 	void playGameMusic();
-	void resetGame();
-	void initializeGameStart();
+	void resetGame(string menu_selection);
+	void initializeGameStart(string menu_selection);
 	void handleEvents();
 	void render();
-	void clean();
 	bool running();
+
+	void saveStatesinFile();
+	string saveGameStateVariables();
+	void getGamePreviousStates();
+	void initializePreviousGameState(string state);
 
 };

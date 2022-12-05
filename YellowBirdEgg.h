@@ -9,4 +9,6 @@
 class YellowBirdEgg : public Egg {
 public:
 	YellowBirdEgg(SDL_Texture* texture, double x, double y);
+	void setPreviousGameState(string state);
+	string saveState();
 };
