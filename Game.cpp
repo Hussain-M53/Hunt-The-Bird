@@ -166,9 +166,7 @@ void Game::initializeGameStart() {
 	GameObject* sun = new Sun(SunTexture, 0, 0);
 	ui_elements_list.insert(ui_elements_list.begin(), sun);
 	isEnemyCreated = false;
-
 	int generate_random_cloud = rand() % 10;
-
 	for (int i = 0; i <= generate_random_cloud; i++) {
 		int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
 		int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;

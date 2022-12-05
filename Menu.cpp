@@ -8,6 +8,7 @@ SDL_Rect buttonTopLeft, buttonTopMiddle, buttonTopRight, buttonBottomLeft, butto
 Mix_Music* menuMusic = NULL;
 Mix_Chunk* menuSelect = NULL;
 SDL_Texture* buttonTexture;
+SDL_Texture* menu_screen_texture;
 
 Menu::Menu() {
 	isMenu = true;
@@ -27,6 +28,8 @@ void Menu::loadMedia() {
 	menuMusic = Mix_LoadMUS("Music/Menu_Music.mp3");
 	menuSelect = Mix_LoadWAV("Music/Sound Effects/blipSelect.wav");
 	buttonTexture = Middleware::LoadTexture("Images/buttons.png");
+	menu_screen_texture = Middleware::LoadTexture("Images/menu_screen.png");
+
 }
 
 void Menu::clickSound() {
@@ -50,28 +53,27 @@ bool Menu::checkButtonCollision(int x, int y, SDL_Rect rect) {
 	else return false;
 }
 
-void Menu::display_button(SDL_Rect* gSpriteClips, int position) {
-	buttonTopLeft = { position ,((Middleware::SCREEN_HEIGHT - 130) / 2),64,64 };
+void Menu::display_button(SDL_Rect* gSpriteClips,int height) {
+	buttonTopLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height+1,gSpriteClips[0].w,gSpriteClips[0].h};
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonTopLeft, NULL, NULL, SDL_FLIP_VERTICAL);
-	buttonTopMiddle = { position + 63 ,((Middleware::SCREEN_HEIGHT - 132) / 2),65,65 };
+	buttonTopMiddle = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + gSpriteClips[0].w ,height,gSpriteClips[0].w,gSpriteClips[0].h};
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[1], &buttonTopMiddle, 90, NULL, SDL_FLIP_NONE);
-	buttonTopRight = { position + 126,((Middleware::SCREEN_HEIGHT - 130) / 2),64,64 };
+	buttonTopRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2*gSpriteClips[0].w),height+1,gSpriteClips[0].w,gSpriteClips[0].h };
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonTopRight, 180, NULL, SDL_FLIP_NONE);
-	buttonBottomLeft = { position ,((Middleware::SCREEN_HEIGHT - 130) / 2) + 63,64,64 };
+	buttonBottomLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height+gSpriteClips[0].h-1,gSpriteClips[0].w,gSpriteClips[0].h};
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonBottomLeft, NULL, NULL, SDL_FLIP_NONE);
-	buttonBottomMiddle = { position + 63,((Middleware::SCREEN_HEIGHT - 130) / 2) + 63,65,65 };
+	buttonBottomMiddle = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + gSpriteClips[0].w ,height + gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h };
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[1], &buttonBottomMiddle, -90, NULL, SDL_FLIP_NONE);
-	buttonBottomRight = { position + 126,((Middleware::SCREEN_HEIGHT - 130) / 2) + 63,64,64 };
+	buttonBottomRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2 * gSpriteClips[0].w),height + gSpriteClips[0].h-1,gSpriteClips[0].w,gSpriteClips[0].h };
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonBottomRight, NULL, NULL, SDL_FLIP_HORIZONTAL);
 
 }
 
 string Menu::showMenu() {
-
+	loadMedia();
 	string game_state = "";
 	Mix_HaltMusic();
 	loadMedia();
-	SDL_Texture* buttonTexture = Middleware::LoadTexture("Images/buttons.png");
 	TTF_Font* SpaceFont = TTF_OpenFont("Fonts/debug_font.otf", 40);
 	TTF_Font* SpaceFontLarge = TTF_OpenFont("Fonts/debug_font.otf", 100);
 
@@ -88,24 +90,27 @@ string Menu::showMenu() {
 	TTF_Init();
 	SDL_Color Color = { 255, 255, 255 ,255 };
 
-	SDL_Surface* gameTitleSurface = TTF_RenderText_Solid(SpaceFontLarge, "Bird Hunting", Color);
+	SDL_Surface* gameTitleSurface = TTF_RenderText_Solid(SpaceFontLarge, "Hunt The Sky", Color);
 	SDL_Texture* Message = SDL_CreateTextureFromSurface(Middleware::renderer, gameTitleSurface);
 	SDL_Point titlePoint = getSize(Message);
-	SDL_Rect rect = { (Middleware::SCREEN_WIDTH / 2) - (titlePoint.x / 2),(Middleware::SCREEN_HEIGHT / 4) - (titlePoint.y / 2),titlePoint.x,titlePoint.y };
+	SDL_Rect rect = { (Middleware::SCREEN_WIDTH / 2) - (titlePoint.x / 2),(Middleware::SCREEN_HEIGHT / 4) - (titlePoint.y),titlePoint.x,titlePoint.y };
 
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(SpaceFont, "New", Color);
-	SDL_Rect play_rect = { (Middleware::SCREEN_WIDTH / 2) - 244,((Middleware::SCREEN_HEIGHT - 150) / 2) + 54,100,100 };
 	SDL_Texture* playTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);
+	SDL_Point play_point = getSize(playTexture);
+	SDL_Rect play_rect = { (Middleware::SCREEN_WIDTH / 2) - (play_point.x / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (2 * gSpriteClips[0].h)-10) - play_point.y/2 + 40,play_point.x,play_point.y};
 	SDL_QueryTexture(playTexture, NULL, NULL, &play_rect.w, &play_rect.h);
 
 	surfaceMessage = TTF_RenderText_Solid(SpaceFont, "Exit", Color);
-	SDL_Rect exit_rect = { (Middleware::SCREEN_WIDTH / 2) - 30,((Middleware::SCREEN_HEIGHT - 150) / 2) + 54,100,100 };
 	SDL_Texture* exitTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);
+	SDL_Point exit_point = getSize(exitTexture);
+	SDL_Rect exit_rect = { (Middleware::SCREEN_WIDTH / 2) - (exit_point.x / 2) ,50 + (Middleware::SCREEN_HEIGHT / 2) - exit_point.y/2 + 40,exit_point.x,exit_point.y};
 	SDL_QueryTexture(exitTexture, NULL, NULL, &exit_rect.w, &exit_rect.h);
 
 	surfaceMessage = TTF_RenderText_Solid(SpaceFont, "Continue", Color);
-	SDL_Rect continue_rect = { (Middleware::SCREEN_WIDTH / 2) + 145,((Middleware::SCREEN_HEIGHT - 150) / 2) + 54,100,100 };
 	SDL_Texture* continueTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);
+	SDL_Point continue_point = getSize(continueTexture);
+	SDL_Rect continue_rect = { (Middleware::SCREEN_WIDTH / 2) - (continue_point.x / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) + (2 * gSpriteClips[0].h) - 10) + 40,continue_point.x,continue_point.y };
 	SDL_QueryTexture(continueTexture, NULL, NULL, &continue_rect.w, &continue_rect.h);
 
 	bool isMenu = true;
@@ -114,6 +119,9 @@ string Menu::showMenu() {
 		//Play the music
 		Mix_PlayMusic(menuMusic, -1);
 	}
+	SDL_Rect play_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (3 * gSpriteClips[0].h) - 10) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
+	SDL_Rect exit_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (gSpriteClips[0].h)) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
+	SDL_Rect continue_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,((Middleware::SCREEN_HEIGHT / 2) + (3 * gSpriteClips[0].h) - 70) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
 	SDL_Event event;
 
 	while (isMenu) {
@@ -128,17 +136,17 @@ string Menu::showMenu() {
 				int x, y;
 				SDL_GetMouseState(&x, &y);
 				if (SDL_BUTTON_LEFT == event.button.button) {
-					if (checkButtonCollision(x, y, play_rect)) {
+					if (checkButtonCollision(x, y, play_button)) {
 						clickSound();
 						game_state = "new";
 						isMenu = false;
 					}
-					else if (checkButtonCollision(x, y, exit_rect)) {
+					else if (checkButtonCollision(x, y, exit_button)) {
 						clickSound();
 						game_state = "exit";
 						isMenu = false;
 					}
-					else if (checkButtonCollision(x, y, continue_rect)) {
+					else if (checkButtonCollision(x, y, continue_button)) {
 						clickSound();
 						game_state = "continue";
 						isMenu = false;
@@ -147,12 +155,15 @@ string Menu::showMenu() {
 
 			}
 		}
+		
 
+		SDL_Rect menu_screen_rect = {0,0,900,700};
 		SDL_RenderClear(Middleware::renderer);
+		SDL_RenderCopy(Middleware::renderer,menu_screen_texture,NULL, &menu_screen_rect);
 		SDL_RenderCopy(Middleware::renderer, Message, NULL, &rect);
-		display_button(gSpriteClips, (Middleware::SCREEN_WIDTH / 2) - 308);
-		display_button(gSpriteClips, (Middleware::SCREEN_WIDTH / 2) - 96);
-		display_button(gSpriteClips, (Middleware::SCREEN_WIDTH / 2) + 116);
+		display_button(gSpriteClips,50+ ((Middleware::SCREEN_HEIGHT / 2) - (3 * gSpriteClips[0].h) - 10) + 40);
+		display_button(gSpriteClips,50+ ((Middleware::SCREEN_HEIGHT / 2) - (gSpriteClips[0].h)) + 40);
+		display_button(gSpriteClips, ((Middleware::SCREEN_HEIGHT / 2) + (3 * gSpriteClips[0].h) - 70) + 40);
 		SDL_RenderCopy(Middleware::renderer, playTexture, NULL, &play_rect);
 		SDL_RenderCopy(Middleware::renderer, exitTexture, NULL, &exit_rect);
 		SDL_RenderCopy(Middleware::renderer, continueTexture, NULL, &continue_rect);
@@ -161,6 +172,7 @@ string Menu::showMenu() {
 	SDL_FreeSurface(gameTitleSurface);
 	SDL_FreeSurface(surfaceMessage);
 	SDL_DestroyTexture(buttonTexture);
+	SDL_DestroyTexture(menu_screen_texture);
 	SDL_DestroyTexture(Message);
 	SDL_DestroyTexture(playTexture);
 	SDL_DestroyTexture(exitTexture);

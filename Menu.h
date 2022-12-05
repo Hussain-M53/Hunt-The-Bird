@@ -23,6 +23,6 @@ public:
 	string showMenu();
 	void clickSound();
 	void loadMedia();
-	void display_button(SDL_Rect* gSpriteClips, int position);
+	void display_button(SDL_Rect* gSpriteClips,int height);
 
 };
