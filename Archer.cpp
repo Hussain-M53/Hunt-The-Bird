@@ -33,16 +33,18 @@ string Archer::saveState() {
 	string state = "<Archer>\n";
 	state += Middleware::doubleToString(x_pos) + "\n";
 	state += Middleware::doubleToString(y_pos) + "\n";
+	state += this->state + "\n";
 	return state.c_str();
 }
 
-void Archer::setPreviousState(string state) {
+void Archer::setPreviousGameState(string state) {
 	istringstream f(state);
 	string line;
 	int counter = 0;
 	while (getline(f, line)) {
 		if (counter == 0) x_pos = stod(line);
 		if (counter == 1) y_pos = stod(line);
+		if (counter == 2) this->state = line;
 		counter++;
 	}
 }

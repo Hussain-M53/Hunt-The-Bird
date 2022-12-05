@@ -10,5 +10,7 @@ class RedBird : public Bird {
 public:
 	RedBird(SDL_Texture* texture, double x, double y);
 	bool animate();
+	void setPreviousGameState(string state);
+	string saveState();
 };
 

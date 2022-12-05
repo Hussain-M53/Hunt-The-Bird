@@ -13,5 +13,7 @@ public:
 	Dragon(SDL_Texture* texture, double x, double y);
 	bool animate();
 	void move();
+	void setPreviousGameState(string state);
+	string saveState();
 };
 

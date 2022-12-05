@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 class Egg : public GameObject {
+protected:
 	double friction = 1.005;
 	double ty = 1;
 public:

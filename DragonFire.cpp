@@ -40,3 +40,49 @@ void DragonFire::move() {
 		alive = false;
 	}
 }
+
+string DragonFire::saveState() {
+
+	//Format:
+	// 	<DragonFire>
+	//	xpos
+	//	ypos
+	// src_rect.x
+	// state
+	// angleDegree
+	//alive
+	//moveRight
+	//moveDown
+
+	string state = "<DragonFire>\n";
+	state += Middleware::doubleToString(x_pos) + "\n";
+	state += Middleware::doubleToString(y_pos) + "\n";
+	state += Middleware::intToString(src_rect.x) + "\n";
+	state += Middleware::doubleToString(angle_in_radian) + "\n";
+	state += Middleware::doubleToString(angle_in_degree) + "\n";
+	state += this->state + "\n";
+	state += Middleware::boolToString(alive) + "\n";
+	return state.c_str();
+
+}
+
+void DragonFire::setPreviousGameState(string state) {
+	istringstream f(state);
+	string line;
+	int counter = 0;
+	while (getline(f, line)) {
+		if (counter == 0) x_pos = stod(line);
+		if (counter == 1) y_pos = stod(line);
+		if (counter == 2) src_rect.x = stoi(line);
+		if (counter == 3) angle_in_radian = stod(line);
+		if (counter == 4) angle_in_degree = stod(line);
+		if (counter == 5) this->state = line;
+		if (counter == 6) {
+			if (line == "1") {
+				alive = true;
+			}
+			else alive = false;
+		}
+		counter++;
+	}
+}

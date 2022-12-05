@@ -67,7 +67,7 @@ SDL_Rect GameObject::getDstRect(){
 string GameObject::saveState(){
 	return "";
 }
-void GameObject::setPreviousState(string state){}
+void GameObject::setPreviousGameState(string state){}
 
 bool GameObject::animate(){
 	return false;

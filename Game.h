@@ -38,11 +38,10 @@ public:
 	SDL_Point getSize(SDL_Texture* texture);
 	void updateScore();
 	void playGameMusic();
-	void resetGame();
-	void initializeGameStart();
+	void resetGame(string menu_selection);
+	void initializeGameStart(string menu_selection);
 	void handleEvents();
 	void render();
-	void clean();
 	bool running();
 
 	void saveStatesinFile();

@@ -10,7 +10,7 @@ public:
 	Archer(SDL_Texture* texture, double x, double y);
 	void move();
 	string saveState();
-	void setPreviousState(string state);
+	void setPreviousGameState(string state);
 	void setState(string state);
 	bool animate();
 

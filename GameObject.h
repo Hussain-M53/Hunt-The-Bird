@@ -45,7 +45,7 @@ public:
 
 	//related to saving state
 	virtual string saveState();
-	virtual void setPreviousState(string state);
+	virtual void setPreviousGameState(string state);
 
 	//related to game objects behaviour
 	void update();

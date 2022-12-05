@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 class Bird : public GameObject {
+protected:
 	double friction = 1.01;
 	double ty = 1;
 public:
