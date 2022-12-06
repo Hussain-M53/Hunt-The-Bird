@@ -194,6 +194,16 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			isRunning = false;
 		}
 		loadMedia();
+		GameObject* sun = new Sun(SunTexture, 0, 0);
+		ui_elements_list.insert(ui_elements_list.begin(), sun);
+
+		int generate_random_cloud = rand() % 10;
+		for (int i = 0; i <= generate_random_cloud; i++) {
+			int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
+			int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;
+			GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
+			ui_elements_list.insert(ui_elements_list.begin(), cloud);
+		}
 	}
 }
 
@@ -201,20 +211,6 @@ void Game::initializeGameStart(string menu_selection) {
 	playGameMusic();
 	isRunning = true;
 	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 230);
-	GameObject* sun = new Sun(SunTexture, 0, 0);
-	ui_elements_list.insert(ui_elements_list.begin(), sun);
-<<<<<<< HEAD
-	isEnemyCreated = false;
-=======
-
->>>>>>> 25c40794cea53f03a4da08cc782b967b086f2520
-	int generate_random_cloud = rand() % 10;
-	for (int i = 0; i <= generate_random_cloud; i++) {
-		int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
-		int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;
-		GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
-		ui_elements_list.insert(ui_elements_list.begin(), cloud);
-	}
 	if (menu_selection == "continue") getGamePreviousStates();
 	if (menu_selection == "new") {
 		game_score = 0;
