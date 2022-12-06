@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 class Cloud : public GameObject {
+	double speed;
 public:
 	Cloud(SDL_Texture* texture, double x, double y);
 	void move();

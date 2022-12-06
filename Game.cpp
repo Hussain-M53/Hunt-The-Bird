@@ -501,34 +501,30 @@ void Game::handleEvents() {
 			isRunning = false;
 		}
 		if (event.type == SDL_KEYDOWN) {
-			switch (event.key.keysym.sym) {
-			case SDLK_a:
+			if (event.key.keysym.sym == SDLK_a) {
 				if (archer->src_rect.x < 720) {
 					archer->setState("movingleft");
 				}
-				break;
-			case SDLK_d:
+			}
+			if (event.key.keysym.sym == SDLK_d) {
 				if (archer->src_rect.x < 720) {
 					archer->setState("movingright");
 				}
 			}
 		}
 		if (event.type == SDL_KEYUP) {
-			switch (event.key.keysym.sym) {
-			case SDLK_a:
+			if (event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_d) {
 				archer->setState("still");
-				break;
-			case SDLK_d:
-				archer->setState("still");
-				break;
 			}
 		}
+
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
 			int x, y;
 			SDL_GetMouseState(&x, &y);
 			if (SDL_BUTTON_LEFT == event.button.button) {
 				if (bow_count > 0) {
-					bow = new Bow(BowTexture, archer->getX(), archer->getY(), x, y);
+					if (archer->getState() == "movingright") bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
+					else bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
 					bow_count--;
 					if (bow->getAngleInDegrees() >= -260 && bow->getAngleInDegrees() <= -115) {
 						archer->setState("shootright");

@@ -12,5 +12,5 @@ Sun::Sun(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y) {
 
 
 void Sun::move() {
-	angle_in_degree += 0.05;
+	angle_in_degree += 0.025;
 }
