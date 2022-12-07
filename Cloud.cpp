@@ -13,13 +13,14 @@ Cloud::Cloud(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y
 	int randomCloudSelection = rand() % 8;
 	src_rect = { randomCloudSelection*width,0,width,height };
 	dst_rect = { int(x),int(y),width,height };
+	speed = 1 + rand() % 1;
 	
 }
 
 
 void Cloud::move() {
 	if (x_pos <= (Middleware::SCREEN_WIDTH + width)) {
-		if (Middleware::nSpeedCount % 5 == 0) this->x_pos++;
+		if (Middleware::nSpeedCount % 5 == 0) this->x_pos+= speed;
 	}
 	else
 		alive = false;
