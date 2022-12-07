@@ -9,10 +9,12 @@ Explosion:: ~Explosion() {
 Explosion::Explosion(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y)
 {
 	name = "explosion";
-	src_rect.h = 64;
-	src_rect.w = 64;
-	dst_rect.w = 64;
-	dst_rect.h = 64;
+	width = 32;
+	height = 32;
+	src_rect.h = height;
+	src_rect.w = width;
+	dst_rect.w = width;
+	dst_rect.h = height;
 	//Initialize animation
 	mFrame = rand() % 50;
 	angle_in_radian = 0;
@@ -27,5 +29,5 @@ void Explosion::move() {
 }
 
 bool Explosion::getAlive() {
-	return mFrame < 50;
+	return mFrame < 100;
 }

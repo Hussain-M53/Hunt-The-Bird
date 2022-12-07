@@ -389,7 +389,7 @@ void Game::loadMedia() {
 	YellowEggTexture = Middleware::LoadTexture("Images/yellow_egg.png");
 	EagleEggTexture = Middleware::LoadTexture("Images/eagle_egg.png");
 	BowTexture = Middleware::LoadTexture("Images/bow.png");
-	ExplosionTexture = Middleware::LoadTexture("Images/explosion.png");
+	ExplosionTexture = Middleware::LoadTexture("Images/feathers.png");
 	DragonFireTexture = Middleware::LoadTexture("Images/dragon_fire.png");
 	BackgroundTexture = Background_Level_One_Texture;
 

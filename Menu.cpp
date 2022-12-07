@@ -54,17 +54,17 @@ bool Menu::checkButtonCollision(int x, int y, SDL_Rect rect) {
 }
 
 void Menu::display_button(SDL_Rect* gSpriteClips,int height) {
-	buttonTopLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height+1,gSpriteClips[0].w,gSpriteClips[0].h};
+	buttonTopLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height,gSpriteClips[0].w,gSpriteClips[0].h};
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonTopLeft, NULL, NULL, SDL_FLIP_VERTICAL);
 	buttonTopMiddle = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + gSpriteClips[0].w ,height,gSpriteClips[0].w,gSpriteClips[0].h};
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[1], &buttonTopMiddle, 90, NULL, SDL_FLIP_NONE);
-	buttonTopRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2*gSpriteClips[0].w),height+1,gSpriteClips[0].w,gSpriteClips[0].h };
+	buttonTopRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2*gSpriteClips[0].w),height,gSpriteClips[0].w,gSpriteClips[0].h };
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonTopRight, 180, NULL, SDL_FLIP_NONE);
-	buttonBottomLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height+gSpriteClips[0].h-1,gSpriteClips[0].w,gSpriteClips[0].h};
+	buttonBottomLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height+gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h};
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonBottomLeft, NULL, NULL, SDL_FLIP_NONE);
 	buttonBottomMiddle = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + gSpriteClips[0].w ,height + gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h };
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[1], &buttonBottomMiddle, -90, NULL, SDL_FLIP_NONE);
-	buttonBottomRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2 * gSpriteClips[0].w),height + gSpriteClips[0].h-1,gSpriteClips[0].w,gSpriteClips[0].h };
+	buttonBottomRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2 * gSpriteClips[0].w),height + gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h };
 	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonBottomRight, NULL, NULL, SDL_FLIP_HORIZONTAL);
 
 }
@@ -83,7 +83,7 @@ string Menu::showMenu() {
 	gSpriteClips[0].w = 64;
 	gSpriteClips[0].h = 64;
 
-	gSpriteClips[1].x = 64 + 22;
+	gSpriteClips[1].x = 64+22;
 	gSpriteClips[1].y = 0;
 	gSpriteClips[1].w = 64;
 	gSpriteClips[1].h = 64;
