@@ -9,8 +9,8 @@ Explosion:: ~Explosion() {
 Explosion::Explosion(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y)
 {
 	name = "explosion";
-	width = 32;
-	height = 32;
+	width = 64;
+	height = 64;
 	src_rect.h = height;
 	src_rect.w = width;
 	dst_rect.w = width;

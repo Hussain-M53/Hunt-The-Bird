@@ -24,6 +24,7 @@ private:
 	int level_number;
 
 public:
+	int getLevelNumber();
 	double static playerX;
 	double static playerY;
 	static Game* getInstance();

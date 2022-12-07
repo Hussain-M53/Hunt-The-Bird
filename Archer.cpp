@@ -10,17 +10,49 @@ Archer::Archer(SDL_Texture* texture, double x, double y) :GameObject(texture, x,
 	name = "archer";
 	width = 120;
 	height = 120;
+	ty = 3.5;
+	gravity_up = 0.98;
+	gravity_down = 1.02;
+	jumpDown = false;
+	isJumping = false;
+	groundHeight = y;
 }
 
 
 void Archer::move() {
-	if (state == "movingright") {
-		x_pos += 1.5;;
+	if (x_pos >= -width/2 && x_pos <= Middleware::SCREEN_WIDTH - width/2) {
+		if (state == "movingright") {
+			x_pos += 1.5;
+		}
+		if (state == "movingleft") {
+			x_pos -= 1.5;
+		}
+		if (isJumping || y_pos < groundHeight)
+		{
+			if (y_pos > 300 && jumpDown == false) {
+
+				y_pos -= ty;
+				ty *= gravity_up;
+			}
+
+			else {
+				jumpDown = true;
+				y_pos += ty;
+				ty *= gravity_down;
+				if (y_pos >= groundHeight) {
+					y_pos = groundHeight;
+					ty = 3.5;
+					jumpDown = false;
+					isJumping = false;
+					setState("still");
+				}
+			}
+		}
 	}
-	if (state == "movingleft") {
-		x_pos-=1.5;
-	}
+	if (x_pos < -width / 2) x_pos++;
+	if (x_pos > Middleware::SCREEN_WIDTH - width/2) x_pos--;
 }
+	
 
 string Archer::saveState() {
 	//Format:
@@ -51,16 +83,26 @@ void Archer::setPreviousGameState(string state) {
 void Archer::setState(string state)
 {
 
+		this->state = state;
+	
+
 	if (state == "still") {
 		src_rect.x = 0;
 	}
 	if (state == "movingleft") {
 		flip = SDL_FLIP_HORIZONTAL;
 		src_rect.x = 6 * width;
+		if (isJumping) {
+			src_rect.x = 36 * width;
+		}
+		
 	}
 	if (state == "movingright") {
 		flip = SDL_FLIP_NONE;
 		src_rect.x = 6 * width;
+		if (isJumping) {
+			src_rect.x = 36 * width;
+		}
 	}
 	if (state == "dead") {
 		src_rect.x = 26 * width;
@@ -77,11 +119,14 @@ void Archer::setState(string state)
 		src_rect.x = 31 * width;
 		flip = SDL_FLIP_HORIZONTAL;
 	}
-	if (state == "shoolowtright") {
-		flip = SDL_FLIP_NONE;
+	if (state == "shootlowright") {
 		src_rect.x = 31 * width;
+		flip = SDL_FLIP_NONE;
 	}
-	this->state = state;
+	if (state == "jump") {
+		src_rect.x = 36 * width;
+		isJumping = true;
+	}
 }
 
 bool Archer::animate() {
@@ -93,7 +138,7 @@ bool Archer::animate() {
 				src_rect.x += width;
 			}
 		}
-		else if (state == "movingleft" || state == "movingright") {
+		else if ((state == "movingleft" || state == "movingright")) {
 			if (src_rect.x == 19 * width) {
 				src_rect.x = 6 * width;
 			}
@@ -121,6 +166,14 @@ bool Archer::animate() {
 		else if (state == "shootlowright" || state == "shootlowleft") {
 			if (src_rect.x == 35 * width) {
 				return true;
+			}
+			else {
+				src_rect.x += width;
+			}
+		}
+		else if (state == "jump") {
+			if (src_rect.x == 43 * width) {
+				src_rect.x = 43 * width;
 			}
 			else {
 				src_rect.x += width;

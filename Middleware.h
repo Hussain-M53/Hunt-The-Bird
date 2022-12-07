@@ -11,6 +11,8 @@ public:
 	static const int SCREEN_HEIGHT = 700;
 	static const int LEVEL_ONE_BOSS_SCORE = 1000;
 	static const int LEVEL_TWO_BOSS_SCORE = 3000;
+	static const int LEVEL_ONE_GROUND_HEIGHT = 470;
+	static const int LEVEL_TWO_GROUND_HEIGHT = 500;
 	static SDL_Renderer* renderer;
 	static int nSpeedCount;
 	static SDL_Texture* LoadTexture(const char* filename);
