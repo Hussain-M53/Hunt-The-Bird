@@ -73,6 +73,14 @@ void Archer::setState(string state)
 		src_rect.x = 20 * width;
 		flip = SDL_FLIP_HORIZONTAL;
 	}
+	if (state == "shootlowleft") {
+		src_rect.x = 31 * width;
+		flip = SDL_FLIP_HORIZONTAL;
+	}
+	if (state == "shoolowtright") {
+		flip = SDL_FLIP_NONE;
+		src_rect.x = 31 * width;
+	}
 	this->state = state;
 }
 
@@ -85,7 +93,7 @@ bool Archer::animate() {
 				src_rect.x += width;
 			}
 		}
-		if (state == "movingleft" || state == "movingright") {
+		else if (state == "movingleft" || state == "movingright") {
 			if (src_rect.x == 19 * width) {
 				src_rect.x = 6 * width;
 			}
@@ -93,7 +101,7 @@ bool Archer::animate() {
 				src_rect.x += width;
 			}
 		}
-		if (state == "dead") {
+		else if (state == "dead") {
 			if (src_rect.x == 30 * width) {
 				src_rect.x = 30 * width;
 				//isRunning = false;
@@ -102,8 +110,16 @@ bool Archer::animate() {
 				src_rect.x += width;
 			}
 		}
-		if (state == "shootright" || state == "shootleft") {
+		else if (state == "shootright" || state == "shootleft") {
 			if (src_rect.x == 24 * width) {
+				return true;
+			}
+			else {
+				src_rect.x += width;
+			}
+		}
+		else if (state == "shootlowright" || state == "shootlowleft") {
+			if (src_rect.x == 35 * width) {
 				return true;
 			}
 			else {

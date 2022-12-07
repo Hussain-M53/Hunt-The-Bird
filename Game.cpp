@@ -500,18 +500,6 @@ void Game::handleEvents() {
 		if (event.type == SDL_QUIT) {
 			isRunning = false;
 		}
-		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym == SDLK_a) {
-				if (archer->src_rect.x < 720) {
-					archer->setState("movingleft");
-				}
-			}
-			if (event.key.keysym.sym == SDLK_d) {
-				if (archer->src_rect.x < 720) {
-					archer->setState("movingright");
-				}
-			}
-		}
 		if (event.type == SDL_KEYUP) {
 			if (event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_d) {
 				archer->setState("still");
@@ -536,9 +524,15 @@ void Game::handleEvents() {
 	}
 	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 	if (currentKeyStates[SDL_SCANCODE_A]) {
+		if (archer->src_rect.x < 720) {
+			archer->setState("movingleft");
+		}
 		archer->move();
 	}
 	if (currentKeyStates[SDL_SCANCODE_D]) {
+		if (archer->src_rect.x < 720) {
+			archer->setState("movingright");
+		}
 		archer->move();
 	}
 	}
