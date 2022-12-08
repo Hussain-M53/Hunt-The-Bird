@@ -129,6 +129,10 @@ Game::~Game() {
 void Game::startLevelTwo() {
 	BackgroundTexture = Background_Level_Two_Texture;
 	level_number = 2;
+	Middleware::cleanEntireList(ui_elements_list);
+	Middleware::cleanEntireList(bird_list);
+	Middleware::cleanEntireList(egg_list);
+	Middleware::cleanEntireList(explosion_list);
 	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
 }
 
