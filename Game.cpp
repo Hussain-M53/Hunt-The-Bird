@@ -204,15 +204,15 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
 			ui_elements_list.insert(ui_elements_list.begin(), cloud);
 		}
+		archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	}
 }
 
 void Game::initializeGameStart(string menu_selection) {
 	playGameMusic();
 	isRunning = true;
-	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	if (menu_selection == "continue") getGamePreviousStates();
-	if (menu_selection == "new") {
+	else if (menu_selection == "new") {
 		game_score = 0;
 		bow_count = 10;
 		prev_score = 0;
@@ -273,10 +273,9 @@ void Game::getGamePreviousStates() {
 
 		// A game Tag is found
 		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
-			//Player
-			cout << Tag << endl;
-			cout << state << endl;
+			//Archer
 			if (Tag == "<Archer>") {
+				archer = new Archer(ArcherTexture, 0, 0);
 				archer->setPreviousGameState(state);
 			}
 			//Enemies
@@ -330,6 +329,16 @@ void Game::getGamePreviousStates() {
 				GameObject* gameObject = new RedBirdEgg(DragonFireTexture, 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<Sun>") {
+				GameObject* gameObject = new Sun(SunTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
+			}
+			if (Tag == "<Cloud>") {
+				GameObject* gameObject = new Cloud(CloudTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
 			}
 			if (Tag == "<GameState>") {
 				initializePreviousGameState(state);

@@ -58,13 +58,20 @@ string Archer::saveState() {
 	//Format:
 // 	<Archer>
 //	xpos
-//	ypos
-
+// ypos
+// src_rect.x
+// ty
+// isJumping
+// jumpDown
 
 
 	string state = "<Archer>\n";
 	state += Middleware::doubleToString(x_pos) + "\n";
 	state += Middleware::doubleToString(y_pos) + "\n";
+	state += Middleware::intToString(src_rect.x) + "\n";
+	state += Middleware::doubleToString(ty) + "\n";
+	state += Middleware::boolToString(isJumping) + "\n";
+	state += Middleware::boolToString(jumpDown) + "\n";
 	state += this->state + "\n";
 	return state.c_str();
 }
@@ -76,7 +83,26 @@ void Archer::setPreviousGameState(string state) {
 	while (getline(f, line)) {
 		if (counter == 0) x_pos = stod(line);
 		if (counter == 1) y_pos = stod(line);
-		if (counter == 2) this->state = line;
+		if (counter == 2) src_rect.x = stoi(line);
+		if (counter == 3) ty = stod(line);
+		if (counter == 4) {
+			if (line == "1") {
+				isJumping = true;
+			}
+			else {
+				isJumping = false;
+			}
+		}
+		if (counter == 5) {
+			if (line == "1") {
+				jumpDown = true;
+			}
+			else {
+				jumpDown = false;
+			}
+		}
+
+		if (counter == 6) this->state = line;
 		counter++;
 	}
 }

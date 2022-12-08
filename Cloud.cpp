@@ -25,3 +25,33 @@ void Cloud::move() {
 	else
 		alive = false;
 }
+string Cloud::saveState() {
+
+	//Cloud:
+	// 	<Cloud>
+	//	xpos
+	//	ypos
+	// src_rect.x
+	//speed
+
+	string state = "<Cloud>\n";
+	state += Middleware::doubleToString(x_pos) + "\n";
+	state += Middleware::doubleToString(y_pos) + "\n";
+	state += Middleware::intToString(src_rect.x) + "\n";
+	state += Middleware::doubleToString(speed) + "\n";
+	return state.c_str();
+
+}
+
+void Cloud::setPreviousGameState(string state) {
+	istringstream f(state);
+	string line;
+	int counter = 0;
+	while (getline(f, line)) {
+		if (counter == 0) x_pos = stod(line);
+		if (counter == 1) y_pos = stod(line);
+		if (counter == 2) src_rect.x = stoi(line);
+		if (counter == 3) speed = stod(line);
+		counter++;
+	}
+}
