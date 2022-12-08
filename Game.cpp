@@ -56,12 +56,17 @@ SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect,lives_Rect,health_Rect;
 Mix_Music* gameMusic = NULL;
 Mix_Chunk* dragonFire = NULL;
 Mix_Chunk* BirdChirp = NULL;
+<<<<<<< HEAD
 Mix_Chunk* eagleHit = NULL;
 Mix_Chunk* bird1Hit = NULL;
 Mix_Chunk* bird2Hit = NULL;
 Mix_Chunk* eggShoot = NULL;
 
 
+=======
+Mix_Chunk* jumpSound = NULL;
+Mix_Chunk* bowSound = NULL;
+>>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 
 double Game::playerX = 0;
 double Game::playerY = 0;
@@ -120,11 +125,18 @@ Game::~Game() {
 
 	//Free the sound effects
 	Mix_FreeChunk(dragonFire);
+<<<<<<< HEAD
 	Mix_FreeChunk(eagleHit);
 	Mix_FreeChunk(bird1Hit);
 	Mix_FreeChunk(bird2Hit);
 	Mix_FreeChunk(BirdChirp);
 	Mix_FreeChunk(eggShoot);
+=======
+	Mix_FreeChunk(BirdChirp);
+	Mix_FreeChunk(jumpSound);
+	Mix_FreeChunk(bowSound);
+
+>>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 	Mix_Quit();
 	TTF_Quit();
 	SDL_Quit();
@@ -213,15 +225,15 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
 			ui_elements_list.insert(ui_elements_list.begin(), cloud);
 		}
+		archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	}
 }
 
 void Game::initializeGameStart(string menu_selection) {
 	playGameMusic();
 	isRunning = true;
-	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	if (menu_selection == "continue") getGamePreviousStates();
-	if (menu_selection == "new") {
+	else if (menu_selection == "new") {
 		game_score = 0;
 		bow_count = 10;
 		prev_score = 0;
@@ -282,10 +294,9 @@ void Game::getGamePreviousStates() {
 
 		// A game Tag is found
 		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
-			//Player
-			cout << Tag << endl;
-			cout << state << endl;
+			//Archer
 			if (Tag == "<Archer>") {
+				archer = new Archer(ArcherTexture, 0, 0);
 				archer->setPreviousGameState(state);
 			}
 			//Enemies
@@ -339,6 +350,16 @@ void Game::getGamePreviousStates() {
 				GameObject* gameObject = new RedBirdEgg(DragonFireTexture, 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
+			}
+			if (Tag == "<Sun>") {
+				GameObject* gameObject = new Sun(SunTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
+			}
+			if (Tag == "<Cloud>") {
+				GameObject* gameObject = new Cloud(CloudTexture, 0, 0);
+				gameObject->setPreviousGameState(state);
+				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
 			}
 			if (Tag == "<GameState>") {
 				initializePreviousGameState(state);
@@ -405,14 +426,23 @@ void Game::loadMedia() {
 
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
+<<<<<<< HEAD
+=======
+	explosion = Mix_LoadWAV("Music/Sound Effects/explosion.wav");
+>>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
 	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
+<<<<<<< HEAD
 	bird1Hit = Mix_LoadWAV("Music/Sound Effects/bird1_hit.wav");
 	bird2Hit = Mix_LoadWAV("Music/Sound Effects/bird2_hit.wav");
 	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
 	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
 	eggShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
 
+=======
+	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
+	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
+>>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -540,6 +570,7 @@ void Game::handleEvents() {
 			if (event.key.keysym.sym == SDLK_w) {
 				if (archer->src_rect.x < 36 * archer->getWidth()) {
 					archer->setState("jump");
+					Mix_PlayChannel(-1, jumpSound, 0);
 				}
 			}
 		}
@@ -551,6 +582,10 @@ void Game::handleEvents() {
 					if (archer->getState() == "movingright") bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
 					else bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
 					bow_count--;
+<<<<<<< HEAD
+=======
+					//cout << bow->getAngleInDegrees() << endl;
+>>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 					if (bow->getAngleInDegrees() <= -194 && bow->getAngleInDegrees() >= -265) {
 						archer->setState("shootright");
 					}
@@ -562,6 +597,7 @@ void Game::handleEvents() {
 					}
 					else archer->setState("shootlowleft");
 				}
+				Mix_PlayChannel(-1, bowSound, 0);
 			}
 		}
 	}

@@ -18,8 +18,14 @@ Explosion::Explosion(SDL_Texture* texture, double x, double y) :GameObject(textu
 		src_rect.x = 172;
 		src_rect.y = 0;
 	} 
+<<<<<<< HEAD
 	width = 16;
 	height = 16;
+=======
+
+	height = 16;
+	width = 16;
+>>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 	src_rect.h = height;
 	src_rect.w = width;
 	dst_rect.w = width;

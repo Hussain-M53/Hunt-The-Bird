@@ -14,7 +14,6 @@ class Archer : public GameObject {
 public:
 	Archer(SDL_Texture* texture, double x, double y);
 	void move();
-	void jump();
 	string saveState();
 	void setPreviousGameState(string state);
 	void setState(string state);
