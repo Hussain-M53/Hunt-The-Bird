@@ -16,6 +16,7 @@
 #include "Bow.h"
 #include "Explosion.h"
 #include "DragonFire.h"
+#include "HealthBar.h"
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -50,6 +51,7 @@ SDL_Texture* BowsLeftTexture;
 SDL_Texture* LevelNumberTexture;
 SDL_Texture* Background_Level_Two_Texture;
 SDL_Texture* Background_Level_One_Texture;
+SDL_Texture* HealthBarTexture;
 
 SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect,lives_Rect,health_Rect;
 
@@ -62,6 +64,7 @@ Mix_Chunk* bird2Hit = NULL;
 Mix_Chunk* eggShoot = NULL;
 Mix_Chunk* jumpSound = NULL;
 Mix_Chunk* bowSound = NULL;
+Mix_Chunk* hitHurt = NULL;
 
 double Game::playerX = 0;
 double Game::playerY = 0;
@@ -136,7 +139,6 @@ Game::~Game() {
 void Game::startLevelTwo() {
 	BackgroundTexture = Background_Level_Two_Texture;
 	level_number = 2;
-	Middleware::cleanEntireList(ui_elements_list);
 	Middleware::cleanEntireList(bird_list);
 	Middleware::cleanEntireList(egg_list);
 	Middleware::cleanEntireList(explosion_list);
@@ -221,6 +223,8 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			ui_elements_list.insert(ui_elements_list.begin(), cloud);
 		}
 		archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
+		GameObject* health_bar = new HealthBar(HealthBarTexture, Middleware::SCREEN_WIDTH - 200, 50);
+		ui_elements_list.insert(ui_elements_list.begin(), health_bar);
 	}
 }
 
@@ -237,7 +241,12 @@ void Game::initializeGameStart(string menu_selection) {
 		isLevelTwoBossCreated = false;
 		level_number = 1;
 		BackgroundTexture = Background_Level_One_Texture;
+		archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	}
+	GameObject* sun = new Sun(SunTexture, 0, 0);
+	ui_elements_list.insert(ui_elements_list.begin(), sun);
+	GameObject* health_bar = new HealthBar(HealthBarTexture, Middleware::SCREEN_WIDTH - 200, 50);
+	ui_elements_list.insert(ui_elements_list.begin(), health_bar);
 }
 
 
@@ -417,6 +426,7 @@ void Game::loadMedia() {
 	ExplosionTexture = Middleware::LoadTexture("Images/feathers.png");
 	Explosion2Texture = Middleware::LoadTexture("Images/explosion.png");
 	DragonFireTexture = Middleware::LoadTexture("Images/dragon_fire.png");
+	HealthBarTexture= Middleware::LoadTexture("Images/health_bar.png");
 	BackgroundTexture = Background_Level_One_Texture;
 
 	//load the music and sound effects
@@ -430,6 +440,7 @@ void Game::loadMedia() {
 	eggShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
 	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
 	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
+	hitHurt= Mix_LoadWAV("Music/Sound Effects/hitHurt.wav");
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -459,25 +470,24 @@ void Game::updateScore() {
 	LevelNumberTexture = SDL_CreateTextureFromSurface(Middleware::renderer, levelSurface);
 	SDL_Point LevelTitlePoint = getSize(LevelNumberTexture);
 	Level_Number_Rect = { Middleware::SCREEN_WIDTH - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 90,10,LevelTitlePoint.x,LevelTitlePoint.y };
-
-	string health = "Health: " + Middleware::intToString(archer->getLives());
-	SDL_Surface* healthSurface = TTF_RenderText_Solid(SpaceFont, health.c_str(), Color);
-	healthTexture = SDL_CreateTextureFromSurface(Middleware::renderer, healthSurface);
-	SDL_Point healthTitlePoint = getSize(healthTexture);
-	health_Rect = { Middleware::SCREEN_WIDTH - healthTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 120,10,LevelTitlePoint.x,LevelTitlePoint.y };
-
 	if (isLevelOneBossCreated || isLevelTwoBossCreated) {
 		for (int i = 0; i < bird_list.size(); i++)
 		{
 			if (bird_list.at(i)->getName() == "eagle" || bird_list.at(i)->getName() == "dragon") {
-				string Lives = "Lives: " + Middleware::intToString(bird_list.at(i)->getLives());
+				string Lives = bird_list.at(i)->getName() + " Lives: " + Middleware::intToString(bird_list.at(i)->getLives());
 				SDL_Surface* livesSurface = TTF_RenderText_Solid(SpaceFont, Lives.c_str(), Color);
 				livesTexture = SDL_CreateTextureFromSurface(Middleware::renderer, livesSurface);
 				SDL_Point livesTitlePoint = getSize(livesTexture);
-				lives_Rect = { Middleware::SCREEN_WIDTH - livesTitlePoint.x - healthTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 150,10,livesTitlePoint.x,livesTitlePoint.y };
+				lives_Rect = { Middleware::SCREEN_WIDTH - livesTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 120,10,livesTitlePoint.x,livesTitlePoint.y };
 			}
 		}
-		
+
+	}
+	for (int i = 0; i < ui_elements_list.size(); i++)
+	{
+		if (ui_elements_list.at(i)->getName() == "health_bar") {
+			ui_elements_list.at(i)->setState(Middleware::intToString(archer->getLives()));
+		}
 	}
 
 }
@@ -676,6 +686,8 @@ void Game::detectCollisions() {
 						archer->setState("dead");
 						gameObject->setState("dead");
 						archer->reduceLives();
+						updateScore();
+						Mix_PlayChannel(-1, hitHurt, 0);
 					}
 				}
 			}
