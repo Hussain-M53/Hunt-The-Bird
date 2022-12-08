@@ -124,7 +124,7 @@ Game::~Game() {
 void Game::startLevelTwo() {
 	BackgroundTexture = Background_Level_Two_Texture;
 	level_number = 2;
-	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 200);
+	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
 }
 
 
@@ -210,7 +210,7 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 void Game::initializeGameStart(string menu_selection) {
 	playGameMusic();
 	isRunning = true;
-	archer = new Archer(ArcherTexture, 0, Middleware::SCREEN_HEIGHT - 230);
+	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	if (menu_selection == "continue") getGamePreviousStates();
 	if (menu_selection == "new") {
 		game_score = 0;
@@ -435,7 +435,7 @@ void Game::updateScore() {
 
 void Game::update() {
 	Middleware::nSpeedCount++;
-
+	archer->move();
 	//--------------------------------animate-----------------------------------------
 	if (Middleware::nSpeedCount % 30 == 0) {
 		Middleware::animate(bird_list);
@@ -445,7 +445,7 @@ void Game::update() {
 
 	if (Middleware::nSpeedCount % 10 == 0) {
 		bool animation_complete = archer->animate();
-		if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft")) {
+		if (animation_complete && (archer->getState() == "shootright" || archer->getState() == "shootleft" || archer->getState() == "shootlowleft" || archer->getState() == "shootlowright")) {
 			egg_list.insert(egg_list.begin(), bow);
 			archer->setState("still");
 		}
@@ -505,7 +505,13 @@ void Game::handleEvents() {
 				archer->setState("still");
 			}
 		}
-
+		if (event.type == SDL_KEYDOWN) {
+			if (event.key.keysym.sym == SDLK_w) {
+				if (archer->src_rect.x < 36 * archer->getWidth()) {
+					archer->setState("jump");
+				}
+			}
+		}
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
 			int x, y;
 			SDL_GetMouseState(&x, &y);
@@ -514,26 +520,31 @@ void Game::handleEvents() {
 					if (archer->getState() == "movingright") bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
 					else bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
 					bow_count--;
-					if (bow->getAngleInDegrees() >= -260 && bow->getAngleInDegrees() <= -115) {
+					cout << bow->getAngleInDegrees() << endl;
+					if (bow->getAngleInDegrees() <= -194 && bow->getAngleInDegrees() >= -265) {
 						archer->setState("shootright");
 					}
-					else archer->setState("shootleft");
+					else if (bow->getAngleInDegrees() <= -170 && bow->getAngleInDegrees() >= -193) {
+						archer->setState("shootlowright");
+					}
+					else if (bow->getAngleInDegrees() <= -266 && bow->getAngleInDegrees() >= -350) {
+						archer->setState("shootleft");
+					}
+					else archer->setState("shootlowleft");
 				}
 			}
 		}
 	}
 	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 	if (currentKeyStates[SDL_SCANCODE_A]) {
-		if (archer->src_rect.x < 720) {
+		if (archer->src_rect.x < 6 * archer->getWidth() || archer->src_rect.x > 19 * archer->getWidth()) {
 			archer->setState("movingleft");
 		}
-		archer->move();
 	}
 	if (currentKeyStates[SDL_SCANCODE_D]) {
-		if (archer->src_rect.x < 720) {
+		if (archer->src_rect.x < 6 * archer->getWidth() || archer->src_rect.x > 19 * archer->getWidth()) {
 			archer->setState("movingright");
 		}
-		archer->move();
 	}
 	}
 
@@ -745,4 +756,8 @@ void Game::render() {
 
 bool Game::running() {
 	return isRunning;
+}
+
+int Game::getLevelNumber() {
+	return level_number;
 }
