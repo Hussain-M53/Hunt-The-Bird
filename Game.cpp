@@ -56,6 +56,8 @@ Mix_Chunk* dragonFire = NULL;
 Mix_Chunk* laserShoot = NULL;
 Mix_Chunk* enemyShoot = NULL;
 Mix_Chunk* BirdChirp = NULL;
+Mix_Chunk* jumpSound = NULL;
+Mix_Chunk* bowSound = NULL;
 
 double Game::playerX = 0;
 double Game::playerY = 0;
@@ -115,6 +117,9 @@ Game::~Game() {
 	Mix_FreeChunk(enemyShoot);
 	Mix_FreeChunk(laserShoot);
 	Mix_FreeChunk(dragonFire);
+	Mix_FreeChunk(BirdChirp);
+	Mix_FreeChunk(jumpSound);
+	Mix_FreeChunk(bowSound);
 
 	Mix_Quit();
 	TTF_Quit();
@@ -405,10 +410,11 @@ void Game::loadMedia() {
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
 	explosion = Mix_LoadWAV("Music/Sound Effects/explosion.wav");
-	//bowShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
 	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
 	enemyShoot = Mix_LoadWAV("Music/Sound Effects/laserShoot.wav");
 	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
+	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
+	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -517,6 +523,7 @@ void Game::handleEvents() {
 			if (event.key.keysym.sym == SDLK_w) {
 				if (archer->src_rect.x < 36 * archer->getWidth()) {
 					archer->setState("jump");
+					Mix_PlayChannel(-1, jumpSound, 0);
 				}
 			}
 		}
@@ -528,7 +535,7 @@ void Game::handleEvents() {
 					if (archer->getState() == "movingright") bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
 					else bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
 					bow_count--;
-					cout << bow->getAngleInDegrees() << endl;
+					//cout << bow->getAngleInDegrees() << endl;
 					if (bow->getAngleInDegrees() <= -194 && bow->getAngleInDegrees() >= -265) {
 						archer->setState("shootright");
 					}
@@ -540,6 +547,7 @@ void Game::handleEvents() {
 					}
 					else archer->setState("shootlowleft");
 				}
+				Mix_PlayChannel(-1, bowSound, 0);
 			}
 		}
 	}
