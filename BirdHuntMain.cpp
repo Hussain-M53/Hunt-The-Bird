@@ -40,7 +40,6 @@ int main(int argc, char* args[])
 			else if (level == 2) {
 				level = game->handleLevelTwoChanges();
 			}
-			
 			game->update();
 			game->render();
 

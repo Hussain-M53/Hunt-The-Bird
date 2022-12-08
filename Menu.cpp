@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include "Menu.h"
 #include <iostream>
+#include "Button.h"
 using namespace std;
 
 Menu* Menu::menu_instance = nullptr;
@@ -94,6 +95,7 @@ string Menu::showMenu() {
 	SDL_Texture* Message = SDL_CreateTextureFromSurface(Middleware::renderer, gameTitleSurface);
 	SDL_Point titlePoint = getSize(Message);
 	SDL_Rect rect = { (Middleware::SCREEN_WIDTH / 2) - (titlePoint.x / 2),(Middleware::SCREEN_HEIGHT / 4) - (titlePoint.y),titlePoint.x,titlePoint.y };
+
 
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(SpaceFont, "New", Color);
 	SDL_Texture* playTexture = SDL_CreateTextureFromSurface(Middleware::renderer, surfaceMessage);

@@ -10,6 +10,7 @@ class Archer : public GameObject {
 	double gravity_up,gravity_down;
 	bool isJumping,jumpDown;
 	double groundHeight;
+	int count;
 public:
 	Archer(SDL_Texture* texture, double x, double y);
 	void move();

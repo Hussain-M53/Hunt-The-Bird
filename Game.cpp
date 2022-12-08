@@ -482,7 +482,6 @@ void Game::update() {
 	Middleware::move(ui_elements_list);
 	Middleware::move(explosion_list);
 
-
 	//--------------------------------clean-----------------------------------------
 	Middleware::clean(bird_list);
 	Middleware::clean(egg_list);
@@ -666,7 +665,6 @@ void Game::detectCollisions() {
 				}
 			}
 		}
-
 	}
 }
 void Game::insertEggs() {

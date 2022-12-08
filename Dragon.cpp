@@ -26,7 +26,6 @@ bool Dragon::animate() {
 		else {
 			src_rect.x += width;
 		}
-	
 	return false;
 }
 
