@@ -18,7 +18,7 @@ private:
 
 public:
 	static Menu* getInstance();
-	SDL_Point getSize(SDL_Texture* texture);
+	static SDL_Point getSize(SDL_Texture* texture);
 	bool checkButtonCollision(int x, int y, SDL_Rect rect);
 	string showMenu();
 	void clickSound();
