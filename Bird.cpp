@@ -23,9 +23,15 @@ void Bird::move() {
 				else y_pos--;
 			}
 		}
-		if (state == "die" && y_pos <= Middleware::SCREEN_HEIGHT - 150) {
-			y_pos += ty;
-			ty *= friction;
+		if (state == "die" && y_pos <= Middleware::SCREEN_HEIGHT) {
+			if (y_pos >= Middleware::SCREEN_HEIGHT) {
+				cout << "killed" << endl;
+				alive = false;
+			}
+			else {
+				y_pos += ty;
+				ty *= friction;
+			}
 		}
 	}
 	else

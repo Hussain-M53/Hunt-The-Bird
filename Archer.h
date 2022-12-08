@@ -19,6 +19,5 @@ public:
 	void setPreviousGameState(string state);
 	void setState(string state);
 	bool animate();
-
 };
 

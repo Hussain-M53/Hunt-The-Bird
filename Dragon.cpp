@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Middleware.h"
 #include "Bird.h"
+#include "Game.h"
+
 
 using namespace std;
 
@@ -37,27 +39,32 @@ void Dragon::move() {
 
 	if (moveDown) {
 		flip = SDL_FLIP_VERTICAL;
-		this->y_pos += 3;
+		this->y_pos += 1;
 		if (int(y_pos) % 5 == 0) {
 			moveDown = false;
 		}
 	}
 	else {
+		double random = 10 + rand() % 30;
 		if (moveRight) {
 			state = "movingright";
-			flip = SDL_FLIP_HORIZONTAL;
-			x_pos--;
-			if (x_pos <= 10) {
+			flip = SDL_FLIP_NONE;
+			x_pos++;
+			if (x_pos >= Middleware::SCREEN_WIDTH - width) {
 				moveDown = true;
+			}
+			else if (x_pos >= Game::playerX+ random) {
 				moveRight = false;
 			}
 		}
 		else {
 			state = "movingleft";
-			flip = SDL_FLIP_NONE;
-			x_pos++;
-			if (x_pos >= Middleware::SCREEN_WIDTH - dst_rect.w) {
+			flip = SDL_FLIP_HORIZONTAL;
+			x_pos--;
+			if (x_pos <= 0) {
 				moveDown = true;
+			}
+			else if (x_pos <= Game::playerX+ random ) {
 				moveRight = true;
 			}
 		}

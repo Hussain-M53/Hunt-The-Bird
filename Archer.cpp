@@ -16,6 +16,7 @@ Archer::Archer(SDL_Texture* texture, double x, double y) :GameObject(texture, x,
 	jumpDown = false;
 	isJumping = false;
 	groundHeight = y;
+	lives = 6;
 }
 
 
