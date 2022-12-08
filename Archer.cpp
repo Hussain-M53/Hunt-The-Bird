@@ -29,7 +29,7 @@ void Archer::move() {
 		}
 		if (isJumping || y_pos < groundHeight)
 		{
-			if (y_pos > 300 && jumpDown == false) {
+			if (ty > 0.1 && jumpDown == false) {
 
 				y_pos -= ty;
 				ty *= gravity_up;
@@ -49,8 +49,8 @@ void Archer::move() {
 			}
 		}
 	}
-	if (x_pos < -width / 2) x_pos++;
-	if (x_pos > Middleware::SCREEN_WIDTH - width/2) x_pos--;
+	if (x_pos < -double(width / 2)) x_pos++;
+	if (x_pos > Middleware::SCREEN_WIDTH - double(width/2)) x_pos--;
 }
 	
 
