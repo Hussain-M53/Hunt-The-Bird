@@ -59,6 +59,7 @@ void GameObject::setState(string state)
 {
 	this->state = state;
 }
+
 SDL_Rect GameObject::getDstRect(){
 	return dst_rect;
 }
@@ -71,6 +72,7 @@ void GameObject::reduceLives() {
 string GameObject::saveState(){
 	return "";
 }
+
 void GameObject::setPreviousGameState(string state){}
 
 bool GameObject::animate(){
@@ -83,11 +85,10 @@ void GameObject::update() {
 	dst_rect.y = int(y_pos);
 }
 
-
-
 //related to game objects behaviour
 void GameObject::render() {
 	this->update();
 	SDL_RenderCopyEx(Middleware::renderer, texture, &src_rect, &dst_rect, angle_in_degree, NULL, flip);
 }
-void GameObject::move(){}
+void GameObject::move(){
+}

@@ -9,10 +9,19 @@ Explosion:: ~Explosion() {
 Explosion::Explosion(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y)
 {
 	name = "explosion";
+	int random =  1+ rand() % 3;
+	if (random == 2) {
+		src_rect.x = 86;
+		src_rect.y = 0;
+	}
+	else if(random == 3) {
+		src_rect.x = 172;
+		src_rect.y = 0;
+	} 
 	src_rect.h = 64;
 	src_rect.w = 64;
-	dst_rect.w = 64;
-	dst_rect.h = 64;
+	dst_rect.w = 16;
+	dst_rect.h = 16;
 	//Initialize animation
 	mFrame = rand() % 50;
 	angle_in_radian = 0;

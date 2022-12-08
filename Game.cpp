@@ -603,11 +603,11 @@ void Game::detectCollisions() {
 	for (int b = 0; b < egg_list.size(); b++)
 	{
 
-		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg" || egg_list.at(b)->getName()=="dragon_fire") {
+		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg") {
 			GameObject* gameObject = egg_list.at(b);
 			if (checkCollision(gameObject, archer)) {
-				Middleware::createExplosion(gameObject, ExplosionTexture, explosion_list, explosion);
-				gameObject->setAliveToFalse();
+				gameObject->src_rect.x = 32;
+				//gameObject->setAliveToFalse();
 				archer->setAliveToFalse();
 				archer->setState("dead");
 			}

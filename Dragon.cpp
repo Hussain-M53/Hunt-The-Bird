@@ -46,7 +46,7 @@ void Dragon::move() {
 	else {
 		if (moveRight) {
 			state = "movingright";
-			flip = SDL_FLIP_HORIZONTAL;;
+			flip = SDL_FLIP_HORIZONTAL;
 			x_pos--;
 			if (x_pos <= 10) {
 				moveDown = true;
