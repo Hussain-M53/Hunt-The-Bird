@@ -40,32 +40,27 @@ void Dragon::move() {
 	if (moveDown) {
 		flip = SDL_FLIP_VERTICAL;
 		this->y_pos += 1;
-		if (int(y_pos) % 5 == 0) {
-			moveDown = false;
-		}
+		moveDown = false;
 	}
 	else {
-		double random = 10 + rand() % 30;
+		int random = 300 + rand() % 400;
+		cout << random << endl;
 		if (moveRight) {
 			state = "movingright";
 			flip = SDL_FLIP_NONE;
 			x_pos++;
-			if (x_pos >= Middleware::SCREEN_WIDTH - width) {
-				moveDown = true;
-			}
-			else if (x_pos >= Game::playerX+ random) {
+			if (x_pos >= Middleware::SCREEN_WIDTH - width || x_pos - Game::playerX >= random) {
 				moveRight = false;
+				moveDown = true;
 			}
 		}
 		else {
 			state = "movingleft";
 			flip = SDL_FLIP_HORIZONTAL;
 			x_pos--;
-			if (x_pos <= 0) {
-				moveDown = true;
-			}
-			else if (x_pos <= Game::playerX+ random ) {
+			if (x_pos <= 0 || Game::playerX - x_pos >= random) {
 				moveRight = true;
+				moveDown = true;
 			}
 		}
 	}
