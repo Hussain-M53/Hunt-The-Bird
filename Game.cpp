@@ -56,17 +56,12 @@ SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect,lives_Rect,health_Rect;
 Mix_Music* gameMusic = NULL;
 Mix_Chunk* dragonFire = NULL;
 Mix_Chunk* BirdChirp = NULL;
-<<<<<<< HEAD
 Mix_Chunk* eagleHit = NULL;
 Mix_Chunk* bird1Hit = NULL;
 Mix_Chunk* bird2Hit = NULL;
 Mix_Chunk* eggShoot = NULL;
-
-
-=======
 Mix_Chunk* jumpSound = NULL;
 Mix_Chunk* bowSound = NULL;
->>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 
 double Game::playerX = 0;
 double Game::playerY = 0;
@@ -125,18 +120,14 @@ Game::~Game() {
 
 	//Free the sound effects
 	Mix_FreeChunk(dragonFire);
-<<<<<<< HEAD
 	Mix_FreeChunk(eagleHit);
 	Mix_FreeChunk(bird1Hit);
 	Mix_FreeChunk(bird2Hit);
 	Mix_FreeChunk(BirdChirp);
 	Mix_FreeChunk(eggShoot);
-=======
 	Mix_FreeChunk(BirdChirp);
 	Mix_FreeChunk(jumpSound);
 	Mix_FreeChunk(bowSound);
-
->>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 	Mix_Quit();
 	TTF_Quit();
 	SDL_Quit();
@@ -145,6 +136,10 @@ Game::~Game() {
 void Game::startLevelTwo() {
 	BackgroundTexture = Background_Level_Two_Texture;
 	level_number = 2;
+	Middleware::cleanEntireList(ui_elements_list);
+	Middleware::cleanEntireList(bird_list);
+	Middleware::cleanEntireList(egg_list);
+	Middleware::cleanEntireList(explosion_list);
 	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
 }
 
@@ -426,23 +421,15 @@ void Game::loadMedia() {
 
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
-<<<<<<< HEAD
-=======
-	explosion = Mix_LoadWAV("Music/Sound Effects/explosion.wav");
->>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
 	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
-<<<<<<< HEAD
 	bird1Hit = Mix_LoadWAV("Music/Sound Effects/bird1_hit.wav");
 	bird2Hit = Mix_LoadWAV("Music/Sound Effects/bird2_hit.wav");
 	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
 	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
 	eggShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
-
-=======
 	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
 	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
->>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -582,10 +569,6 @@ void Game::handleEvents() {
 					if (archer->getState() == "movingright") bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
 					else bow = new Bow(BowTexture, archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
 					bow_count--;
-<<<<<<< HEAD
-=======
-					//cout << bow->getAngleInDegrees() << endl;
->>>>>>> 3e584a3019b36962dfb3472fa3066d1aa864c5b1
 					if (bow->getAngleInDegrees() <= -194 && bow->getAngleInDegrees() >= -265) {
 						archer->setState("shootright");
 					}

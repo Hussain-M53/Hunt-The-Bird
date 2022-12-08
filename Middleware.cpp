@@ -33,12 +33,7 @@ void Middleware::clean(vector<GameObject*>& list)
 
 void Middleware::cleanEntireList(vector<GameObject*>& list)
 {
-	for (int i = 0; i < list.size(); i++)
-	{
-		delete list.at(i);
-		list.erase(list.begin() + i);
-
-	}
+	list.clear();
 }
 
 string Middleware::getListStates(vector<GameObject*>& list)
