@@ -1,5 +1,7 @@
 #include "Music.h"
 
+Music* Music::musicInstance = nullptr;
+
 Music::Music(){
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
@@ -12,6 +14,8 @@ Music::Music(){
 	eggShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
 	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
 	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
+	menuMusic = Mix_LoadMUS("Music/Menu_Music.mp3");
+	menuSelect = Mix_LoadWAV("Music/Sound Effects/blipSelect.wav");
 }
 
 Music::~Music() {
@@ -30,4 +34,11 @@ Music::~Music() {
 	Mix_FreeChunk(jumpSound);
 	Mix_FreeChunk(bowSound);
 	Mix_Quit();
+}
+
+Music* Music::getMusicInstance()
+{
+	if (musicInstance == nullptr)
+		musicInstance = new Music();
+	return musicInstance;
 }

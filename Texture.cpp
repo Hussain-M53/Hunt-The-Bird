@@ -2,6 +2,9 @@
 #include <SDL_image.h>
 #include "Middleware.h"
 
+
+Texture* Texture::textureInstance = nullptr;
+
 Texture::Texture() {
 	BowTexture = nullptr;
 	scoreTexture=nullptr;
@@ -27,6 +30,8 @@ Texture::Texture() {
 	Explosion2Texture = LoadTexture("Images/explosion.png");
 	DragonFireTexture = LoadTexture("Images/dragon_fire.png");
 	HealthBarTexture = LoadTexture("Images/health_bar.png");
+	menu_screen_texture = LoadTexture("Images/menu_screen.png");
+	buttonTexture = LoadTexture("Images/buttons.png");
 	BackgroundTexture = Background_Level_One_Texture;
 }
 Texture::~Texture() {
@@ -48,6 +53,14 @@ Texture::~Texture() {
 	SDL_DestroyTexture(ExplosionTexture);
 	SDL_DestroyTexture(Explosion2Texture);
 }
+Texture* Texture::getInstance()
+{
+	if (textureInstance == nullptr)
+		textureInstance = new Texture();
+
+	return textureInstance;
+}
+
 SDL_Texture* Texture::LoadTexture(const char* filename) {
 	SDL_Surface* tempSurface = IMG_Load(filename);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(Middleware::renderer, tempSurface);
@@ -161,6 +174,16 @@ SDL_Texture* Texture::getHealthBarTexture()
 SDL_Texture* Texture::getBowsLeftTexture()
 {
 	return BowsLeftTexture;
+}
+
+SDL_Texture* Texture::getmenu_screen_texture()
+{
+	return menu_screen_texture;
+}
+
+SDL_Texture* Texture::getbuttonTexture()
+{
+	return buttonTexture;
 }
 
 SDL_Texture* Texture::getLevelNumberTexture()

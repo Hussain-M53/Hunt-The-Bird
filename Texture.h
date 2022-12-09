@@ -2,6 +2,7 @@
 #include <SDL_render.h>
 
 class Texture {
+	static Texture* textureInstance;
 	SDL_Texture* ArcherTexture;
 	SDL_Texture* GreyBirdTexture;
 	SDL_Texture* RedBirdTexture;
@@ -26,10 +27,12 @@ class Texture {
 	SDL_Texture* LevelNumberTexture;
 	SDL_Texture* Background_Level_Two_Texture;
 	SDL_Texture* Background_Level_One_Texture;
-
-public:
+	SDL_Texture* menu_screen_texture;
+	SDL_Texture* buttonTexture;
 	Texture();
 	~Texture();
+public:
+	static Texture* getInstance();
 	SDL_Texture* LoadTexture(const char* filename);
 	SDL_Texture* getArcherTexture();
 	SDL_Texture* getGreyBirdTexture();
@@ -52,6 +55,8 @@ public:
 	SDL_Texture* getlivesTexture();
 	SDL_Texture* getHealthBarTexture();
 	SDL_Texture* getBowsLeftTexture();
+	SDL_Texture* getmenu_screen_texture();
+	SDL_Texture* getbuttonTexture();
 	SDL_Texture* getLevelNumberTexture();
 	SDL_Texture* getBackground_Level_Two_Texture();
 	SDL_Texture* getBackground_Level_One_Texture();

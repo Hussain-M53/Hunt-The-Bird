@@ -2,14 +2,12 @@
 #include "Menu.h"
 #include <iostream>
 #include "Button.h"
+#include "Music.h"
 using namespace std;
 
 Menu* Menu::menu_instance = nullptr;
 SDL_Rect buttonTopLeft, buttonTopMiddle, buttonTopRight, buttonBottomLeft, buttonBottomMiddle, buttonBottomRight;
-Mix_Music* menuMusic = NULL;
-Mix_Chunk* menuSelect = NULL;
-SDL_Texture* buttonTexture;
-SDL_Texture* menu_screen_texture;
+
 
 Menu::Menu() {
 	isMenu = true;
@@ -25,17 +23,10 @@ SDL_Point Menu::getSize(SDL_Texture* texture) {
 	return size;
 }
 
-void Menu::loadMedia() {
-	menuMusic = Mix_LoadMUS("Music/Menu_Music.mp3");
-	menuSelect = Mix_LoadWAV("Music/Sound Effects/blipSelect.wav");
-	buttonTexture = getTexture->LoadTexture("Images/buttons.png");
-	menu_screen_texture = getTexture->LoadTexture("Images/menu_screen.png");
-
-}
 
 void Menu::clickSound() {
 	Mix_HaltMusic();
-	Mix_PlayChannel(-1, menuSelect, 0);
+	Mix_PlayChannel(-1, Music::getMusicInstance()->menuSelect, 0);
 }
 
 
@@ -56,25 +47,24 @@ bool Menu::checkButtonCollision(int x, int y, SDL_Rect rect) {
 
 void Menu::display_button(SDL_Rect* gSpriteClips,int height) {
 	buttonTopLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height,gSpriteClips[0].w,gSpriteClips[0].h};
-	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonTopLeft, NULL, NULL, SDL_FLIP_VERTICAL);
+	SDL_RenderCopyEx(Middleware::renderer, Texture::getInstance()->getbuttonTexture(), &gSpriteClips[0], &buttonTopLeft, NULL, NULL, SDL_FLIP_VERTICAL);
 	buttonTopMiddle = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + gSpriteClips[0].w ,height,gSpriteClips[0].w,gSpriteClips[0].h};
-	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[1], &buttonTopMiddle, 90, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(Middleware::renderer, Texture::getInstance()->getbuttonTexture(), &gSpriteClips[1], &buttonTopMiddle, 90, NULL, SDL_FLIP_NONE);
 	buttonTopRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2*gSpriteClips[0].w),height,gSpriteClips[0].w,gSpriteClips[0].h };
-	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonTopRight, 180, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(Middleware::renderer, Texture::getInstance()->getbuttonTexture(), &gSpriteClips[0], &buttonTopRight, 180, NULL, SDL_FLIP_NONE);
 	buttonBottomLeft = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) ,height+gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h};
-	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonBottomLeft, NULL, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(Middleware::renderer, Texture::getInstance()->getbuttonTexture(), &gSpriteClips[0], &buttonBottomLeft, NULL, NULL, SDL_FLIP_NONE);
 	buttonBottomMiddle = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + gSpriteClips[0].w ,height + gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h };
-	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[1], &buttonBottomMiddle, -90, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(Middleware::renderer, Texture::getInstance()->getbuttonTexture(), &gSpriteClips[1], &buttonBottomMiddle, -90, NULL, SDL_FLIP_NONE);
 	buttonBottomRight = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2) + (2 * gSpriteClips[0].w),height + gSpriteClips[0].h,gSpriteClips[0].w,gSpriteClips[0].h };
-	SDL_RenderCopyEx(Middleware::renderer, buttonTexture, &gSpriteClips[0], &buttonBottomRight, NULL, NULL, SDL_FLIP_HORIZONTAL);
+	SDL_RenderCopyEx(Middleware::renderer, Texture::getInstance()->getbuttonTexture(), &gSpriteClips[0], &buttonBottomRight, NULL, NULL, SDL_FLIP_HORIZONTAL);
 
 }
 
 string Menu::showMenu() {
-	loadMedia();
+	Texture::getInstance();
 	string game_state = "";
 	Mix_HaltMusic();
-	loadMedia();
 	TTF_Font* SpaceFont = TTF_OpenFont("Fonts/debug_font.otf", 40);
 	TTF_Font* SpaceFontLarge = TTF_OpenFont("Fonts/debug_font.otf", 100);
 
@@ -119,7 +109,7 @@ string Menu::showMenu() {
 	if (Mix_PlayingMusic() == 0)
 	{
 		//Play the music
-		Mix_PlayMusic(menuMusic, -1);
+		Mix_PlayMusic(Music::getMusicInstance() -> menuMusic, -1);
 	}
 	SDL_Rect play_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (3 * gSpriteClips[0].h) - 10) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
 	SDL_Rect exit_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (gSpriteClips[0].h)) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
@@ -161,7 +151,7 @@ string Menu::showMenu() {
 
 		SDL_Rect menu_screen_rect = {0,0,900,700};
 		SDL_RenderClear(Middleware::renderer);
-		SDL_RenderCopy(Middleware::renderer,menu_screen_texture,NULL, &menu_screen_rect);
+		SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getmenu_screen_texture(),NULL, &menu_screen_rect);
 		SDL_RenderCopy(Middleware::renderer, Message, NULL, &rect);
 		display_button(gSpriteClips,50+ ((Middleware::SCREEN_HEIGHT / 2) - (3 * gSpriteClips[0].h) - 10) + 40);
 		display_button(gSpriteClips,50+ ((Middleware::SCREEN_HEIGHT / 2) - (gSpriteClips[0].h)) + 40);
@@ -173,15 +163,14 @@ string Menu::showMenu() {
 	}
 	SDL_FreeSurface(gameTitleSurface);
 	SDL_FreeSurface(surfaceMessage);
-	SDL_DestroyTexture(buttonTexture);
-	SDL_DestroyTexture(menu_screen_texture);
+	SDL_DestroyTexture(Texture::getInstance()->getbuttonTexture());
+	SDL_DestroyTexture(Texture::getInstance()->getmenu_screen_texture());
 	SDL_DestroyTexture(Message);
 	SDL_DestroyTexture(playTexture);
 	SDL_DestroyTexture(exitTexture);
 	SDL_DestroyTexture(continueTexture);
-	Mix_FreeMusic(menuMusic);
-	menuMusic = NULL;
-	Mix_FreeChunk(menuSelect);
+	Mix_FreeMusic(Music::getMusicInstance() ->menuMusic);
+	Mix_FreeChunk(Music::getMusicInstance() ->menuSelect);
 	return game_state;
 }
 

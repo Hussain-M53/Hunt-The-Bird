@@ -31,8 +31,6 @@ private:
 	vector<GameObject*> explosion_list;
 	GameObject* bow;
 	GameObject* archer;
-	Music* music = nullptr;
-	Texture* getTexture;
 
 public:
 	int getLevelNumber();

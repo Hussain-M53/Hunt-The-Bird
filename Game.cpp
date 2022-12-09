@@ -51,8 +51,6 @@ Game::Game() {
 	health_Rect = { 0,0,0,0 };
 	archer = nullptr;
 	bow = nullptr;
-	music = new Music();
-	getTexture = nullptr;
 }
 
 Game::~Game() {
@@ -64,7 +62,7 @@ Game::~Game() {
 }
 
 void Game::startLevelTwo() {
-	getTexture->setBackgroundTexture(getTexture->getBackground_Level_Two_Texture());
+	Texture::getInstance()->setBackgroundTexture(Texture::getInstance()->getBackground_Level_Two_Texture());
 	level_number = 2;
 	Middleware::cleanEntireList(bird_list);
 	Middleware::cleanEntireList(egg_list);
@@ -85,7 +83,7 @@ Game* Game::getInstance() {
 void Game::playGameMusic() {
 	Mix_HaltMusic();
 	//If there is no music playing
-	if (Mix_PlayingMusic() == 0) Mix_PlayMusic(music->gameMusic, -1);
+	if (Mix_PlayingMusic() == 0) Mix_PlayMusic(Music::getMusicInstance()->gameMusic, -1);
 	else
 	{
 		if (Mix_PausedMusic() == 1) Mix_ResumeMusic();
@@ -140,20 +138,20 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			isRunning = false;
 		}
 		loadMedia();
-		GameObject* sun = new Sun(getTexture->getSunTexture(), 0, 0);
+		GameObject* sun = new Sun(Texture::getInstance()->getSunTexture(), 0, 0);
 		ui_elements_list.insert(ui_elements_list.begin(), sun);
 
 		int generate_random_cloud = rand() % 10;
 		for (int i = 0; i <= generate_random_cloud; i++) {
 			int random_clouds_x = rand() % Middleware::SCREEN_WIDTH;
 			int random_clouds_y = rand() % Middleware::SCREEN_HEIGHT / 2;
-			GameObject* cloud = new Cloud(getTexture->getCloudTexture(), random_clouds_x, random_clouds_y);
+			GameObject* cloud = new Cloud(Texture::getInstance()->getCloudTexture(), random_clouds_x, random_clouds_y);
 			ui_elements_list.insert(ui_elements_list.begin(), cloud);
 		}
 
 		archer = Archer::getInstance();
 		updateScore();
-		GameObject* health_bar = new HealthBar(getTexture->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
+		GameObject* health_bar = new HealthBar(Texture::getInstance()->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
 		ui_elements_list.insert(ui_elements_list.begin(), health_bar);
 	}
 }
@@ -170,13 +168,13 @@ void Game::initializeGameStart(string menu_selection) {
 		isLevelOneBossCreated = false;
 		isLevelTwoBossCreated = false;
 		level_number = 1;
-		getTexture->setBackgroundTexture(getTexture->getBackground_Level_One_Texture());
+		Texture::getInstance()->setBackgroundTexture(Texture::getInstance()->getBackground_Level_One_Texture());
 		archer = Archer::getInstance();
 	}
 
-	GameObject* sun = new Sun(getTexture->getSunTexture(), 0, 0);
+	GameObject* sun = new Sun(Texture::getInstance()->getSunTexture(), 0, 0);
 	ui_elements_list.insert(ui_elements_list.begin(), sun);
-	GameObject* health_bar = new HealthBar(getTexture->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
+	GameObject* health_bar = new HealthBar(Texture::getInstance()->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
 	ui_elements_list.insert(ui_elements_list.begin(), health_bar);
 }
 
@@ -236,63 +234,63 @@ void Game::getGamePreviousStates() {
 			}
 			//Enemies
 			if (Tag == "<GreyBird>") {
-				GameObject* gameObject = new GreyBird(getTexture->getGreyBirdTexture(), 0, 0);
+				GameObject* gameObject = new GreyBird(Texture::getInstance()->getGreyBirdTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				bird_list.insert(bird_list.begin(), gameObject);
 			}
 			if (Tag == "<YellowBird>") {
-				GameObject* gameObject = new YellowBird(getTexture->getYellowBirdTexture(), 0, 0);
+				GameObject* gameObject = new YellowBird(Texture::getInstance()->getYellowBirdTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				bird_list.insert(bird_list.begin(), gameObject);
 			}
 			if (Tag == "<RedBird>") {
-				GameObject* gameObject = new RedBird(getTexture->getRedBirdTexture(), 0, 0);
+				GameObject* gameObject = new RedBird(Texture::getInstance()->getRedBirdTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				bird_list.insert(bird_list.begin(), gameObject);
 			}
 			if (Tag == "<Dragon>") {
-				GameObject* gameObject = new Dragon(getTexture->getDragonTexture(), 0, 0);
+				GameObject* gameObject = new Dragon(Texture::getInstance()->getDragonTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				bird_list.insert(bird_list.begin(), gameObject);
 			}
 			if (Tag == "<Eagle>") {
-				GameObject* gameObject = new Eagle(getTexture->getEagleTexture(), 0, 0);
+				GameObject* gameObject = new Eagle(Texture::getInstance()->getEagleTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				bird_list.insert(bird_list.begin(), gameObject);
 			}
 			//Eggs and Fire
 			if (Tag == "<GreyBirdEgg>") {
-				GameObject* gameObject = new GreyBirdEgg(getTexture->getGreyEggTexture(), 0, 0);
+				GameObject* gameObject = new GreyBirdEgg(Texture::getInstance()->getGreyEggTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
 			}
 			if (Tag == "<YellowBirdEgg>") {
-				GameObject* gameObject = new YellowBirdEgg(getTexture->getYellowEggTexture(), 0, 0);
+				GameObject* gameObject = new YellowBirdEgg(Texture::getInstance()->getYellowEggTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
 			}
 			if (Tag == "<RedBirdEgg>") {
-				GameObject* gameObject = new RedBirdEgg(getTexture->getRedEggTexture(), 0, 0);
+				GameObject* gameObject = new RedBirdEgg(Texture::getInstance()->getRedEggTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
 			}
 			if (Tag == "<EagleBirdEgg>") {
-				GameObject* gameObject = new EagleBirdEgg(getTexture->getEagleEggTexture(), 0, 0);
+				GameObject* gameObject = new EagleBirdEgg(Texture::getInstance()->getEagleEggTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
 			}
 			if (Tag == "<DragonFire>") {
-				GameObject* gameObject = new RedBirdEgg(getTexture->getDragonFireTexture(), 0, 0);
+				GameObject* gameObject = new RedBirdEgg(Texture::getInstance()->getDragonFireTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				egg_list.insert(egg_list.begin(), gameObject);
 			}
 			if (Tag == "<Sun>") {
-				GameObject* gameObject = new Sun(getTexture->getSunTexture(), 0, 0);
+				GameObject* gameObject = new Sun(Texture::getInstance()->getSunTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
 			}
 			if (Tag == "<Cloud>") {
-				GameObject* gameObject = new Cloud(getTexture->getCloudTexture(), 0, 0);
+				GameObject* gameObject = new Cloud(Texture::getInstance()->getCloudTexture(), 0, 0);
 				gameObject->setPreviousGameState(state);
 				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
 			}
@@ -339,7 +337,7 @@ void Game::saveStatesinFile() {
 
 void Game::loadMedia() {
 	//load the textures
-	getTexture = new Texture();
+	Texture::getInstance();
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -354,20 +352,20 @@ void Game::updateScore() {
 
 	string bows_left = "Bows Left: " + Middleware::intToString(bow_count);
 	SDL_Surface* BowsLeftSurface = TTF_RenderText_Solid(SpaceFont, bows_left.c_str(), Color);
-	getTexture->setBowsLeftTexture(SDL_CreateTextureFromSurface(Middleware::renderer, BowsLeftSurface));
-	SDL_Point BowTitlePoint = getSize(getTexture->getBowsLeftTexture());
+	Texture::getInstance()->setBowsLeftTexture(SDL_CreateTextureFromSurface(Middleware::renderer, BowsLeftSurface));
+	SDL_Point BowTitlePoint = getSize(Texture::getInstance()->getBowsLeftTexture());
 	Bow_Count_Rect = { Middleware::SCREEN_WIDTH - BowTitlePoint.x - 30,10,BowTitlePoint.x,BowTitlePoint.y };
 
 	string score = "Score: " + Middleware::intToString(game_score);
 	SDL_Surface* scoreSurface = TTF_RenderText_Solid(SpaceFont, score.c_str(), Color);
-	getTexture->setscoreTexture(SDL_CreateTextureFromSurface(Middleware::renderer, scoreSurface));
-	SDL_Point ScoreTitlePoint = getSize(getTexture->getscoreTexture());
+	Texture::getInstance()->setscoreTexture(SDL_CreateTextureFromSurface(Middleware::renderer, scoreSurface));
+	SDL_Point ScoreTitlePoint = getSize(Texture::getInstance()->getscoreTexture());
 	Score_Rect = { Middleware::SCREEN_WIDTH - ScoreTitlePoint.x - BowTitlePoint.x - 60,10,ScoreTitlePoint.x,ScoreTitlePoint.y };
 
 	string level = "Level #" + Middleware::intToString(level_number);
 	SDL_Surface* levelSurface = TTF_RenderText_Solid(SpaceFont, level.c_str(), Color);
-	getTexture->setLevelNumberTexture(SDL_CreateTextureFromSurface(Middleware::renderer, levelSurface));
-	SDL_Point LevelTitlePoint = getSize(getTexture->getLevelNumberTexture());
+	Texture::getInstance()->setLevelNumberTexture(SDL_CreateTextureFromSurface(Middleware::renderer, levelSurface));
+	SDL_Point LevelTitlePoint = getSize(Texture::getInstance()->getLevelNumberTexture());
 	Level_Number_Rect = { Middleware::SCREEN_WIDTH - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 90,10,LevelTitlePoint.x,LevelTitlePoint.y };
 
 
@@ -378,8 +376,8 @@ void Game::updateScore() {
 				string Lives = bird_list.at(i)->getName() + " Lives: " + Middleware::intToString(bird_list.at(i)->getLives());
 				SDL_Surface* livesSurface = TTF_RenderText_Solid(SpaceFont, Lives.c_str(), Color);
 
-				getTexture->setlivesTexture(SDL_CreateTextureFromSurface(Middleware::renderer, livesSurface));
-				SDL_Point livesTitlePoint = getSize(getTexture->getlivesTexture());
+				Texture::getInstance()->setlivesTexture(SDL_CreateTextureFromSurface(Middleware::renderer, livesSurface));
+				SDL_Point livesTitlePoint = getSize(Texture::getInstance()->getlivesTexture());
 				lives_Rect = { Middleware::SCREEN_WIDTH - livesTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 120,10,livesTitlePoint.x,livesTitlePoint.y };
 
 			}
@@ -467,7 +465,7 @@ void Game::handleEvents() {
 			if (event.key.keysym.sym == SDLK_w) {
 				if (archer->src_rect.x < 36 * archer->getWidth()) {
 					archer->setState("jump");
-					Mix_PlayChannel(-1, music->jumpSound, 0);
+					Mix_PlayChannel(-1, Music::getMusicInstance()->jumpSound, 0);
 				}
 			}
 		}
@@ -476,8 +474,8 @@ void Game::handleEvents() {
 			SDL_GetMouseState(&x, &y);
 			if (SDL_BUTTON_LEFT == event.button.button) {
 				if (bow_count > 0) {
-					if (archer->getState() == "movingright") bow = new Bow(getTexture->getBowTexture(), archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
-					else bow = new Bow(getTexture->getBowTexture(), archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
+					if (archer->getState() == "movingright") bow = new Bow(Texture::getInstance()->getBowTexture(), archer->getX() + archer->getWidth() / 2, archer->getY() + archer->getHeight() / 4, x, y);
+					else bow = new Bow(Texture::getInstance()->getBowTexture(), archer->getX() + archer->getWidth() / 4, archer->getY() + archer->getHeight() / 4, x, y);
 					bow_count--;
 					updateScore();
 					if (bow->getAngleInDegrees() <= -194 && bow->getAngleInDegrees() >= -265) {
@@ -491,7 +489,7 @@ void Game::handleEvents() {
 					}
 					else archer->setState("shootlowleft");
 				}
-				Mix_PlayChannel(-1, music->bowSound, 0);
+				Mix_PlayChannel(-1, Music::getMusicInstance()->bowSound, 0);
 			}
 		}
 	}
@@ -509,13 +507,13 @@ void Game::handleEvents() {
 }
 
 int Game::handleLevelTwoChanges() {
-	levelTwo.handleChanges(ui_elements_list, bird_list, game_score, isLevelOneBossCreated,getTexture);
+	levelTwo.handleChanges(ui_elements_list, bird_list, game_score, isLevelOneBossCreated,Texture::getInstance());
 	return level_number;
 }
 
 int Game ::handleLevelOneChanges() {
 
-	levelOne.handleChanges(ui_elements_list, bird_list, game_score, isLevelTwoBossCreated,getTexture);
+	levelOne.handleChanges(ui_elements_list, bird_list, game_score, isLevelTwoBossCreated,Texture::getInstance());
 	return level_number;
 }
 
@@ -554,14 +552,14 @@ void Game::detectCollisions() {
 
 					if (bird_list.at(n)->getName() == "red_bird" || bird_list.at(n)->getName() == "grey_bird" ||
 						bird_list.at(n)->getName() == "yellow_bird") {
-						Middleware::createExplosion(gameObject, getTexture->getExplosionTexture(), explosion_list, music->bird1Hit);
+						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosionTexture(), explosion_list, Music::getMusicInstance()->bird1Hit);
 						bowObject->setAliveToFalse();
 						gameObject->setState("die");
 						game_score += 100;
 					}
 
 					if (bird_list.at(n)->getName() == "eagle") {
-						Middleware::createExplosion(gameObject, getTexture->getExplosionTexture(), explosion_list, music->eagleHit);
+						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosionTexture(), explosion_list, Music::getMusicInstance()->eagleHit);
 						bowObject->setAliveToFalse();
 						if (gameObject->getLives() == 0) {
 							gameObject->setAliveToFalse();
@@ -575,7 +573,7 @@ void Game::detectCollisions() {
 					}
 
 					if (bird_list.at(n)->getName() == "dragon") {
-						Middleware::createExplosion(gameObject, getTexture->getExplosion2Texture(), explosion_list, music->eagleHit);
+						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosion2Texture(), explosion_list, Music::getMusicInstance()->eagleHit);
 						bowObject->setAliveToFalse();
 						if (gameObject->getLives() == 0) {
 							gameObject->setAliveToFalse();
@@ -599,29 +597,29 @@ void Game::insertEggs() {
 		GameObject* gameObject = bird_list.at(i);
 
 		if (gameObject->getName() == "grey_bird" && gameObject->getState() != "die") {
-			GameObject* egg = new GreyBirdEgg(getTexture->getGreyEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
+			GameObject* egg = new GreyBirdEgg(Texture::getInstance()->getGreyEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, music->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
 		}
 
 
 		if (gameObject->getName() == "yellow_bird" && gameObject->getState() != "die") {
-			GameObject* egg = new YellowBirdEgg(getTexture->getYellowEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
+			GameObject* egg = new YellowBirdEgg(Texture::getInstance()->getYellowEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, music->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
 		}
 
 
 		if (gameObject->getName() == "eagle" && gameObject->getState() != "die") {
-			GameObject* egg = new EagleBirdEgg(getTexture->getEagleEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
+			GameObject* egg = new EagleBirdEgg(Texture::getInstance()->getEagleEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, music->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
 		}
 
 		if (gameObject->getName() == "red_bird" && gameObject->getState() != "die") {
-			GameObject* egg = new RedBirdEgg(getTexture->getRedEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
+			GameObject* egg = new RedBirdEgg(Texture::getInstance()->getRedEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, music->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
 		}
 
 		if (gameObject->getName() == "dragon" && gameObject->getState() != "die") {
@@ -630,9 +628,9 @@ void Game::insertEggs() {
 			if (gameObject->getState() == "movingright") dragon_fire_xpos = gameObject->getX() + 10;
 			else dragon_fire_xpos = gameObject->getX() + gameObject->getWidth() - 10;
 
-			GameObject* fire = new DragonFire(getTexture->getDragonFireTexture(), dragon_fire_xpos, gameObject->getY() + gameObject->getHeight() / 2);
+			GameObject* fire = new DragonFire(Texture::getInstance()->getDragonFireTexture(), dragon_fire_xpos, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), fire);
-			Mix_PlayChannel(-1, music->dragonFire, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->dragonFire, 0);
 		}
 	}
 }
@@ -663,7 +661,7 @@ void Game::render() {
 
 	SDL_Delay(2);
 	SDL_RenderClear(Middleware::renderer);
-	SDL_RenderCopy(Middleware::renderer, getTexture->getBackgroundTexture(), NULL, &backgroundRect);
+	SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getBackgroundTexture(), NULL, &backgroundRect);
 
 	archer->render();
 	Middleware::render(ui_elements_list);
@@ -671,14 +669,14 @@ void Game::render() {
 	Middleware::render(egg_list);
 	Middleware::render(explosion_list);
 
-	SDL_RenderCopy(Middleware::renderer, getTexture->getscoreTexture(), NULL, &Score_Rect);
-	SDL_RenderCopy(Middleware::renderer, getTexture->getBowsLeftTexture(), NULL, &Bow_Count_Rect);
-	SDL_RenderCopy(Middleware::renderer, getTexture->getLevelNumberTexture(), NULL, &Level_Number_Rect);
+	SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getscoreTexture(), NULL, &Score_Rect);
+	SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getBowsLeftTexture(), NULL, &Bow_Count_Rect);
+	SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getLevelNumberTexture(), NULL, &Level_Number_Rect);
 
 	for (int i = 0; i < bird_list.size(); i++)
 	{
 		if ((bird_list.at(i)->getName() == "eagle" || bird_list.at(i)->getName() == "dragon") && bird_list.at(i)->getAlive()==true) {
-			SDL_RenderCopy(Middleware::renderer, getTexture->getlivesTexture(), NULL, &lives_Rect);
+			SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getlivesTexture(), NULL, &lives_Rect);
 		}
 	}
 	SDL_RenderPresent(Middleware::renderer);

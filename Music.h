@@ -2,7 +2,9 @@
 #include <cstddef>
 #include <SDL_mixer.h>
 
+
 struct Music {
+	static Music* musicInstance;
 	Mix_Music* gameMusic = NULL;
 	Mix_Chunk* dragonFire = NULL;
 	Mix_Chunk* BirdChirp = NULL;
@@ -12,6 +14,10 @@ struct Music {
 	Mix_Chunk* eggShoot = NULL;
 	Mix_Chunk* jumpSound = NULL;
 	Mix_Chunk* bowSound = NULL;
+	Mix_Music* menuMusic = NULL;
+	Mix_Chunk* menuSelect = NULL;
 	Music();
 	~Music();
+public:
+	static Music* getMusicInstance();
 };
