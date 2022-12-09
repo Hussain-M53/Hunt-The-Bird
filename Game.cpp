@@ -44,7 +44,6 @@ Game::Game() {
 	Level_Number_Rect = { 0,0,0,0 };
 	lives_Rect = { 0,0,0,0 };
 	health_Rect = { 0,0,0,0 };
-	backgroundRect = { 0,0,0,0 };
 	archer = nullptr;
 	bow = nullptr;
 	music = new Music();
@@ -124,7 +123,7 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			Middleware::renderer = SDL_CreateRenderer(window, -1, 0);
 
 			if (Middleware::renderer) {
-				SDL_SetRenderDrawColor(Middleware::renderer, 23, 166, 253, 255);
+				SDL_SetRenderDrawColor(Middleware::renderer, 255, 255, 255, 255);
 			}
 			isRunning = true;
 		}
