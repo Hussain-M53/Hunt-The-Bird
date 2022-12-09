@@ -13,13 +13,13 @@ Archer* Archer::getInstance() {
 	Texture* getTexture = new Texture();
 
 	if (archer_instance == nullptr) 
-	archer_instance = new Archer(getTexture->LoadTexture("Images/archer.png"),0,Middleware::LEVEL_ONE_GROUND_HEIGHT);
+	archer_instance = new Archer(getTexture->getArcherTexture(), 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 
 	if (Game::getInstance()->getLevelNumber() == 1) {
-		archer_instance = new Archer(getTexture->LoadTexture("Images/archer.png"), 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
+		archer_instance = new Archer(getTexture->getArcherTexture(), 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
 	}
 	else if (Game::getInstance()->getLevelNumber() == 2)
-		archer_instance = new Archer(getTexture->LoadTexture("Images/archer.png"), 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
+		archer_instance = new Archer(getTexture->getArcherTexture(), 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
 	
 	return archer_instance;
 }
