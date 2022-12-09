@@ -69,6 +69,8 @@ Mix_Chunk* hitHurt = NULL;
 double Game::playerX = 0;
 double Game::playerY = 0;
 GameObject* bow;
+Archer* archer;
+
 
 SDL_Rect backgroundRect = { 0,0,Middleware::SCREEN_WIDTH,Middleware::SCREEN_HEIGHT };
 
@@ -77,8 +79,6 @@ vector<GameObject*> egg_list;
 vector<GameObject*> ui_elements_list;
 vector<GameObject*> explosion_list;
 
-
-GameObject* archer;
 
 Game::Game() {
 	window = nullptr;
@@ -142,7 +142,7 @@ void Game::startLevelTwo() {
 	Middleware::cleanEntireList(bird_list);
 	Middleware::cleanEntireList(egg_list);
 	Middleware::cleanEntireList(explosion_list);
-	archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
+	archer = Archer::getInstance();
 }
 
 
@@ -222,7 +222,7 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			GameObject* cloud = new Cloud(CloudTexture, random_clouds_x, random_clouds_y);
 			ui_elements_list.insert(ui_elements_list.begin(), cloud);
 		}
-		archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
+		archer = Archer::getInstance();
 		GameObject* health_bar = new HealthBar(HealthBarTexture, Middleware::SCREEN_WIDTH - 200, 50);
 		ui_elements_list.insert(ui_elements_list.begin(), health_bar);
 	}
@@ -241,7 +241,7 @@ void Game::initializeGameStart(string menu_selection) {
 		isLevelTwoBossCreated = false;
 		level_number = 1;
 		BackgroundTexture = Background_Level_One_Texture;
-		archer = new Archer(ArcherTexture, 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
+		archer = Archer::getInstance();
 	}
 	GameObject* sun = new Sun(SunTexture, 0, 0);
 	ui_elements_list.insert(ui_elements_list.begin(), sun);
@@ -300,7 +300,7 @@ void Game::getGamePreviousStates() {
 		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
 			//Archer
 			if (Tag == "<Archer>") {
-				archer = new Archer(ArcherTexture, 0, 0);
+				archer = Archer::getInstance();
 				archer->setPreviousGameState(state);
 			}
 			//Enemies
@@ -678,7 +678,7 @@ void Game::detectCollisions() {
 			if (checkCollision(gameObject, archer)) {
 				cout << archer->getLives() << endl;
 				if (gameObject->getState() != "dead") {
-					if (archer->getLives() == 0) {
+					if (archer->getLives() == 1) {
 						archer->setAliveToFalse();
 						isRunning = false;
 					}else{

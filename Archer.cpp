@@ -1,8 +1,26 @@
 #include "Archer.h"
 #include <sstream>
 #include <iostream>
+#include "Middleware.h"
+#include "Game.h"
+
 using namespace std;
 
+Archer* Archer::archer_instance = nullptr;
+
+Archer* Archer::getInstance() {
+
+	if (archer_instance == nullptr) 
+	archer_instance = new Archer(Middleware::LoadTexture("Images/archer.png"),0,Middleware::LEVEL_ONE_GROUND_HEIGHT);
+
+	if (Game::getInstance()->getLevelNumber() == 1) {
+		archer_instance = new Archer(Middleware::LoadTexture("Images/archer.png"), 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
+	}
+	else if (Game::getInstance()->getLevelNumber() == 2)
+		archer_instance = new Archer(Middleware::LoadTexture("Images/archer.png"), 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
+	
+	return archer_instance;
+}
 
 Archer::Archer(SDL_Texture* texture, double x, double y) :GameObject(texture, x, y) {
 	src_rect = { 0,0,120,120 };
