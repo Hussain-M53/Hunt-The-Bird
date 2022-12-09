@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\vclib\SDL2_mixer-2.6.2\include;C:\vclib\SDL2-2.24.0\include;C:\vclib\SDL2_ttf-2.20.1\include;C:\vclib\SDL2_image-2.6.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\vclib\SDL2_mixer-2.6.2\lib\x64;C:\vclib\SDL2-2.24.0\lib\x64;C:\vclib\SDL2_ttf-2.20.1\lib\x64;C:\vclib\SDL2_image-2.6.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\IMEN\source\SDL2_mixer-2.6.2\include;C:\Users\IMEN\source\SDL2-2.24.0\include;C:\Users\IMEN\source\SDL2_ttf-2.20.1\include;C:\Users\IMEN\source\SDL2_image-2.6.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\IMEN\source\SDL2_mixer-2.6.2\lib\x64;C:\Users\IMEN\source\SDL2-2.24.0\lib\x64;C:\Users\IMEN\source\SDL2_ttf-2.20.1\lib\x64;C:\Users\IMEN\source\SDL2_image-2.6.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,11 +142,8 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="GreyBird.cpp" />
     <ClCompile Include="GreyBirdEgg.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="Music.cpp" />
-=======
     <ClCompile Include="HealthBar.cpp" />
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
     <ClCompile Include="RedBird.cpp" />
     <ClCompile Include="RedBirdEgg.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -173,11 +170,8 @@
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="GreyBird.h" />
     <ClInclude Include="GreyBirdEgg.h" />
-<<<<<<< HEAD
     <ClInclude Include="Music.h" />
-=======
     <ClInclude Include="HealthBar.h" />
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
     <ClInclude Include="RedBird.h" />
     <ClInclude Include="RedBirdEgg.h" />
     <ClInclude Include="Texture.h" />

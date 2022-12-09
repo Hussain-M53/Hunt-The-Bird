@@ -6,7 +6,6 @@ Texture::Texture() {
 	BowTexture = nullptr;
 	scoreTexture=nullptr;
 	livesTexture=nullptr;
-	healthTexture=nullptr;
 	BowsLeftTexture=nullptr;
 	LevelNumberTexture=nullptr;
 	Background_Level_One_Texture = LoadTexture("Images/background.jpg");
@@ -27,6 +26,7 @@ Texture::Texture() {
 	ExplosionTexture = LoadTexture("Images/feathers.png");
 	Explosion2Texture = LoadTexture("Images/explosion.png");
 	DragonFireTexture = LoadTexture("Images/dragon_fire.png");
+	HealthBarTexture = LoadTexture("Images/health_bar.png");
 	BackgroundTexture = Background_Level_One_Texture;
 }
 Texture::~Texture() {
@@ -153,9 +153,9 @@ SDL_Texture* Texture::getlivesTexture()
 	return livesTexture;
 }
 
-SDL_Texture* Texture::gethealthTexture()
+SDL_Texture* Texture::getHealthBarTexture()
 {
-	return healthTexture;
+	return HealthBarTexture;
 }
 
 SDL_Texture* Texture::getBowsLeftTexture()
@@ -186,11 +186,6 @@ void Texture::setscoreTexture(SDL_Texture* texture)
 void Texture::setlivesTexture(SDL_Texture* texture)
 {
 	livesTexture = texture;
-}
-
-void Texture::sethealthTexture(SDL_Texture* texture)
-{
-	healthTexture = texture;
 }
 
 void Texture::setBowsLeftTexture(SDL_Texture* texture)

@@ -24,67 +24,9 @@
 using namespace std;
 
 Game* Game::instance = nullptr;
-<<<<<<< HEAD
 double Game::playerX = 0;
 double Game::playerY = 0;
 
-=======
-SDL_Texture* ArcherTexture;
-SDL_Texture* GreyBirdTexture;
-SDL_Texture* RedBirdTexture;
-SDL_Texture* YellowBirdTexture;
-SDL_Texture* EagleTexture;
-SDL_Texture* ExplosionTexture;
-SDL_Texture* Explosion2Texture;
-
-SDL_Texture* GreyEggTexture;
-SDL_Texture* RedEggTexture;
-SDL_Texture* YellowEggTexture;
-SDL_Texture* EagleEggTexture;
-SDL_Texture* DragonFireTexture;
-
-SDL_Texture* CloudTexture;
-SDL_Texture* DragonTexture;
-SDL_Texture* SunTexture;
-SDL_Texture* BackgroundTexture;
-
-SDL_Texture* BowTexture;
-SDL_Texture* scoreTexture;
-SDL_Texture* livesTexture; 
-SDL_Texture* healthTexture;
-SDL_Texture* BowsLeftTexture;
-SDL_Texture* LevelNumberTexture;
-SDL_Texture* Background_Level_Two_Texture;
-SDL_Texture* Background_Level_One_Texture;
-SDL_Texture* HealthBarTexture;
-
-SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect,lives_Rect,health_Rect;
-
-Mix_Music* gameMusic = NULL;
-Mix_Chunk* dragonFire = NULL;
-Mix_Chunk* BirdChirp = NULL;
-Mix_Chunk* eagleHit = NULL;
-Mix_Chunk* bird1Hit = NULL;
-Mix_Chunk* bird2Hit = NULL;
-Mix_Chunk* eggShoot = NULL;
-Mix_Chunk* jumpSound = NULL;
-Mix_Chunk* bowSound = NULL;
-Mix_Chunk* hitHurt = NULL;
-
-double Game::playerX = 0;
-double Game::playerY = 0;
-GameObject* bow;
-Archer* archer;
-
-
-SDL_Rect backgroundRect = { 0,0,Middleware::SCREEN_WIDTH,Middleware::SCREEN_HEIGHT };
-
-vector<GameObject*> bird_list;
-vector<GameObject*> egg_list;
-vector<GameObject*> ui_elements_list;
-vector<GameObject*> explosion_list;
-
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 
 Game::Game() {
 	window = nullptr;
@@ -123,11 +65,7 @@ void Game::startLevelTwo() {
 	Middleware::cleanEntireList(bird_list);
 	Middleware::cleanEntireList(egg_list);
 	Middleware::cleanEntireList(explosion_list);
-<<<<<<< HEAD
-	archer = new Archer(getTexture->getArcherTexture(), 0, Middleware::LEVEL_TWO_GROUND_HEIGHT);
-=======
 	archer = Archer::getInstance();
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 }
 
 
@@ -208,14 +146,11 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			GameObject* cloud = new Cloud(getTexture->getCloudTexture(), random_clouds_x, random_clouds_y);
 			ui_elements_list.insert(ui_elements_list.begin(), cloud);
 		}
-<<<<<<< HEAD
-		archer = new Archer(getTexture->getArcherTexture(), 0, Middleware::LEVEL_ONE_GROUND_HEIGHT);
-		updateScore();
-=======
+
 		archer = Archer::getInstance();
-		GameObject* health_bar = new HealthBar(HealthBarTexture, Middleware::SCREEN_WIDTH - 200, 50);
+		updateScore();
+		GameObject* health_bar = new HealthBar(getTexture->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
 		ui_elements_list.insert(ui_elements_list.begin(), health_bar);
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 	}
 }
 
@@ -231,16 +166,13 @@ void Game::initializeGameStart(string menu_selection) {
 		isLevelOneBossCreated = false;
 		isLevelTwoBossCreated = false;
 		level_number = 1;
-<<<<<<< HEAD
 		getTexture->setBackgroundTexture(getTexture->getBackground_Level_One_Texture());
-=======
-		BackgroundTexture = Background_Level_One_Texture;
 		archer = Archer::getInstance();
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 	}
-	GameObject* sun = new Sun(SunTexture, 0, 0);
+
+	GameObject* sun = new Sun(getTexture->getSunTexture(), 0, 0);
 	ui_elements_list.insert(ui_elements_list.begin(), sun);
-	GameObject* health_bar = new HealthBar(HealthBarTexture, Middleware::SCREEN_WIDTH - 200, 50);
+	GameObject* health_bar = new HealthBar(getTexture->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
 	ui_elements_list.insert(ui_elements_list.begin(), health_bar);
 }
 
@@ -295,11 +227,7 @@ void Game::getGamePreviousStates() {
 		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
 			//Archer
 			if (Tag == "<Archer>") {
-<<<<<<< HEAD
-				archer = new Archer(getTexture->getArcherTexture(), 0, 0);
-=======
 				archer = Archer::getInstance();
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 				archer->setPreviousGameState(state);
 			}
 			//Enemies
@@ -407,43 +335,7 @@ void Game::saveStatesinFile() {
 
 void Game::loadMedia() {
 	//load the textures
-<<<<<<< HEAD
 	getTexture = new Texture();
-=======
-	Background_Level_One_Texture = Middleware::LoadTexture("Images/background.jpg");
-	Background_Level_Two_Texture = Middleware::LoadTexture("Images/background_level_two.jpg");
-	ArcherTexture = Middleware::LoadTexture("Images/archer.png");
-	GreyBirdTexture = Middleware::LoadTexture("Images/grey_bird.png");
-	YellowBirdTexture = Middleware::LoadTexture("Images/yellow_bird.png");
-	RedBirdTexture = Middleware::LoadTexture("Images/red_bird.png");
-	CloudTexture = Middleware::LoadTexture("Images/cloud.png");
-	DragonTexture = Middleware::LoadTexture("Images/dragon.png");
-	EagleTexture = Middleware::LoadTexture("Images/eagle.png");
-	SunTexture = Middleware::LoadTexture("Images/sun.png");
-	GreyEggTexture = Middleware::LoadTexture("Images/grey_egg.png");
-	RedEggTexture = Middleware::LoadTexture("Images/red_egg.png");
-	YellowEggTexture = Middleware::LoadTexture("Images/yellow_egg.png");
-	EagleEggTexture = Middleware::LoadTexture("Images/eagle_egg.png");
-	BowTexture = Middleware::LoadTexture("Images/bow.png");
-	ExplosionTexture = Middleware::LoadTexture("Images/feathers.png");
-	Explosion2Texture = Middleware::LoadTexture("Images/explosion.png");
-	DragonFireTexture = Middleware::LoadTexture("Images/dragon_fire.png");
-	HealthBarTexture= Middleware::LoadTexture("Images/health_bar.png");
-	BackgroundTexture = Background_Level_One_Texture;
-
-	//load the music and sound effects
-	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
-	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
-	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
-	bird1Hit = Mix_LoadWAV("Music/Sound Effects/bird1_hit.wav");
-	bird2Hit = Mix_LoadWAV("Music/Sound Effects/bird2_hit.wav");
-	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
-	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
-	eggShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
-	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
-	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
-	hitHurt= Mix_LoadWAV("Music/Sound Effects/hitHurt.wav");
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 }
 
 SDL_Point Game::getSize(SDL_Texture* texture) {
@@ -473,31 +365,19 @@ void Game::updateScore() {
 	getTexture->setLevelNumberTexture(SDL_CreateTextureFromSurface(Middleware::renderer, levelSurface));
 	SDL_Point LevelTitlePoint = getSize(getTexture->getLevelNumberTexture());
 	Level_Number_Rect = { Middleware::SCREEN_WIDTH - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 90,10,LevelTitlePoint.x,LevelTitlePoint.y };
-<<<<<<< HEAD
 
-	string health = "Health: " + Middleware::intToString(archer->getLives());
-	SDL_Surface* healthSurface = TTF_RenderText_Solid(SpaceFont, health.c_str(), Color);
-	getTexture->sethealthTexture(SDL_CreateTextureFromSurface(Middleware::renderer, healthSurface));
-	SDL_Point healthTitlePoint = getSize(getTexture->gethealthTexture());
-	health_Rect = { Middleware::SCREEN_WIDTH - healthTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 120,10,LevelTitlePoint.x,LevelTitlePoint.y };
 
-=======
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
 	if (isLevelOneBossCreated || isLevelTwoBossCreated) {
 		for (int i = 0; i < bird_list.size(); i++)
 		{
 			if (bird_list.at(i)->getName() == "eagle" || bird_list.at(i)->getName() == "dragon") {
 				string Lives = bird_list.at(i)->getName() + " Lives: " + Middleware::intToString(bird_list.at(i)->getLives());
 				SDL_Surface* livesSurface = TTF_RenderText_Solid(SpaceFont, Lives.c_str(), Color);
-<<<<<<< HEAD
+
 				getTexture->setlivesTexture(SDL_CreateTextureFromSurface(Middleware::renderer, livesSurface));
 				SDL_Point livesTitlePoint = getSize(getTexture->getlivesTexture());
-				lives_Rect = { Middleware::SCREEN_WIDTH - livesTitlePoint.x - healthTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 150,10,livesTitlePoint.x,livesTitlePoint.y };
-=======
-				livesTexture = SDL_CreateTextureFromSurface(Middleware::renderer, livesSurface);
-				SDL_Point livesTitlePoint = getSize(livesTexture);
 				lives_Rect = { Middleware::SCREEN_WIDTH - livesTitlePoint.x - LevelTitlePoint.x - ScoreTitlePoint.x - BowTitlePoint.x - 120,10,livesTitlePoint.x,livesTitlePoint.y };
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
+
 			}
 		}
 
@@ -703,7 +583,7 @@ void Game::detectCollisions() {
 						gameObject->setState("dead");
 						archer->reduceLives();
 						updateScore();
-						Mix_PlayChannel(-1, hitHurt, 0);
+						//Mix_PlayChannel(-1, hitHurt, 0);
 					}
 				}
 				updateScore();
@@ -841,7 +721,6 @@ void Game::render() {
 	SDL_RenderCopy(Middleware::renderer, getTexture->getscoreTexture(), NULL, &Score_Rect);
 	SDL_RenderCopy(Middleware::renderer, getTexture->getBowsLeftTexture(), NULL, &Bow_Count_Rect);
 	SDL_RenderCopy(Middleware::renderer, getTexture->getLevelNumberTexture(), NULL, &Level_Number_Rect);
-	SDL_RenderCopy(Middleware::renderer, getTexture->gethealthTexture(), NULL, &health_Rect);
 
 	for (int i = 0; i < bird_list.size(); i++)
 	{

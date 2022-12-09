@@ -21,7 +21,7 @@ class Texture {
 	SDL_Texture* BowTexture;
 	SDL_Texture* scoreTexture;
 	SDL_Texture* livesTexture;
-	SDL_Texture* healthTexture;
+	SDL_Texture* HealthBarTexture;
 	SDL_Texture* BowsLeftTexture;
 	SDL_Texture* LevelNumberTexture;
 	SDL_Texture* Background_Level_Two_Texture;
@@ -50,14 +50,13 @@ public:
 	SDL_Texture* getBowTexture();
 	SDL_Texture* getscoreTexture();
 	SDL_Texture* getlivesTexture();
-	SDL_Texture* gethealthTexture();
+	SDL_Texture* getHealthBarTexture();
 	SDL_Texture* getBowsLeftTexture();
 	SDL_Texture* getLevelNumberTexture();
 	SDL_Texture* getBackground_Level_Two_Texture();
 	SDL_Texture* getBackground_Level_One_Texture();
 	void setscoreTexture(SDL_Texture* texture);
 	void setlivesTexture(SDL_Texture* texture);
-	void sethealthTexture(SDL_Texture* texture);
 	void setBowsLeftTexture(SDL_Texture* texture);
 	void setLevelNumberTexture(SDL_Texture* texture);
 	void setBackgroundTexture(SDL_Texture* texture);

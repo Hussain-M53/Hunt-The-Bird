@@ -84,14 +84,13 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="Music.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-=======
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="HealthBar.cpp">
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -162,14 +161,13 @@
     <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="Music.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-=======
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="HealthBar.h">
->>>>>>> 099edaf1e9e18bea350fe3704ea98d7c40f9cff7
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
