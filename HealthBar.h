@@ -5,7 +5,8 @@
 #include<iostream>
 #include <stdio.h>
 
-class Button : public GameObject {
+class HealthBar : public GameObject {
 public:
-	Button(SDL_Texture* texture, double x, double y);
+	HealthBar(SDL_Texture* texture, double x, double y);
+	void setState(string state);
 };

@@ -11,8 +11,10 @@ class Archer : public GameObject {
 	bool isJumping,jumpDown;
 	double groundHeight;
 	int count;
-public:
+	static Archer* archer_instance;
 	Archer(SDL_Texture* texture, double x, double y);
+public:
+	static Archer* getInstance();
 	void move();
 	string saveState();
 	void setPreviousGameState(string state);
