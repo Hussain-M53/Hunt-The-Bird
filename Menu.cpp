@@ -28,8 +28,8 @@ SDL_Point Menu::getSize(SDL_Texture* texture) {
 void Menu::loadMedia() {
 	menuMusic = Mix_LoadMUS("Music/Menu_Music.mp3");
 	menuSelect = Mix_LoadWAV("Music/Sound Effects/blipSelect.wav");
-	buttonTexture = Middleware::LoadTexture("Images/buttons.png");
-	menu_screen_texture = Middleware::LoadTexture("Images/menu_screen.png");
+	buttonTexture = getTexture->LoadTexture("Images/buttons.png");
+	menu_screen_texture = getTexture->LoadTexture("Images/menu_screen.png");
 
 }
 

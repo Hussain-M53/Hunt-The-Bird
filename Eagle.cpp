@@ -32,7 +32,6 @@ void Eagle::move() {
 	}
 	else {
 		int random = 300 + rand() % 400;
-		cout << random << endl;
 		if (moveRight) {
 			state = "movingright";
 			flip = SDL_FLIP_NONE;

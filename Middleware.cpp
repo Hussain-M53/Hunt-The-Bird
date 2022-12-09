@@ -67,16 +67,6 @@ void Middleware::animate(vector<GameObject*>& list) {
 }
 
 
-SDL_Texture* Middleware::LoadTexture(const char* filename) {
-	SDL_Surface* tempSurface = IMG_Load(filename);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(Middleware::renderer, tempSurface);
-	if (texture == NULL) {
-		printf("Unable to create texture from %s! SDL Error: %s\n", filename, SDL_GetError());
-	}
-	SDL_FreeSurface(tempSurface);
-	return texture;
-}
-
 string Middleware::boolToString(bool value) {
 	if (value == true) return "1";
 	else return "0";

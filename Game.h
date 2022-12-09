@@ -5,6 +5,8 @@
 #include <string>
 #include "GameObject.h"
 #include "Middleware.h"
+#include "Music.h"
+#include "Texture.h"
 #pragma once
 
 using namespace std;
@@ -22,6 +24,15 @@ private:
 	bool isLevelOneBossCreated;
 	bool isLevelTwoBossCreated;
 	int level_number;
+	SDL_Rect Bow_Count_Rect, Score_Rect, Level_Number_Rect, lives_Rect, health_Rect, backgroundRect;
+	vector<GameObject*> bird_list;
+	vector<GameObject*> egg_list;
+	vector<GameObject*> ui_elements_list;
+	vector<GameObject*> explosion_list;
+	GameObject* bow;
+	GameObject* archer;
+	Music* music = nullptr;
+	Texture* getTexture;
 
 public:
 	int getLevelNumber();
@@ -45,7 +56,6 @@ public:
 	void handleEvents();
 	void render();
 	bool running();
-
 	void saveStatesinFile();
 	string saveGameStateVariables();
 	void getGamePreviousStates();

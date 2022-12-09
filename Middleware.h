@@ -15,7 +15,6 @@ public:
 	static const int LEVEL_TWO_GROUND_HEIGHT = 500;
 	static SDL_Renderer* renderer;
 	static int nSpeedCount;
-	static SDL_Texture* LoadTexture(const char* filename);
 	static string getListStates(vector<GameObject*>& list);
 	static string intToString(int value);
 	static string doubleToString(double value);

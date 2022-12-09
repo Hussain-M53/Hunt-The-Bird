@@ -5,6 +5,7 @@
 #include <string>
 #include "GameObject.h"
 #include "Middleware.h"
+#include "Texture.h"
 #pragma once
 
 using namespace std;
@@ -15,6 +16,7 @@ private:
 	~Menu();
 	static Menu* menu_instance;
 	bool isMenu;
+	Texture* getTexture;
 
 public:
 	static Menu* getInstance();
