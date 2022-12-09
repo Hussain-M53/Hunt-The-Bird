@@ -14,6 +14,8 @@
 #include "Cloud.h"
 #include "Sun.h"
 #include "Bow.h"
+#include "LevelOne.cpp"
+#include "LevelTwo.cpp"
 #include "Explosion.h"
 #include "DragonFire.h"
 #include "HealthBar.h"
@@ -26,6 +28,9 @@ using namespace std;
 Game* Game::instance = nullptr;
 double Game::playerX = 0;
 double Game::playerY = 0;
+LevelOne levelOne;
+LevelTwo levelTwo;
+
 
 
 Game::Game() {
@@ -504,64 +509,13 @@ void Game::handleEvents() {
 }
 
 int Game::handleLevelTwoChanges() {
-
-	//--------------------------------insert-----------------------------------------
-	if (Middleware::nSpeedCount % 1500 == 0) {
-		int random = rand() % 200;
-		GameObject* cloud = new Cloud(getTexture->getCloudTexture(), -150, random);
-		ui_elements_list.insert(ui_elements_list.begin(), cloud);
-	}
-
-	if (Middleware::nSpeedCount % 800 == 0 && game_score < Middleware::LEVEL_TWO_BOSS_SCORE) {
-		int select_random = rand() % 1;
-		int position_random = 100 + rand() % 200;
-
-		if (select_random == 0) {
-			GameObject* red_bird = new RedBird(getTexture->getRedBirdTexture(), -64, position_random);
-			bird_list.insert(bird_list.begin(), red_bird);
-		}
-
-	}
-	else if (game_score >= Middleware::LEVEL_TWO_BOSS_SCORE && isLevelTwoBossCreated == false) {
-		GameObject* dragon = new Dragon(getTexture->getDragonTexture(), -200, 0);
-		bird_list.insert(bird_list.begin(), dragon);
-		isLevelTwoBossCreated = true;
-	}
-
+	levelTwo.handleChanges(ui_elements_list, bird_list, game_score, isLevelOneBossCreated,getTexture);
 	return level_number;
 }
 
 int Game ::handleLevelOneChanges() {
 
-
-	//--------------------------------insert-----------------------------------------
-	if (Middleware::nSpeedCount % 1500 == 0) {
-		int random = rand() % 200;
-		GameObject* cloud = new Cloud(getTexture->getCloudTexture(), -150, random);
-		ui_elements_list.insert(ui_elements_list.begin(), cloud);
-	}
-
-	if (Middleware::nSpeedCount % 800 == 0 && game_score < Middleware::LEVEL_ONE_BOSS_SCORE) {
-		int select_random = rand() % 2;
-		int position_random = 100 + rand() % 200;
-
-		if (select_random == 0) {
-			GameObject* grey_bird = new GreyBird(getTexture->getGreyBirdTexture(), -64, position_random);
-			bird_list.insert(bird_list.begin(), grey_bird);
-		}
-		if (select_random == 1) {
-			GameObject* yellow_bird = new YellowBird(getTexture->getYellowBirdTexture(), -64, position_random);
-			bird_list.insert(bird_list.begin(), yellow_bird);
-		}
-		Mix_PlayChannel(-1, music->BirdChirp, 0);
-
-	}
-	else if (game_score>=Middleware::LEVEL_ONE_BOSS_SCORE && isLevelOneBossCreated ==false) {
-		int position_random = 100 + rand() % 200;
-		GameObject* eagle = new Eagle(getTexture->getEagleTexture(), -100, position_random);
-		bird_list.insert(bird_list.begin(), eagle);
-		isLevelOneBossCreated = true;
-	}
+	levelOne.handleChanges(ui_elements_list, bird_list, game_score, isLevelTwoBossCreated,getTexture);
 	return level_number;
 }
 
