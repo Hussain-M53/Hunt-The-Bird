@@ -21,6 +21,9 @@ void GameObject::setAliveToFalse() {
 	alive = false;
 }
 
+void GameObject::setY(double y) {
+	y_pos = y;
+}
 double GameObject::getX(){
 	return x_pos;
 }

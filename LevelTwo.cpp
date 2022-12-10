@@ -1,16 +1,25 @@
-#include "Cloud.h"
+#include "LevelTwo.h"
 #include "RedBird.h"
 #include "Dragon.h"
-#include "SDL.h"
 #include "Music.h"
 #include "Texture.h"
+#include "Cloud.h"
 
-class LevelTwo {
-public:
-	LevelTwo(){}
-	~LevelTwo(){}
-	void handleChanges(vector<GameObject*>& ui_elements_list, vector<GameObject*>& bird_list, int& game_score, bool& enemyCreated) {
-		//--------------------------------insert-----------------------------------------
+LevelTwo* LevelTwo::level_two_instance = nullptr;
+
+LevelTwo::LevelTwo(){}
+LevelTwo::~LevelTwo(){}
+
+LevelTwo* LevelTwo::getInstance() {
+
+		if (level_two_instance == nullptr) {
+			level_two_instance = new LevelTwo();
+		}
+		return level_two_instance;
+	}
+
+void LevelTwo::handleChanges(vector<GameObject*>& ui_elements_list, vector<GameObject*>& bird_list, int& game_score, bool& enemyCreated) {
+
 		if (Middleware::nSpeedCount % 1500 == 0) {
 			int random = rand() % 200;
 			GameObject* cloud = new Cloud(Texture::getInstance()->getCloudTexture(), -150, random);
@@ -33,4 +42,3 @@ public:
 			enemyCreated = true;
 		}
 	}
-};
