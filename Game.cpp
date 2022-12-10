@@ -624,8 +624,8 @@ void Game::insertEggs() {
 
 		if (gameObject->getName() == "dragon" && gameObject->getState() != "die") {
 			double dragon_fire_xpos;
-			if (gameObject->getState() == "movingright") dragon_fire_xpos = gameObject->getX() + 10;
-			else dragon_fire_xpos = gameObject->getX() + gameObject->getWidth() - 10;
+			if (gameObject->getState() == "movingright") dragon_fire_xpos = gameObject->getX() + gameObject->getWidth() - 30;
+			else dragon_fire_xpos = gameObject->getX() + 10;
 
 			GameObject* fire = new DragonFire(Texture::getInstance()->getDragonFireTexture(), dragon_fire_xpos, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), fire);
