@@ -32,6 +32,7 @@ public:
 	void setAliveToFalse();
 	double getX();
 	double getY();
+	void setY(double y);
 	int getWidth();
 	int getHeight();
 	int getLives();

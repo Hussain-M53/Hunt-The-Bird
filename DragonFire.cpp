@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include "Middleware.h"
-#include "Game.h"
+#include "Archer.h"
 #define PI 3.14159265
 
 using namespace std;
@@ -15,8 +15,8 @@ DragonFire::DragonFire(SDL_Texture* texture, double x, double y) :Egg(texture, x
 	src_rect = { 0,0,width,100 };
 	dst_rect = { int(x),int(y),width,100 };
 	name = "dragon_fire";
-	movX = Game::playerX - x_pos;
-	movY = Game::playerY - y_pos;
+	movX = Archer::getInstance()->getX() - x_pos;
+	movY = Archer::getInstance()->getY() - y_pos;
 	angle_in_radian = atan2(movY, movX);
 	angle_in_degree = (angle_in_radian * 180 / PI) +270;
 }

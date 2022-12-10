@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include "Middleware.h"
-#include "Game.h"
+#include "Archer.h"
 
 using namespace std;
 
@@ -36,7 +36,7 @@ void Eagle::move() {
 			state = "movingright";
 			flip = SDL_FLIP_NONE;
 			x_pos++;
-			if (x_pos >= Middleware::SCREEN_WIDTH - width || x_pos - Game::playerX >= random) {
+			if (x_pos >= Middleware::SCREEN_WIDTH - width || x_pos - Archer::getInstance()->getX() >= random) {
 				moveRight = false;
 				moveDown = true;
 			}
@@ -45,7 +45,7 @@ void Eagle::move() {
 			state = "movingleft";
 			flip = SDL_FLIP_HORIZONTAL;
 			x_pos--;
-			if (x_pos <= 0 || Game::playerX - x_pos >= random) {
+			if (x_pos <= 0 || Archer::getInstance()->getX() - x_pos >= random) {
 				moveRight = true;
 				moveDown = true;
 			}

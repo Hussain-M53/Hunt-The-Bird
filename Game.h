@@ -15,7 +15,7 @@ class Game {
 private:
 	Game();
 	~Game();
-	static Game* instance;
+	static Game* game_instance;
 	bool isRunning;
 	SDL_Window* window;
 	int game_score;
@@ -34,8 +34,6 @@ private:
 
 public:
 	int getLevelNumber();
-	double static playerX;
-	double static playerY;
 	static Game* getInstance();
 	void loadMedia();
 	void initialize(const char* title, int x, int y, int width, int height, bool fullscreen);
@@ -54,9 +52,7 @@ public:
 	void handleEvents();
 	void render();
 	bool running();
-	void saveStatesinFile();
 	string saveGameStateVariables();
-	void getGamePreviousStates();
 	void initializePreviousGameState(string state);
 
 };

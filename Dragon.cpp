@@ -5,6 +5,7 @@
 #include "Middleware.h"
 #include "Bird.h"
 #include "Game.h"
+#include "Archer.h"
 
 
 using namespace std;
@@ -48,7 +49,7 @@ void Dragon::move() {
 			state = "movingright";
 			flip = SDL_FLIP_NONE;
 			x_pos++;
-			if (x_pos >= Middleware::SCREEN_WIDTH - width || x_pos - Game::playerX >= random) {
+			if (x_pos >= Middleware::SCREEN_WIDTH - width || x_pos - Archer::getInstance()->getX() >= random) {
 				moveRight = false;
 				moveDown = true;
 			}
@@ -57,7 +58,7 @@ void Dragon::move() {
 			state = "movingleft";
 			flip = SDL_FLIP_HORIZONTAL;
 			x_pos--;
-			if (x_pos <= 0 || Game::playerX - x_pos >= random) {
+			if (x_pos <= 0 || Archer::getInstance()->getX() - x_pos >= random) {
 				moveRight = true;
 				moveDown = true;
 			}

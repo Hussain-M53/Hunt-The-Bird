@@ -14,24 +14,19 @@
 #include "Cloud.h"
 #include "Sun.h"
 #include "Bow.h"
-#include "LevelOne.cpp"
-#include "LevelTwo.cpp"
+#include "LevelOne.h"
+#include "LevelTwo.h"
 #include "Explosion.h"
 #include "DragonFire.h"
 #include "HealthBar.h"
+#include "FileManager.h"
 #include <sstream>
-#include <fstream>
-#include <string>
+#include <iostream>
+
 
 using namespace std;
 
-Game* Game::instance = nullptr;
-double Game::playerX = 0;
-double Game::playerY = 0;
-LevelOne levelOne;
-LevelTwo levelTwo;
-
-
+Game* Game::game_instance = nullptr;
 
 Game::Game() {
 	window = nullptr;
@@ -68,15 +63,16 @@ void Game::startLevelTwo() {
 	Middleware::cleanEntireList(egg_list);
 	Middleware::cleanEntireList(explosion_list);
 	archer = Archer::getInstance();
+	archer->setY(Middleware::LEVEL_TWO_GROUND_HEIGHT);
 }
 
 
 Game* Game::getInstance() {
 
-	if (instance == nullptr) {
-		instance = new Game();
+	if (game_instance == nullptr) {
+		game_instance = new Game();
 	}
-	return instance;
+	return game_instance;
 
 }
 
@@ -93,7 +89,7 @@ void Game::playGameMusic() {
 }
 
 void Game::resetGame(string menu_selection) {
-	saveStatesinFile();
+	FileManager::getInstance()->makeFileWithStates(bird_list, egg_list);
 	Mix_HaltMusic();
 	Middleware::cleanEntireList(ui_elements_list);
 	Middleware::cleanEntireList(bird_list);
@@ -159,7 +155,7 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 void Game::initializeGameStart(string menu_selection) {
 	playGameMusic();
 	isRunning = true;
-	if (menu_selection == "continue") getGamePreviousStates();
+	if (menu_selection == "continue") FileManager::getInstance()->readFileAndContinue(bird_list, egg_list, ui_elements_list);
 	else if (menu_selection == "new") {
 		game_score = 0;
 		bow_count = 10;
@@ -214,125 +210,6 @@ string Game::saveGameStateVariables() {
 	state += Middleware::boolToString(isLevelTwoBossCreated) + "\n";
 	return state.c_str();
 }
-
-
-void Game::getGamePreviousStates() {
-	string myText;
-	string Tag;
-	string state;
-
-	ifstream readFile("Game State/game_state.txt");
-
-	while (getline(readFile, myText)) {
-
-		// A game Tag is found
-		if ((myText.find('<')) != string::npos && (myText.find('>')) != string::npos) {
-			//Archer
-			if (Tag == "<Archer>") {
-				archer = Archer::getInstance();
-				archer->setPreviousGameState(state);
-			}
-			//Enemies
-			if (Tag == "<GreyBird>") {
-				GameObject* gameObject = new GreyBird(Texture::getInstance()->getGreyBirdTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				bird_list.insert(bird_list.begin(), gameObject);
-			}
-			if (Tag == "<YellowBird>") {
-				GameObject* gameObject = new YellowBird(Texture::getInstance()->getYellowBirdTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				bird_list.insert(bird_list.begin(), gameObject);
-			}
-			if (Tag == "<RedBird>") {
-				GameObject* gameObject = new RedBird(Texture::getInstance()->getRedBirdTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				bird_list.insert(bird_list.begin(), gameObject);
-			}
-			if (Tag == "<Dragon>") {
-				GameObject* gameObject = new Dragon(Texture::getInstance()->getDragonTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				bird_list.insert(bird_list.begin(), gameObject);
-			}
-			if (Tag == "<Eagle>") {
-				GameObject* gameObject = new Eagle(Texture::getInstance()->getEagleTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				bird_list.insert(bird_list.begin(), gameObject);
-			}
-			//Eggs and Fire
-			if (Tag == "<GreyBirdEgg>") {
-				GameObject* gameObject = new GreyBirdEgg(Texture::getInstance()->getGreyEggTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				egg_list.insert(egg_list.begin(), gameObject);
-			}
-			if (Tag == "<YellowBirdEgg>") {
-				GameObject* gameObject = new YellowBirdEgg(Texture::getInstance()->getYellowEggTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				egg_list.insert(egg_list.begin(), gameObject);
-			}
-			if (Tag == "<RedBirdEgg>") {
-				GameObject* gameObject = new RedBirdEgg(Texture::getInstance()->getRedEggTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				egg_list.insert(egg_list.begin(), gameObject);
-			}
-			if (Tag == "<EagleBirdEgg>") {
-				GameObject* gameObject = new EagleBirdEgg(Texture::getInstance()->getEagleEggTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				egg_list.insert(egg_list.begin(), gameObject);
-			}
-			if (Tag == "<DragonFire>") {
-				GameObject* gameObject = new RedBirdEgg(Texture::getInstance()->getDragonFireTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				egg_list.insert(egg_list.begin(), gameObject);
-			}
-			if (Tag == "<Sun>") {
-				GameObject* gameObject = new Sun(Texture::getInstance()->getSunTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
-			}
-			if (Tag == "<Cloud>") {
-				GameObject* gameObject = new Cloud(Texture::getInstance()->getCloudTexture(), 0, 0);
-				gameObject->setPreviousGameState(state);
-				ui_elements_list.insert(ui_elements_list.begin(), gameObject);
-			}
-			if (Tag == "<GameState>") {
-				initializePreviousGameState(state);
-			}
-
-			Tag = myText;
-			state = "";
-			continue;
-		}
-		state += myText + "\n";
-	}
-}
-
-
-
-void Game::saveStatesinFile() {
-
-	//Open File
-	ofstream file;
-	file.open("Game State/game_state.txt");
-
-	//save Player State
-	if (archer != nullptr) {
-		string getPlayerState = archer->saveState();
-		file << getPlayerState;
-	}
-
-	//save List States
-	file << Middleware::getListStates(bird_list);
-	file << Middleware::getListStates(egg_list);
-
-	// save Game States
-	file << saveGameStateVariables();
-
-	//add a closing Tag
-	file << "<>";
-	file.close();
-	//Close File
-}
-
 
 
 void Game::loadMedia() {
@@ -417,10 +294,6 @@ void Game::update() {
 	if (Middleware::nSpeedCount % 600 == 0) insertEggs();
 	//--------------------------------------------------collision detection-----------------------------------------
 	detectCollisions();
-
-	//-------------------------------------------------updatescore+playerValues---------------------------------------
-	playerX = archer->getX();
-	playerY = archer->getY();
 
 
 	//Increase missile limit with time
@@ -507,13 +380,12 @@ void Game::handleEvents() {
 }
 
 int Game::handleLevelTwoChanges() {
-	levelTwo.handleChanges(ui_elements_list, bird_list, game_score, isLevelOneBossCreated,Texture::getInstance());
+	LevelTwo::getInstance()->handleChanges(ui_elements_list, bird_list, game_score, isLevelOneBossCreated);
 	return level_number;
 }
 
 int Game ::handleLevelOneChanges() {
-
-	levelOne.handleChanges(ui_elements_list, bird_list, game_score, isLevelTwoBossCreated,Texture::getInstance());
+	LevelOne::getInstance()->handleChanges(ui_elements_list, bird_list, game_score, isLevelTwoBossCreated);
 	return level_number;
 }
 
