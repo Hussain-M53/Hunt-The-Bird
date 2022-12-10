@@ -6,7 +6,7 @@
 using namespace std;
 
 Menu* Menu::menu_instance = nullptr;
-SDL_Rect buttonTopLeft, buttonTopMiddle, buttonTopRight, buttonBottomLeft, buttonBottomMiddle, buttonBottomRight;
+
 
 
 Menu::Menu() {
@@ -26,7 +26,7 @@ SDL_Point Menu::getSize(SDL_Texture* texture) {
 
 void Menu::clickSound() {
 	Mix_HaltMusic();
-	Mix_PlayChannel(-1, Music::getMusicInstance()->menuSelect, 0);
+	Mix_PlayChannel(-1, Music::getMusicInstance()->getMenuSelect(), 0);
 }
 
 
@@ -41,7 +41,10 @@ Menu* Menu::getInstance() {
 
 bool Menu::checkButtonCollision(int x, int y, SDL_Rect rect) {
 	if ((x > rect.x) && (x < rect.x + rect.w)
-		&& (y > rect.y) && (y < rect.y + rect.h)) return true;
+		&& (y > rect.y) && (y < rect.y + rect.h))
+	{
+		return true;
+	}
 	else return false;
 }
 
@@ -109,7 +112,7 @@ string Menu::showMenu() {
 	if (Mix_PlayingMusic() == 0)
 	{
 		//Play the music
-		Mix_PlayMusic(Music::getMusicInstance() -> menuMusic, -1);
+		Mix_PlayMusic(Music::getMusicInstance() -> getMenuMusic(), -1);
 	}
 	SDL_Rect play_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (3 * gSpriteClips[0].h) - 10) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
 	SDL_Rect exit_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (gSpriteClips[0].h)) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
@@ -169,8 +172,8 @@ string Menu::showMenu() {
 	SDL_DestroyTexture(playTexture);
 	SDL_DestroyTexture(exitTexture);
 	SDL_DestroyTexture(continueTexture);
-	Mix_FreeMusic(Music::getMusicInstance() ->menuMusic);
-	Mix_FreeChunk(Music::getMusicInstance() ->menuSelect);
+	Mix_FreeMusic(Music::getMusicInstance() ->getMenuMusic());
+	Mix_FreeChunk(Music::getMusicInstance() ->getMenuSelect());
 	return game_state;
 }
 

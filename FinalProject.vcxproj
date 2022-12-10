@@ -142,6 +142,7 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="GreyBird.cpp" />
     <ClCompile Include="GreyBirdEgg.cpp" />
+    <ClCompile Include="LevelOne.cpp" />
     <ClCompile Include="LevelTwo.cpp" />
     <ClCompile Include="Music.cpp" />
     <ClCompile Include="HealthBar.cpp" />

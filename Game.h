@@ -1,3 +1,4 @@
+#pragma once
 #include "SDL.h" 
 #include <stdio.h>
 #include <vector>
@@ -7,12 +8,10 @@
 #include "Middleware.h"
 #include "Music.h"
 #include "Texture.h"
-#pragma once
 
 using namespace std;
 
 class Game {
-private:
 	Game();
 	~Game();
 	static Game* instance;

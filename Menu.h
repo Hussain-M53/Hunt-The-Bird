@@ -11,11 +11,11 @@
 using namespace std;
 
 class Menu {
-private:
 	Menu();
 	~Menu();
 	static Menu* menu_instance;
 	bool isMenu;
+	SDL_Rect buttonTopLeft, buttonTopMiddle, buttonTopRight, buttonBottomLeft, buttonBottomMiddle, buttonBottomRight;
 
 public:
 	static Menu* getInstance();
