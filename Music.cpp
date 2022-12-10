@@ -42,3 +42,53 @@ Music* Music::getMusicInstance()
 		musicInstance = new Music();
 	return musicInstance;
 }
+
+Mix_Music* Music::getGameMusic()
+{
+	return gameMusic;
+}
+
+Mix_Music* Music::getMenuMusic()
+{
+	return menuMusic;
+}
+
+Mix_Chunk* Music::getDragonFire()
+{
+	return dragonFire;
+}
+
+Mix_Chunk* Music::getBirdChirp()
+{
+	return BirdChirp;
+}
+
+Mix_Chunk* Music::getEagleHit()
+{
+	return eagleHit;
+}
+
+Mix_Chunk* Music::getBird1Hit()
+{
+	return bird1Hit;
+}
+
+Mix_Chunk* Music::getEggShoot()
+{
+	return eggShoot;
+}
+
+Mix_Chunk* Music::getJumpSound()
+{
+	return jumpSound;
+}
+
+Mix_Chunk* Music::getBowSound()
+{
+	return bowSound;
+}
+
+Mix_Chunk* Music::getMenuSelect()
+{
+	return menuSelect;
+}
