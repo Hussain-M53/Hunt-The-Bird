@@ -1,3 +1,9 @@
 # FinalProject
 This is our final game developement project<br />
-Lets go hunting ;)
+
+## Game Instructions
+
+W - Jump
+A - Move Left
+D - Move Right
+Mouse Left Click - Fire Bow
