@@ -52,7 +52,6 @@ int main(int argc, char* args[])
 		menu_selection= menu->showMenu();
 		game->resetGame(menu_selection);
 	}
-
 	return 0;
 }
 

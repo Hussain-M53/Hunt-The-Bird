@@ -82,7 +82,7 @@ string Menu::showMenu() {
 		Mix_PlayMusic(Music::getMusicInstance() -> getMenuMusic(), -1);
 	}
 	SDL_Event event;
-	bool isMenu = true;
+	isMenu = true;
 	while (isMenu) {
 		while (SDL_PollEvent(&event) != 0) {
 			if (event.type == SDL_QUIT) {
