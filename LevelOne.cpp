@@ -41,8 +41,7 @@ void LevelOne::handleChanges(vector<GameObject*>& ui_elements_list, vector<GameO
 			GameObject* yellow_bird = new YellowBird(Texture::getInstance()->getYellowBirdTexture(), -64, position_random);
 			bird_list.insert(bird_list.begin(), yellow_bird);
 		}
-		Music* music = new Music();
-		Mix_PlayChannel(-1, music->BirdChirp, 0);
+		Mix_PlayChannel(-1, Music::getMusicInstance()->getBirdChirp(), 0);
 
 	}
 	else if (game_score >= Middleware::LEVEL_ONE_BOSS_SCORE && enemyCreated == false) {
