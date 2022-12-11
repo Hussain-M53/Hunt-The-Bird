@@ -17,10 +17,10 @@ RedBird::RedBird(SDL_Texture* texture, double x, double y) :Bird(texture, x, y) 
 
 bool RedBird::animate() {
 		if (state == "die") {
-			src_rect.x = 0;
+			src_rect.x = flyStateStart;
 		}
-		if (src_rect.x == 5 * width) {
-			src_rect.x = 0;
+		if (src_rect.x == flyStateEnd * width) {
+			src_rect.x = flyStateStart;
 		}
 		else {
 			src_rect.x += width;

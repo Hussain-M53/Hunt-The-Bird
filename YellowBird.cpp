@@ -17,10 +17,10 @@ YellowBird::YellowBird(SDL_Texture* texture, double x, double y) :Bird(texture, 
 
 bool YellowBird::animate() {
 	if (state == "die") {
-		src_rect.x = 0;
+		src_rect.x = flyStateStart;
 	}
-	else if (src_rect.x == 3 * width) {
-		src_rect.x = 0;
+	else if (src_rect.x == flyStateEnd * width) {
+		src_rect.x = flyStateStart;
 	}
 	else {
 		src_rect.x += width;

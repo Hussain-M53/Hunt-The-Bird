@@ -63,7 +63,7 @@ void Game::startLevelTwo() {
 	Middleware::cleanEntireList(egg_list);
 	Middleware::cleanEntireList(explosion_list);
 	archer = Archer::getInstance();
-	archer->setY(Middleware::LEVEL_TWO_GROUND_HEIGHT);
+	archer->setGroundHeight(Middleware::LEVEL_TWO_GROUND_HEIGHT);
 }
 
 
@@ -79,7 +79,7 @@ Game* Game::getInstance() {
 void Game::playGameMusic() {
 	Mix_HaltMusic();
 	//If there is no music playing
-	if (Mix_PlayingMusic() == 0) Mix_PlayMusic(Music::getMusicInstance()->gameMusic, -1);
+	if (Mix_PlayingMusic() == 0) Mix_PlayMusic(Music::getMusicInstance()->getGameMusic(), -1);
 	else
 	{
 		if (Mix_PausedMusic() == 1) Mix_ResumeMusic();
@@ -126,13 +126,6 @@ void Game::initialize(const char* title, int x, int y, int width, int height, bo
 			}
 			isRunning = true;
 		}
-
-		//Initialize SDL_mixer
-		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-		{
-			printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-			isRunning = false;
-		}
 		loadMedia();
 		GameObject* sun = new Sun(Texture::getInstance()->getSunTexture(), 0, 0);
 		ui_elements_list.insert(ui_elements_list.begin(), sun);
@@ -166,12 +159,15 @@ void Game::initializeGameStart(string menu_selection) {
 		level_number = 1;
 		Texture::getInstance()->setBackgroundTexture(Texture::getInstance()->getBackground_Level_One_Texture());
 		archer = Archer::getInstance();
+		archer->setLives(5);
+		archer->setState("still");
 	}
 
 	GameObject* sun = new Sun(Texture::getInstance()->getSunTexture(), 0, 0);
 	ui_elements_list.insert(ui_elements_list.begin(), sun);
 	GameObject* health_bar = new HealthBar(Texture::getInstance()->getHealthBarTexture(), Middleware::SCREEN_WIDTH - 200, 50);
 	ui_elements_list.insert(ui_elements_list.begin(), health_bar);
+	updateScore();
 }
 
 
@@ -336,9 +332,9 @@ void Game::handleEvents() {
 		}
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_w) {
-				if (archer->src_rect.x < 36 * archer->getWidth()) {
+				if (archer->getSrcRect().x < 36 * archer->getWidth()) {
 					archer->setState("jump");
-					Mix_PlayChannel(-1, Music::getMusicInstance()->jumpSound, 0);
+					Mix_PlayChannel(-1, Music::getMusicInstance()->getJumpSound(), 0);
 				}
 			}
 		}
@@ -362,18 +358,18 @@ void Game::handleEvents() {
 					}
 					else archer->setState("shootlowleft");
 				}
-				Mix_PlayChannel(-1, Music::getMusicInstance()->bowSound, 0);
+				Mix_PlayChannel(-1, Music::getMusicInstance()->getBowSound(), 0);
 			}
 		}
 	}
 	const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 	if (currentKeyStates[SDL_SCANCODE_A]) {
-		if (archer->src_rect.x < 6 * archer->getWidth() || archer->src_rect.x > 19 * archer->getWidth()) {
+		if (archer->getSrcRect().x < 6 * archer->getWidth() || archer->getSrcRect().x > 19 * archer->getWidth()) {
 			archer->setState("movingleft");
 		}
 	}
 	if (currentKeyStates[SDL_SCANCODE_D]) {
-		if (archer->src_rect.x < 6 * archer->getWidth() || archer->src_rect.x > 19 * archer->getWidth()) {
+		if (archer->getSrcRect().x < 6 * archer->getWidth() || archer->getSrcRect().x > 19 * archer->getWidth()) {
 			archer->setState("movingright");
 		}
 	}
@@ -393,15 +389,16 @@ void Game::detectCollisions() {
 	for (int b = 0; b < egg_list.size(); b++)
 	{
 
-		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg"|| egg_list.at(b)->getName() == "dragon_fire") {
+		if (egg_list.at(b)->getName() == "grey_bird_egg" || egg_list.at(b)->getName() == "red_bird_egg" || egg_list.at(b)->getName() == "yellow_bird_egg" || egg_list.at(b)->getName() == "eagle_bird_egg" || egg_list.at(b)->getName() == "dragon_fire") {
 			GameObject* gameObject = egg_list.at(b);
 			if (checkCollision(gameObject, archer)) {
 				if (gameObject->getState() != "dead") {
 					if (archer->getLives() == 1) {
 						archer->setAliveToFalse();
 						isRunning = false;
-					}else{
-						if(gameObject->getName() != "dragon_fire") gameObject->src_rect.x = 32;
+					}
+					else {
+						if (gameObject->getName() != "dragon_fire") gameObject->setSrcRectX(32);
 						archer->setState("dead");
 						gameObject->setState("dead");
 						archer->reduceLives();
@@ -424,14 +421,15 @@ void Game::detectCollisions() {
 
 					if (bird_list.at(n)->getName() == "red_bird" || bird_list.at(n)->getName() == "grey_bird" ||
 						bird_list.at(n)->getName() == "yellow_bird") {
-						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosionTexture(), explosion_list, Music::getMusicInstance()->bird1Hit);
+						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosionTexture(), explosion_list, Music::getMusicInstance()->getBird1Hit());
 						bowObject->setAliveToFalse();
 						gameObject->setState("die");
 						game_score += 100;
+						updateScore();
 					}
 
 					if (bird_list.at(n)->getName() == "eagle") {
-						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosionTexture(), explosion_list, Music::getMusicInstance()->eagleHit);
+						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosionTexture(), explosion_list, Music::getMusicInstance()->getEagleHit());
 						bowObject->setAliveToFalse();
 						if (gameObject->getLives() == 0) {
 							gameObject->setAliveToFalse();
@@ -445,7 +443,7 @@ void Game::detectCollisions() {
 					}
 
 					if (bird_list.at(n)->getName() == "dragon") {
-						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosion2Texture(), explosion_list, Music::getMusicInstance()->eagleHit);
+						Middleware::createExplosion(gameObject, Texture::getInstance()->getExplosion2Texture(), explosion_list, Music::getMusicInstance()->getEagleHit());
 						bowObject->setAliveToFalse();
 						if (gameObject->getLives() == 0) {
 							gameObject->setAliveToFalse();
@@ -471,27 +469,27 @@ void Game::insertEggs() {
 		if (gameObject->getName() == "grey_bird" && gameObject->getState() != "die") {
 			GameObject* egg = new GreyBirdEgg(Texture::getInstance()->getGreyEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->getEggShoot(), 0);
 		}
 
 
 		if (gameObject->getName() == "yellow_bird" && gameObject->getState() != "die") {
 			GameObject* egg = new YellowBirdEgg(Texture::getInstance()->getYellowEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->getEggShoot(), 0);
 		}
 
 
 		if (gameObject->getName() == "eagle" && gameObject->getState() != "die") {
 			GameObject* egg = new EagleBirdEgg(Texture::getInstance()->getEagleEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->getEggShoot(), 0);
 		}
 
 		if (gameObject->getName() == "red_bird" && gameObject->getState() != "die") {
 			GameObject* egg = new RedBirdEgg(Texture::getInstance()->getRedEggTexture(), gameObject->getX() + gameObject->getWidth() / 2, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), egg);
-			Mix_PlayChannel(-1, Music::getMusicInstance()->eggShoot, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->getEggShoot(), 0);
 		}
 
 		if (gameObject->getName() == "dragon" && gameObject->getState() != "die") {
@@ -502,7 +500,7 @@ void Game::insertEggs() {
 
 			GameObject* fire = new DragonFire(Texture::getInstance()->getDragonFireTexture(), dragon_fire_xpos, gameObject->getY() + gameObject->getHeight() / 2);
 			egg_list.insert(egg_list.begin(), fire);
-			Mix_PlayChannel(-1, Music::getMusicInstance()->dragonFire, 0);
+			Mix_PlayChannel(-1, Music::getMusicInstance()->getDragonFire(), 0);
 		}
 	}
 }
@@ -531,7 +529,6 @@ bool Game::checkCollision(GameObject* game_object_one, GameObject* game_object_t
 
 void Game::render() {
 
-	SDL_Delay(2);
 	SDL_RenderClear(Middleware::renderer);
 	SDL_RenderCopy(Middleware::renderer, Texture::getInstance()->getBackgroundTexture(), NULL, &backgroundRect);
 

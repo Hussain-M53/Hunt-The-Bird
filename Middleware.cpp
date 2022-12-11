@@ -86,8 +86,8 @@ string Middleware::intToString(int value) {
 
 void Middleware::createExplosion(GameObject* object, SDL_Texture* ExplosionTexture, vector<GameObject*>& explosion_list, Mix_Chunk* sf_explosion) {
 	for (int i = 0; i < 40; i++) {
-		double randomX = object->dst_rect.w/6 + rand() % object->dst_rect.w;
-		double randomY = object->dst_rect.h/4+ rand() % object->dst_rect.h ;
+		double randomX = object->getDstRect().w / 6 + rand() % object->getDstRect().w;
+		double randomY = object->getDstRect().h/4+ rand() % object->getDstRect().h ;
 		GameObject* explosion = new Explosion(ExplosionTexture,object->getX() + randomX,object->getY() + randomY );
 		explosion_list.insert(explosion_list.begin(), explosion);
 		Mix_PlayChannel(-1, sf_explosion, 0);

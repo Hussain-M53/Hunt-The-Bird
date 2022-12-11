@@ -121,6 +121,7 @@ void FileManager::readFileAndContinue(vector<GameObject*>& bird_list, vector<Gam
 		}
 		state += myText + "\n";
 	}
+	Game::getInstance()->updateScore();
 }
 
 

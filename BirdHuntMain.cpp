@@ -10,7 +10,7 @@ using namespace std;
 int main(int argc, char* args[])
 {
 
-	const int FPS = 60;
+	const int FPS = 280;
 	const int frame_delay = 1000 / FPS;
 	Uint32 frame_start = 0;
 	int frame_time = 0;
@@ -43,7 +43,7 @@ int main(int argc, char* args[])
 			game->update();
 			game->render();
 
-			frame_time = SDL_GetTicks();
+			frame_time = SDL_GetTicks() - frame_start;
 
 			if (frame_delay > frame_time) {
 				SDL_Delay(frame_delay - frame_time);

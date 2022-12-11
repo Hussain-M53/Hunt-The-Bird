@@ -35,23 +35,30 @@ Texture::Texture() {
 	BackgroundTexture = Background_Level_One_Texture;
 }
 Texture::~Texture() {
+
+	SDL_DestroyTexture(Background_Level_One_Texture);
+	SDL_DestroyTexture(Background_Level_Two_Texture);
 	SDL_DestroyTexture(ArcherTexture);
 	SDL_DestroyTexture(GreyBirdTexture);
-	SDL_DestroyTexture(RedBirdTexture);
 	SDL_DestroyTexture(YellowBirdTexture);
+	SDL_DestroyTexture(RedBirdTexture);
+	SDL_DestroyTexture(CloudTexture);
+	SDL_DestroyTexture(DragonTexture);
 	SDL_DestroyTexture(EagleTexture);
+	SDL_DestroyTexture(SunTexture);
 	SDL_DestroyTexture(GreyEggTexture);
 	SDL_DestroyTexture(RedEggTexture);
 	SDL_DestroyTexture(YellowEggTexture);
 	SDL_DestroyTexture(EagleEggTexture);
-	SDL_DestroyTexture(CloudTexture);
-	SDL_DestroyTexture(DragonTexture);
-	SDL_DestroyTexture(SunTexture);
-	SDL_DestroyTexture(Background_Level_One_Texture);
-	SDL_DestroyTexture(Background_Level_Two_Texture);
-	SDL_DestroyTexture(BackgroundTexture);
+	SDL_DestroyTexture(BowTexture);
 	SDL_DestroyTexture(ExplosionTexture);
 	SDL_DestroyTexture(Explosion2Texture);
+	SDL_DestroyTexture(DragonFireTexture);
+	SDL_DestroyTexture(HealthBarTexture);
+	SDL_DestroyTexture(menu_screen_texture);
+	SDL_DestroyTexture(buttonTexture);
+	SDL_DestroyTexture(BackgroundTexture);
+
 }
 Texture* Texture::getInstance()
 {

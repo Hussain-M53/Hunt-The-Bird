@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Button.h"
 #include "Music.h"
+#include "SDL_mixer.h"
 using namespace std;
 
 Menu* Menu::menu_instance = nullptr;
@@ -11,6 +12,12 @@ Menu* Menu::menu_instance = nullptr;
 
 Menu::Menu() {
 	isMenu = true;
+	buttonTopLeft = { 0,0,0,0 };
+	buttonTopMiddle = { 0,0,0,0 };
+	buttonTopRight = { 0,0,0,0 };
+	buttonBottomLeft = { 0,0,0,0 };
+	buttonBottomMiddle = { 0,0,0,0 };
+	buttonBottomRight = { 0,0,0,0 };
 }
 
 Menu::~Menu() {
@@ -66,6 +73,7 @@ void Menu::display_button(SDL_Rect* gSpriteClips,int height) {
 
 string Menu::showMenu() {
 	Texture::getInstance();
+	Music* music = Music::getMusicInstance();
 	string game_state = "";
 	Mix_HaltMusic();
 	TTF_Font* SpaceFont = TTF_OpenFont("Fonts/debug_font.otf", 40);
@@ -112,7 +120,7 @@ string Menu::showMenu() {
 	if (Mix_PlayingMusic() == 0)
 	{
 		//Play the music
-		Mix_PlayMusic(Music::getMusicInstance() -> getMenuMusic(), -1);
+		Mix_PlayMusic(music-> getMenuMusic(), -1);
 	}
 	SDL_Rect play_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (3 * gSpriteClips[0].h) - 10) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
 	SDL_Rect exit_button = { (Middleware::SCREEN_WIDTH / 2) - ((3 * gSpriteClips[0].w) / 2),50 + ((Middleware::SCREEN_HEIGHT / 2) - (gSpriteClips[0].h)) + 40,3 * gSpriteClips[0].w,gSpriteClips[0].h * 2 };
@@ -166,14 +174,10 @@ string Menu::showMenu() {
 	}
 	SDL_FreeSurface(gameTitleSurface);
 	SDL_FreeSurface(surfaceMessage);
-	SDL_DestroyTexture(Texture::getInstance()->getbuttonTexture());
-	SDL_DestroyTexture(Texture::getInstance()->getmenu_screen_texture());
 	SDL_DestroyTexture(Message);
 	SDL_DestroyTexture(playTexture);
 	SDL_DestroyTexture(exitTexture);
 	SDL_DestroyTexture(continueTexture);
-	Mix_FreeMusic(Music::getMusicInstance() ->getMenuMusic());
-	Mix_FreeChunk(Music::getMusicInstance() ->getMenuSelect());
 	return game_state;
 }
 

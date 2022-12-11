@@ -1,15 +1,23 @@
 #include "Music.h"
+#include <iostream>
+#include "SDL_mixer.h"
+
 
 Music* Music::musicInstance = nullptr;
 
 Music::Music(){
+
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+	}
 	//load the music and sound effects
 	gameMusic = Mix_LoadMUS("Music/Game_Music.mp3");
 	dragonFire = Mix_LoadWAV("Music/Sound Effects/dragonFire.wav");
 	BirdChirp = Mix_LoadWAV("Music/Sound Effects/birdChirp.mp3");
 	bird1Hit = Mix_LoadWAV("Music/Sound Effects/bird1_hit.wav");
 	bird2Hit = Mix_LoadWAV("Music/Sound Effects/bird2_hit.wav");
-	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
 	eagleHit = Mix_LoadWAV("Music/Sound Effects/eagle_hit.wav");
 	eggShoot = Mix_LoadWAV("Music/Sound Effects/enemyShoot.wav");
 	jumpSound = Mix_LoadWAV("Music/Sound Effects/jump.wav");
@@ -22,6 +30,8 @@ Music::~Music() {
 	//Free the music
 	Mix_FreeMusic(gameMusic);
 	gameMusic = NULL;
+	Mix_FreeMusic(menuMusic);
+	menuMusic = NULL;
 
 	//Free the sound effects
 	Mix_FreeChunk(dragonFire);

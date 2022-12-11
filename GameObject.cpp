@@ -21,8 +21,20 @@ void GameObject::setAliveToFalse() {
 	alive = false;
 }
 
-void GameObject::setY(double y) {
-	y_pos = y;
+void GameObject::setY(double y_pos) {
+	this->y_pos = y_pos;
+}
+void GameObject::setGroundHeight(double groundHeight)
+{
+	this->groundHeight = groundHeight;
+}
+void GameObject::setX(double x_pos)
+{
+	this->x_pos = x_pos;
+}
+void GameObject::setLives(int lives)
+{
+	this->lives = lives;
 }
 double GameObject::getX(){
 	return x_pos;
@@ -67,6 +79,13 @@ SDL_Rect GameObject::getDstRect(){
 	return dst_rect;
 }
 
+SDL_Rect GameObject::getSrcRect() {
+	return src_rect;
+}
+
+void GameObject::setSrcRectX(int value) {
+	src_rect.x = value;
+}
 void GameObject::reduceLives() {
 	lives--;
 }

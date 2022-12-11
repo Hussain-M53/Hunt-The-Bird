@@ -19,20 +19,23 @@ protected:
 	string state;
 	SDL_RendererFlip flip;
 	int lives;
-
-public:
+	double groundHeight;
 	SDL_Rect src_rect;
 	SDL_Rect dst_rect;
 
+public:
 	//constructors and destructors
 	GameObject(SDL_Texture* texture, double x, double y);
 	~GameObject();
 
 	//getters and setters
 	void setAliveToFalse();
+	void setY(double y_pos);
+	virtual void setGroundHeight(double groundHeight);
+	void setX(double x_pos);
+	void setLives(int lives);
 	double getX();
 	double getY();
-	void setY(double y);
 	int getWidth();
 	int getHeight();
 	int getLives();
@@ -43,6 +46,8 @@ public:
 	double getAngleInDegrees();
 	virtual void setState(string state);
 	SDL_Rect getDstRect();
+	SDL_Rect getSrcRect();
+	void setSrcRectX(int value);
 	virtual bool animate();
 
 	//related to saving state

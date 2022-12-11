@@ -9,6 +9,10 @@
 class Eagle : public Bird {
 	bool moveRight;
 	bool moveDown;
+	enum animation {
+		flyStateStart = 0,
+		flyStateEnd = 14,
+	};
 public:
 	Eagle(SDL_Texture* texture, double x, double y);
 	void move();

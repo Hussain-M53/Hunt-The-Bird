@@ -55,8 +55,8 @@ void Eagle::move() {
 
 bool Eagle::animate(){
 
-		if (src_rect.x >= 14 * width) {
-			src_rect.x = 0;
+		if (src_rect.x >= flyStateEnd * width) {
+			src_rect.x = flyStateStart;
 		}
 		else {
 			src_rect.x += width;

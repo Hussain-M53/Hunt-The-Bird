@@ -7,6 +7,10 @@
 #include "Bird.h"
 
 class RedBird : public Bird {
+	enum animation {
+		flyStateStart = 0,
+		flyStateEnd = 5,
+	};
 public:
 	RedBird(SDL_Texture* texture, double x, double y);
 	bool animate();

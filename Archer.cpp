@@ -65,13 +65,14 @@ void Archer::move() {
 	if (x_pos < -double(width / 2)) x_pos++;
 	if (x_pos > Middleware::SCREEN_WIDTH - double(width/2)) x_pos--;
 }
-	
+
 
 string Archer::saveState() {
 	//Format:
 // 	<Archer>
 //	xpos
 // ypos
+// lives
 // src_rect.x
 // ty
 // isJumping
@@ -86,6 +87,7 @@ string Archer::saveState() {
 	state += Middleware::boolToString(isJumping) + "\n";
 	state += Middleware::boolToString(jumpDown) + "\n";
 	state += this->state + "\n";
+	state += Middleware::intToString(lives) + "\n";
 	return state.c_str();
 }
 
@@ -116,86 +118,84 @@ void Archer::setPreviousGameState(string state) {
 		}
 
 		if (counter == 6) this->state = line;
+		if (counter == 7) this->lives = stoi(line);
 		counter++;
 	}
 }
 void Archer::setState(string state)
 {
-
 		this->state = state;
 	
-
 	if (state == "still") {
-		src_rect.x = 0;
+		src_rect.x = stillStateStart ;
 	}
 	if (state == "movingleft") {
 		flip = SDL_FLIP_HORIZONTAL;
-		src_rect.x = 6 * width;
+		src_rect.x = moveStateStart * width;
 		if (isJumping) {
-			src_rect.x = 36 * width;
+			src_rect.x = jumpStateStart * width;
 		}
 		
 	}
 	if (state == "movingright") {
 		flip = SDL_FLIP_NONE;
-		src_rect.x = 6 * width;
+		src_rect.x = moveStateStart * width;
 		if (isJumping) {
-			src_rect.x = 36 * width;
+			src_rect.x = jumpStateStart * width;
 		}
 	}
 	if (state == "dead") {
-		src_rect.x = 26 * width;
+		src_rect.x = deadStateStart * width;
 	}
 	if (state == "shootright") {
 		flip = SDL_FLIP_NONE;
-		src_rect.x = 20  *width;
+		src_rect.x = shootStateStart *width;
 	}
 	if (state == "shootleft") {
-		src_rect.x = 20 * width;
+		src_rect.x = shootStateStart * width;
 		flip = SDL_FLIP_HORIZONTAL;
 	}
 	if (state == "shootlowleft") {
-		src_rect.x = 31 * width;
+		src_rect.x = shootLowStateStart * width;
 		flip = SDL_FLIP_HORIZONTAL;
 	}
 	if (state == "shootlowright") {
-		src_rect.x = 31 * width;
+		src_rect.x = shootLowStateStart * width;
 		flip = SDL_FLIP_NONE;
 	}
 	if (state == "jump") {
-		src_rect.x = 36 * width;
+		src_rect.x = jumpStateStart * width;
 		isJumping = true;
 	}
 }
 
 bool Archer::animate() {
 		if (state == "still") {
-			if (src_rect.x == 5 * width) {
-				src_rect.x = 0;
+			if (src_rect.x == stillStateEnd * width) {
+				src_rect.x = stillStateStart * width;
 			}
 			else {
 				src_rect.x += width;
 			}
 		}
 		else if ((state == "movingleft" || state == "movingright")) {
-			if (src_rect.x == 19 * width) {
-				src_rect.x = 6 * width;
+			if (src_rect.x == moveStateEnd * width) {
+				src_rect.x = moveStateStart * width;
 			}
 			else {
 				src_rect.x += width;
 			}
 		}
 		else if (state == "dead") {
-			if (src_rect.x == 30 * width) {
-				src_rect.x = 30 * width;
-				//isRunning = false;
+			if (src_rect.x == deadStateEnd * width) {
+				src_rect.x = deadStateEnd * width;
 			}
 			else {
 				src_rect.x += width;
 			}
 		}
 		else if (state == "shootright" || state == "shootleft") {
-			if (src_rect.x == 24 * width) {
+			if (src_rect.x == shootStateEnd * width) {
 				return true;
 			}
 			else {
@@ -203,7 +203,7 @@ bool Archer::animate() {
 			}
 		}
 		else if (state == "shootlowright" || state == "shootlowleft") {
-			if (src_rect.x == 35 * width) {
+			if (src_rect.x == shootLowStateEnd * width) {
 				return true;
 			}
 			else {
@@ -211,12 +211,17 @@ bool Archer::animate() {
 			}
 		}
 		else if (state == "jump") {
-			if (src_rect.x == 43 * width) {
-				src_rect.x = 43 * width;
+			if (src_rect.x == jumpStateEnd * width) {
+				src_rect.x = jumpStateEnd * width;
 			}
 			else {
 				src_rect.x += width;
 			}
 		}
 		return false;
+}
+
+void Archer::setGroundHeight(double groundHeight) {
+	this->groundHeight = groundHeight;
+	this->y_pos = groundHeight;
 }

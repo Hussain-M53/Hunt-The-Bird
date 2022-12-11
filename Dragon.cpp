@@ -23,8 +23,8 @@ Dragon::Dragon(SDL_Texture* texture, double x, double y) :Bird(texture, x, y) {
 }
 
 bool Dragon::animate() {
-		if (src_rect.x >= 11 * width) {
-			src_rect.x = 0;
+		if (src_rect.x >= flyStateEnd * width) {
+			src_rect.x = flyStateStart;
 		}
 		else {
 			src_rect.x += width;
