@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\vclib\SDL2_mixer-2.6.2\include;C:\vclib\SDL2-2.24.0\include;C:\vclib\SDL2_ttf-2.20.1\include;C:\vclib\SDL2_image-2.6.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\vclib\SDL2-2.24.0\lib\x64;C:\vclib\SDL2_ttf-2.20.1\lib\x64;C:\vclib\SDL2_mixer-2.6.2\lib\x64;C:\vclib\SDL2_image-2.6.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\IMEN\source\SDL2_mixer-2.6.2\include;C:\Users\IMEN\source\SDL2-2.24.0\include;C:\Users\IMEN\source\SDL2_ttf-2.20.1\include;C:\Users\IMEN\source\SDL2_image-2.6.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\IMEN\source\SDL2-2.24.0\lib\x64;C:\Users\IMEN\source\SDL2_ttf-2.20.1\lib\x64;C:\Users\IMEN\source\SDL2_mixer-2.6.2\lib\x64;C:\Users\IMEN\source\SDL2_image-2.6.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
