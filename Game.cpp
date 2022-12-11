@@ -551,7 +551,6 @@ void Game::render() {
 	SDL_RenderPresent(Middleware::renderer);
 }
 
-
 bool Game::running() {
 	return isRunning;
 }

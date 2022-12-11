@@ -4,6 +4,7 @@
 
 
 class Music {
+
 	static Music* musicInstance;
 	Mix_Music* gameMusic = NULL;
 	Mix_Chunk* dragonFire = NULL;
@@ -19,6 +20,7 @@ class Music {
 	Mix_Chunk* archerHit = NULL;
 	Music();
 	~Music();
+
 public:
 	static Music* getMusicInstance();
 	Mix_Music* getGameMusic();
@@ -32,6 +34,4 @@ public:
 	Mix_Chunk* getBowSound();
 	Mix_Chunk* getMenuSelect();
 	Mix_Chunk* getArcherHitSound();
-
-
 };
