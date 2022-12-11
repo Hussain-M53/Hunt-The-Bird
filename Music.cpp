@@ -24,6 +24,7 @@ Music::Music(){
 	bowSound = Mix_LoadWAV("Music/Sound Effects/bow.wav");
 	menuMusic = Mix_LoadMUS("Music/Menu_Music.mp3");
 	menuSelect = Mix_LoadWAV("Music/Sound Effects/blipSelect.wav");
+	archerHit = Mix_LoadWAV("Music/Sound Effects/hitHurt.wav");
 }
 
 Music::~Music() {
@@ -43,6 +44,7 @@ Music::~Music() {
 	Mix_FreeChunk(BirdChirp);
 	Mix_FreeChunk(jumpSound);
 	Mix_FreeChunk(bowSound);
+	Mix_FreeChunk(archerHit);
 	Mix_Quit();
 }
 
@@ -101,4 +103,8 @@ Mix_Chunk* Music::getBowSound()
 Mix_Chunk* Music::getMenuSelect()
 {
 	return menuSelect;
+}
+Mix_Chunk* Music::getArcherHitSound()
+{
+	return archerHit;
 }

@@ -403,7 +403,7 @@ void Game::detectCollisions() {
 						gameObject->setState("dead");
 						archer->reduceLives();
 						updateScore();
-						//Mix_PlayChannel(-1, hitHurt, 0);
+						Mix_PlayChannel(-1, Music::getMusicInstance()->getArcherHitSound(), 0);
 					}
 				}
 				updateScore();

@@ -28,12 +28,16 @@ public:
 	GameObject(SDL_Texture* texture, double x, double y);
 	~GameObject();
 
-	//getters and setters
+	//setters
 	void setAliveToFalse();
 	void setY(double y_pos);
 	virtual void setGroundHeight(double groundHeight);
 	void setX(double x_pos);
 	void setLives(int lives);
+	void setSrcRectX(int value);
+	virtual void setState(string state);
+
+	//getters
 	double getX();
 	double getY();
 	int getWidth();
@@ -44,10 +48,10 @@ public:
 	string getName();
 	string getState();
 	double getAngleInDegrees();
-	virtual void setState(string state);
 	SDL_Rect getDstRect();
 	SDL_Rect getSrcRect();
-	void setSrcRectX(int value);
+
+	//animate
 	virtual bool animate();
 
 	//related to saving state

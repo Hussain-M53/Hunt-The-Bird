@@ -16,6 +16,7 @@ class Music {
 	Mix_Chunk* bowSound = NULL;
 	Mix_Music* menuMusic = NULL;
 	Mix_Chunk* menuSelect = NULL;
+	Mix_Chunk* archerHit = NULL;
 	Music();
 	~Music();
 public:
@@ -30,6 +31,7 @@ public:
 	Mix_Chunk* getJumpSound();
 	Mix_Chunk* getBowSound();
 	Mix_Chunk* getMenuSelect();
+	Mix_Chunk* getArcherHitSound();
 
 
 };
